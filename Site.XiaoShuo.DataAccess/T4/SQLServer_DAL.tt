@@ -1,0 +1,416 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="params.ttinclude" #>
+<#@ include file="DbHelper.ttinclude" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Practices.EnterpriseLibrary.Data;
+using System.Data.Common;
+using System.Data;
+using DataAccess.Base;
+using System.Configuration;
+using <#= ModelNamespaceStr #>;
+
+namespace <#= DataAccessNamespaceStr #>
+{
+
+<# 
+	bool isPartialTable = false;
+    foreach (DbTable table in DbHelper.GetDbTables(ConnectionString,DataBaseName))
+    {
+		if(table.TableName.Contains("_T_"))
+        {
+			continue;
+		}
+
+		if(partialTable.Contains(table.TableName))
+        {
+			isPartialTable=true;
+		}
+		else
+        {
+			isPartialTable=false;
+		}
+#>
+
+	[Serializable]
+	public partial class <#=table.TableName#>Access : <#=isPartialTable?"AccessBasePartial":"AccessBase"  #><<#=table.TableName#>>,IDisposable
+    {
+
+		Database db;
+
+		DatabaseProviderFactory factory = new DatabaseProviderFactory();//6.0 创建方式
+
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		<#
+			if(isPartialTable)
+            {
+		#>private string _dataTableNameFormat;
+		protected override string DataTableNameFormat
+		{
+			get { return _dataTableNameFormat; }
+			set { _dataTableNameFormat = value; }
+		}
+		<#
+            }
+			else
+            {
+		#>private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		<#}#>
+
+        
+
+        #region 00 IDisposable 实现
+        public <#=table.TableName#>Access(string configName)
+        {
+			db = factory.Create(configName);
+			<#
+				if(isPartialTable)
+				{
+			#>DataTableNameFormat = "<#=table.TableName#>_T_{0}";
+			<#
+				}
+				else
+				{
+			#>DataTableName = "<#=table.TableName#>";
+			<#
+				} 
+			#>ConnectionStr = ConfigurationManager.ConnectionStrings["<#=connectionNameString  #>"].ToString();
+        }
+
+        public <#=table.TableName#>Access()
+        {
+            db = factory.Create("<#=connectionNameString#>");
+			<#
+				if(isPartialTable)
+				{
+			#>DataTableNameFormat = "<#=table.TableName#>_T_{0}";
+			<#
+				}
+				else
+				{
+			#>DataTableName = "<#=table.TableName#>";
+			<#
+				} 
+			#>ConnectionStr = ConfigurationManager.ConnectionStrings["<#=connectionNameString  #>"].ToString();
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~<#=table.TableName#>Access()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Proc_<#=table.TableName#>_Insert
+		 public override int Insert(<#=table.TableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_<#=table.TableName#>_Insert");
+			<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+			  {
+				if(column.IsIdentity)
+				{
+			#>db.AddOutParameter(dbCmd, "@<#=column.ColumnName#>", DbType.<#=column.DbType#>,4);
+			<#	
+				}
+				else
+                {
+			#>db.AddInParameter(dbCmd, "@<#=column.ColumnName#>", DbType.<#=column.DbType#>,obj.<#=column.ColumnName#>);
+			<#	
+                }
+			  }
+			  if(isPartialTable)
+			  {
+			#>db.AddInParameter(dbCmd, "@TableIndex", DbType.Int32,tableIndex);
+			<#  
+			  }
+			#>
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				int Id = (int)dbCmd.Parameters["@Id"].Value;
+				return Id;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Proc_<#=table.TableName#>_Delete
+		 public override int Delete(int id<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			
+			<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+			  {
+				if(column.IsIdentity)
+				{
+			#>DbCommand dbCmd = db.GetStoredProcCommand("Proc_<#=table.TableName#>_DeleteBy<#=column.ColumnName#>");
+			db.AddInParameter(dbCmd, "@<#=column.ColumnName#>", DbType.<#=column.DbType#>,id);
+			<#	
+					break;
+				}
+			  }
+			  if(isPartialTable)
+			  {
+			#>db.AddInParameter(dbCmd, "@TableIndex", DbType.Int32,tableIndex);
+			<#  
+			  }
+			#>
+
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Proc_<#=table.TableName#>_Update
+		 public override int Update(<#=table.TableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+			  {
+				if(column.IsIdentity)
+				{
+			#>DbCommand dbCmd = db.GetStoredProcCommand("Proc_<#=table.TableName#>_UpdateBy<#=column.ColumnName#>");
+			db.AddInParameter(dbCmd, "@<#=column.ColumnName#>", DbType.<#=column.DbType#>,obj.<#=column.ColumnName#>);
+			<#
+				}
+				else
+				{
+			#>db.AddInParameter(dbCmd, "@<#=column.ColumnName#>", DbType.<#=column.DbType#>,obj.<#=column.ColumnName#>);
+			<#	
+				}
+			  }
+			  if(isPartialTable)
+			  {
+			#>db.AddInParameter(dbCmd, "@TableIndex", DbType.Int32,tableIndex);
+			<#  
+			  }
+			#>
+
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Proc_<#=table.TableName#>_SelectObject
+		 public override <#=table.TableName#> SelectObject(int id<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+			  {
+				if(column.IsIdentity)
+				{
+			#>DbCommand dbCmd = db.GetStoredProcCommand("Proc_<#=table.TableName#>_SelectBy<#=column.ColumnName#>");
+			db.AddInParameter(dbCmd, "@<#=column.ColumnName#>", DbType.<#=column.DbType#>,id);
+			<#
+					break;
+				}
+			  }
+			  if(isPartialTable)
+			  {
+			#>db.AddInParameter(dbCmd, "@TableIndex", DbType.Int32,tableIndex);
+			<#  
+			  }
+			#>
+
+			<#=table.TableName#> obj=null;
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						obj=Object2Model(reader);
+					}
+                }
+				return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Proc_<#=table.TableName#>_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<<#=table.TableName#>> Select(string whereStr<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_<#=table.TableName#>_SelectList");
+			db.AddInParameter(dbCmd, "@whereStr", DbType.String,whereStr);
+			<#
+			  if(isPartialTable)
+			  {
+			#>db.AddInParameter(dbCmd, "@TableIndex", DbType.Int32,tableIndex);
+			<#  
+			  }
+			#>
+			IList<<#=table.TableName#>> list= new List<<#=table.TableName#>>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						<#=table.TableName#> obj= Object2Model(reader);
+						list.Add(obj);
+					}
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 06 Proc_<#=table.TableName#>_SelectPage
+		 public override IList<<#=table.TableName#>> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, <#= isPartialTable?"int tableIndex,":"" #>out int rowCount)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_<#=table.TableName#>_SelectPage");
+			db.AddOutParameter(dbCmd, "@rowCount", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@cloumns", DbType.String,cloumns);
+			db.AddInParameter(dbCmd, "@pageIndex", DbType.Int32,pageIndex);
+			db.AddInParameter(dbCmd, "@pageSize", DbType.Int32,pageSize);
+			db.AddInParameter(dbCmd, "@orderBy", DbType.String,order);
+			db.AddInParameter(dbCmd, "@where", DbType.String,whereStr);
+			<#
+			  if(isPartialTable)
+			  {
+			#>db.AddInParameter(dbCmd, "@TableIndex", DbType.Int32,tableIndex);
+			<#  
+			  }
+			#>
+
+			List<<#=table.TableName#>> list= new List<<#=table.TableName#>>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						<#=table.TableName#> obj= Object2Model(reader);
+						list.Add(obj);
+					}
+					reader.NextResult();
+					rowCount = (int)dbCmd.Parameters["@rowCount"].Value;
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+		#region Object2Model
+
+        public <#=table.TableName#> Object2Model(IDataReader reader)
+        {
+            <#=table.TableName#> obj = null;
+            try
+            {
+                obj = new <#=table.TableName#>();
+				<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+				  {
+				#>obj.<#=column.ColumnName#> = reader["<#=column.ColumnName#>"] == DBNull.Value ? default(<#=column.CSharpType#>) : (<#=column.CSharpType#>)reader["<#=column.ColumnName#>"];
+				<#	
+				  }
+				#>
+
+            }
+            catch(Exception ex)
+            {
+                obj = null;
+            }
+            return obj;
+        }
+
+
+
+        #endregion
+
+
+    }
+<#		 
+    }
+#>
+}

@@ -1,0 +1,3 @@
+打开目录，运行
+redis-server --service-install redis.windows.conf
+自动安装为 Redis 服务

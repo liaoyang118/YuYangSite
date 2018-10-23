@@ -1,0 +1,202 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ include file="params.ttinclude" #>
+<#@ include file="DbHelper.ttinclude" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.Common;
+using System.Data;
+using System.Linq.Expressions;
+using MongoDB.Driver;
+using <#= ModelNamespaceStr #>;
+using <#= DataAccessNamespaceStr #>;
+
+namespace <#= ServiceNamespaceStr #>
+{
+
+<# 
+	bool isPartialTable = false;
+    foreach (DbTable table in DbHelper.GetDbTables(ConnectionString,DataBaseName))
+    {
+		if(table.TableName.Contains("_T_"))
+        {
+			continue;
+		}
+
+		if(partialTable.Contains(table.TableName))
+        {
+			isPartialTable=true;
+		}
+		else
+        {
+			isPartialTable=false;
+		}
+		string mongoTableName = "Mongo_"+table.TableName;
+#>
+	public partial class <#=mongoTableName#>Service
+    {
+
+        #region 01 <#=mongoTableName#>_Insert
+		 public static string Insert(<#=mongoTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.Insert(obj<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 <#=mongoTableName#>_Delete
+		 public static int Delete(Expression<Func<<#=mongoTableName#>,bool>> filter<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.Delete(filter<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 <#=mongoTableName#>_Update
+		 public static int Update(Expression<Func<<#=mongoTableName#>, bool>> filter,<#=mongoTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.Update(filter,obj<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 <#=mongoTableName#>_SelectObject
+		 public static <#=mongoTableName#> SelectObject(Expression<Func<<#=mongoTableName#>, bool>> filter<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.SelectObject(filter<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 <#=mongoTableName#>_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<<#=mongoTableName#>> Select(Expression<Func<<#=mongoTableName#>, bool>> filter<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.Select(filter<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 <#=mongoTableName#>_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<<#=mongoTableName#>> Select(Expression<Func<<#=mongoTableName#>, bool>> filter,SortDefinition<<#=mongoTableName#>> order<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.Select(filter,order<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion 
+
+
+
+		#region 06 <#=mongoTableName#>_SelectPage
+		 public static IList<<#=mongoTableName#>> SelectPage(SortDefinition<<#=mongoTableName#>> order, Expression<Func<<#=mongoTableName#>, bool>> filter, int pageIndex, int pageSize, <#= isPartialTable?"int tableIndex,":"" #>out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					return access.SelectPage(order,filter,pageIndex,pageSize,<#= isPartialTable?"tableIndex,":"" #>out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 <#=mongoTableName#>_BatchInsert
+        public static void BatchInsert(IList<<#=mongoTableName#>> list<#= isPartialTable?",int tableIndex":"" #>)
+        {
+			try
+			{
+				using (var access = new <#=mongoTableName#>Access())
+				{
+					access.BatchInsert(list<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
+<#		 
+    }
+#>
+}

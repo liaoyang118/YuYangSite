@@ -1,0 +1,127 @@
+﻿@using Site.XiaoShuo.DataAccess.Model;
+@using Site.Untity;
+@{
+    Fiction fInfo = ViewBag.fInfo;
+    ContentCate cInfo = ViewBag.cInfo;
+    Mongo_ChapterList clInfo = ViewBag.clInfo;
+}
+@{
+    ViewBag.Title = string.Format("{0}_{1}最新章节_{2}", cInfo.CateName, fInfo.Title, clInfo.ChapterName);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<ol id="bread_nav" class="breadcrumb">
+    <li><a href="/">@UntityTool.GetConfigValue("SiteName")</a></li>
+    <li><a href="@UntityTool.GenerateListUrl(cInfo.Id)">@cInfo.CateName</a></li>
+    <li><a href="@UntityTool.GenerateIntroUrl(fInfo.Id)">@fInfo.Title</a></li>
+    <li class="active">@clInfo.ChapterName.Replace("章", "章 ")</li>
+</ol>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*详情页头部部横幅*/
+        var cpro_id = "u3211303";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+<div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*移动版详情页头部横幅 20:3*/
+        var cpro_id = "u3211305";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+<div class="alert alert-success text-center" role="alert">
+    <h3>@clInfo.ChapterName.Replace("章", "章 ")</h3>
+    <div class="row">
+        <div class="col-xs-4">
+            <span>书名：<a href="@UntityTool.GenerateIntroUrl(fInfo.Id)" target="_blank" title="@fInfo.Title">@fInfo.Title</a></span>
+        </div>
+        <div class="col-xs-4">
+            <span class="text_author">作者：@fInfo.Author</span>
+        </div>
+        <div class="col-xs-4">
+            <span>更新时间：@clInfo.UpdateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+        </div>
+    </div>
+</div>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*详情页头部部横幅2*/
+        var cpro_id = "u3373685";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+<div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*详情页头部部横幅2_wap*/
+        var cpro_id = "u3373688";
+    </script>
+</div>
+
+<div class="alert alert-info text-left inner_content" role="alert">
+    <p>
+        @Html.Raw(clInfo.ChapterContent)
+    </p>
+</div>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*详情页底部横幅2*/
+        var cpro_id = "u3373742";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+<div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*详情页底部横幅2_wap*/
+        var cpro_id = "u3373743";
+    </script>
+</div>
+
+<div class="alert alert-success" role="alert">
+    <ul class="pager">
+        <li><a href="/Detail/Chapter/?fid=@fInfo.Id&cid=@clInfo.Id.ToString()&o=p">上一章</a></li>
+        <li><a href="@UntityTool.GenerateIntroUrl(fInfo.Id)">目录</a></li>
+        <li><a href="/Detail/Chapter/?fid=@fInfo.Id&cid=@clInfo.Id.ToString()&o=n">下一章</a></li>
+    </ul>
+</div>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*详情页底部横幅*/
+        var cpro_id = "u3211213";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+<div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*移动版详情页底部横幅 20:3*/
+        var cpro_id = "u3211215";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title">《@fInfo.Title》—— @clInfo.ChapterName 【章节讨论】</h3>
+    </div>
+    <div class="panel-body text-left">
+        <!--PC版-->
+        <div id="SOHUCS" sid="@fInfo.Id"></div>
+        <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+        <script type="text/javascript">
+            window.changyan.api.config({
+                appid: 'cyttTA5X6',
+                conf: 'prod_a5982a1a5b591db743c22f0037cc5584'
+            });
+        </script>
+
+    </div>
+</div>
+
+
+
+

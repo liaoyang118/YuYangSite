@@ -1,0 +1,35 @@
+﻿@using Site.XiaoShuo.DataAccess.Model;
+@using Site.Untity;
+@{
+
+    IList<FictionVisits> list = ViewBag.list;
+}
+
+<div class="panel panel-danger">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-fire fa-lg"></i>最热阅读</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table text-left">
+            <tbody>
+                @{
+                    int i = 1;
+                    foreach (FictionVisits item in list)
+                    {
+                        <tr>
+                            <td><i class="hotsort@(i<=3?i.ToString():"")">@i</i></td>
+                            <td>
+                                《<a href="@UntityTool.GenerateIntroUrl(item.Fiction_Id)" target="_blank" title="@item.Fiction_Title">@item.Fiction_Title</a>》
+                                <br />
+                                &nbsp;&nbsp;@item.Fiction_Author
+                            </td>
+                            <td>@item.Visits</td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

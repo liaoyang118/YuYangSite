@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TaskList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TaskInfos>
+    <TaskInfo>
+      <TaskName>58小说网更新任务</TaskName>
+      <IsStart>0</IsStart>
+      <IocName>5858XS</IocName>
+      <LastUpdateTime></LastUpdateTime>
+      <PageNums>1</PageNums>
+      <FictionNums>5</FictionNums>
+      <Nums>5</Nums>
+      <PredictThreadNums>0</PredictThreadNums>
+      <UpdateGrowNums>10</UpdateGrowNums>
+    </TaskInfo>
+    <TaskInfo>
+      <TaskName>58小说网补偿任务</TaskName>
+      <IsStart>0</IsStart>
+      <IocName>5858XS_Error</IocName>
+      <LastUpdateTime></LastUpdateTime>
+      <PageNums>1</PageNums>
+      <FictionNums>5</FictionNums>
+      <Nums>5</Nums>
+      <PredictThreadNums>0</PredictThreadNums>
+      <UpdateGrowNums>20</UpdateGrowNums>
+    </TaskInfo>
+  </TaskInfos>
+</TaskList>

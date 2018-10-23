@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = ViewBag.CateName + "小说-全本小说-TXT小说";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Site.XiaoShuo.DataAccess.Model;
+@using Site.Untity;
+@{
+
+    IList<Fiction> list = ViewBag.list;
+    string key = ViewBag.key;
+
+    int pageIndex = ViewBag.pageIndex;
+    int pageSize = ViewBag.pageSize;
+    int rowCount = ViewBag.rowCount;
+}
+
+<ol id="bread_nav" class="breadcrumb">
+    <li><a href="/">@UntityTool.GetConfigValue("SiteName")</a></li>
+    <li class="active">@ViewBag.CateName</li>
+</ol>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*列表页顶部横幅*/
+        var cpro_id = "u3373590";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+<div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*列表页顶部横幅_wap*/
+        var cpro_id = "u3373591";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 text-center">
+        <table id="list_tb" class="table table-striped">
+            <tbody>
+                @{
+                    if (list != null && list.Count > 0)
+                    {
+                        int count = 0;
+                        foreach (Fiction item in list)
+                        {
+                            if (count == 3)
+                            {
+                                <tr class="hidden-xs">
+                                    <td>
+                                        <div class="ad_pc_block hidden-xs">
+                                            <script type="text/javascript">
+                                                /*列表页信息流*/
+                                                var cpro_id = "u3373664";
+                                            </script>
+                                            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            if (count == 8)
+                            {
+                                <tr class="hidden-xs">
+                                    <td>
+                                        <div class="ad_pc_block hidden-xs">
+                                            <script type="text/javascript">
+                                                /*列表页信息流2*/
+                                                var cpro_id = "u3373665";
+                                            </script>
+                                            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-xs-6 col-sm-2">
+                                            <div class="thumbnail">
+                                                <a href="@UntityTool.GenerateIntroUrl(item.Id)" target="_blank" title="@item.Title"><img src="@item.CoverImage" alt="@item.Title"></a>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-10">
+                                            <div class="caption">
+                                                <div class="row">
+                                                    <div class="col-xs-12 text-left">
+                                                        <span>《<a href="@UntityTool.GenerateIntroUrl(item.Id)" target="_blank" title="@item.Title">@item.Title</a>》</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row text-left">
+                                                    <div class="col-sm-4">
+                                                        <span class="text_author">作者：@item.Author</span>
+                                                    </div>
+                                                    <div class="col-sm-4 hidden-xs">
+                                                        <span>最新：</span>
+                                                        <a href="@UntityTool.GenerateDetailUrl(item.Id,item.LastChapterId)" title="@item.LastUpdateChapter" target="_blank">@item.LastUpdateChapter.Replace("章", "章 ")</a>
+                                                    </div>
+                                                    <div class="col-sm-4 hidden-xs">
+                                                        <span>时间：</span>
+                                                        <span>@item.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                <p class="text-left">@item.Intro.Replace("<br />", "").SubOmitString(200)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-12 col-sm-4 text-center hidden-xs">
+        <!--列表页右侧上-->
+        <div class="ad_pc_block hidden-xs">
+            <script type="text/javascript">
+                /*列表页右侧顶部*/
+                var cpro_id = "u3373663";
+            </script>
+            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+        </div>
+        <!--最热-->
+        @{
+            Html.RenderAction("HotRead", "Common");
+        }
+        <div class="ad_pc_block hidden-xs">
+            <script type="text/javascript">
+                /*列表页右侧中部*/
+                var cpro_id = "u3211200";
+            </script>
+            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+        </div>
+        <!--推荐-->
+        @{
+            Html.RenderAction("RecomendRead", "Common");
+        }
+        <div class="ad_pc_block hidden-xs">
+            <script type="text/javascript">
+                /*列表页右侧下部*/
+                var cpro_id = "u3211196";
+            </script>
+            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+        </div>
+    </div>
+</div>
+<!--分页-->
+<div class="row">
+    <div class="col-xs-12 text-center">
+        @Html.Raw(UntityTool.CreateListPage(3, pageSize, pageIndex, rowCount, string.Format("/List/{0}.html{1}", ViewBag.CId, key == "" ? "" : string.Format("?title={0}", HttpUtility.UrlEncode(key)))))
+    </div>
+</div>

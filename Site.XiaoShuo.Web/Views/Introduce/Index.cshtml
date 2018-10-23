@@ -1,0 +1,269 @@
+﻿
+@using Site.XiaoShuo.DataAccess.Model;
+@using Site.Untity;
+@using MongoDB.Bson;
+
+@{
+    Fiction fInfo = ViewBag.fInfo;
+    ContentCate cInfo = ViewBag.cInfo;
+    IList<Fiction> rList = ViewBag.rList;
+    IList<FictionVisits> recList = ViewBag.recList;
+    IList<Mongo_ChapterList> chpList = ViewBag.chpList;
+}
+
+
+@{
+    ViewBag.Title = fInfo.Title + "-最新章节、全集、全本-" + fInfo.Author;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<ol id="bread_nav" class="breadcrumb">
+    <li><a href="/">@UntityTool.GetConfigValue("SiteName")</a></li>
+    <li><a href="@UntityTool.GenerateListUrl(cInfo.Id)">@cInfo.CateName</a></li>
+    <li class="active">@fInfo.Title</li>
+</ol>
+
+<div class="panel ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*介绍页头部横幅*/
+        var cpro_id = "u3373667";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+<div class="panel ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*介绍页头部横幅_wap*/
+        var cpro_id = "u3373668";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/cm.js"></script>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">小说名称</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-2">
+                                <div class="thumbnail">
+                                    <a href="/" title="@fInfo.Title"><img src="@fInfo.CoverImage" width="140" height="180" alt="@fInfo.Title"></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-10">
+                                <div class="caption">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-4">
+                                            <span>《<a href="@UntityTool.GenerateIntroUrl(fInfo.Id)" title="">@fInfo.Title</a>》</span>
+                                            <span class="text_author">@fInfo.Author</span>
+                                        </div>
+                                        <div class="col-sm-4 hidden-xs text-left">
+                                            <span>最新：</span>
+                                            <a href="@UntityTool.GenerateDetailUrl(fInfo.Id,fInfo.LastChapterId)" title="@fInfo.LastUpdateChapter" target="_blank">@fInfo.LastUpdateChapter.Replace("章", "章 ")</a>
+                                        </div>
+                                        <div class="col-sm-4 hidden-xs text-right">
+                                            <span>@fInfo.LastUpdateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <p>@fInfo.Intro.Replace("<br />", "").SubOmitString(200)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @{
+                                    if (rList.Count > 0)
+                                    {
+                                        <div class="alert alert-success" role="alert">
+                                            <strong>作者作品：</strong>
+                                            @{
+                                                foreach (Fiction item in rList)
+                                                {
+                                                    <span>《<a href="@UntityTool.GenerateIntroUrl(item.Id)" target="_blank" title="@item.Title">@item.Title</a>》</span>
+                                                    <text>&nbsp;</text>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="ad_pc_block hidden-xs">
+                                            <script type="text/javascript">
+                                                /*介绍页头部横幅2*/
+                                                var cpro_id = "u3373681";
+                                            </script>
+                                            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+                                        </div>
+
+                                        <div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+                                            <script type="text/javascript">
+                                                /*介绍页头部横幅2_wap */
+                                                var cpro_id = "u3373682";
+                                            </script>
+                                            <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden-xs col-sm-4">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">相关阅读推荐</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table text-left">
+                                    <thead>
+                                        <tr>
+                                            <th>书名</th>
+                                            <th>作者</th>
+                                            <th>阅读</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (FictionVisits item in recList)
+                                            {
+                                                <tr>
+                                                    <td><a href="@UntityTool.GenerateIntroUrl(item.F_Id)" target="_blank" title="@item.Fiction_Title">@item.Fiction_Title</a></td>
+                                                    <td>@item.Fiction_Author</td>
+                                                    <td>@item.Visits</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*介绍页中部横幅1*/
+        var cpro_id = "u3373669";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+<div class="well alert alert-danger">
+    <p>
+        1.如果您发现有章节遗漏或是错误，请<a href="#" target="_blank">点击此处</a>，上报给我们，我们会尽快处理，谢谢您的支持！<br />
+        2.本站小说仅用作文化传播，分享阅读，小说网文的发展还需要广大读者的支持，喜欢本站请收藏本站！
+    </p>
+</div>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*介绍页中部横幅2*/
+        var cpro_id = "u3373670";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">章节列表</h3>
+            </div>
+            <div class="panel-body text-left">
+                <table class="table table-striped table-bordered">
+                    <tbody>
+                        @{
+                            Mongo_ChapterList _chpInfo = null;
+                            int rows = chpList.Count / 4;
+                            if (rows > 0)
+                            {
+                                for (int i = 0; i < rows; i++)
+                                {
+                                    <tr>
+                                        @for (int j = 0; j < 4; j++)
+                                        {
+                                            _chpInfo = chpList[4 * i + j];
+                                            <td>
+                                                <a href="@UntityTool.GenerateDetailUrl(_chpInfo.F_ID,_chpInfo.Id.ToString())" target="_blank" title="@_chpInfo.ChapterIndex &nbsp;&nbsp;&nbsp;@_chpInfo.ChapterName">@_chpInfo.ChapterName.Replace("章", "章 ")</a>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                                //不满整行的数据
+                                if (chpList.Count % 4 > 0)
+                                {
+                                    <tr>
+                                        @for (int j = 0; j < chpList.Count % 4; j++)
+                                        {
+                                            _chpInfo = chpList[4 * rows + j];
+                                            <td>
+                                                <a href="@UntityTool.GenerateDetailUrl(_chpInfo.F_ID,_chpInfo.Id.ToString())" target="_blank" title="@_chpInfo.ChapterIndex &nbsp;&nbsp;&nbsp;@_chpInfo.ChapterName">@_chpInfo.ChapterName.Replace("章", "章 ")</a>
+                                            </td>
+                                        }
+
+                                        @for (int j = 0; j < 4 - (chpList.Count % 4); j++)
+                                        {
+                                            <td></td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                if (chpList.Count > 0)
+                                {
+                                    <tr>
+                                        @for (int j = 0; j < chpList.Count; j++)
+                                        {
+                                            _chpInfo = chpList[j];
+                                            <td>
+                                                <a href="@UntityTool.GenerateDetailUrl(_chpInfo.F_ID,_chpInfo.Id.ToString())" target="_blank" title="@_chpInfo.ChapterIndex &nbsp;&nbsp;&nbsp;@_chpInfo.ChapterName">@_chpInfo.ChapterName.Replace("章", "章 ")</a>
+                                            </td>
+                                        }
+
+                                        @for (int j = 0; j < 4 - (chpList.Count % 4); j++)
+                                        {
+                                            <td></td>
+                                        }
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">暂未任何章节，请耐心等候，我们将会尽快更新...</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ad_pc_block hidden-xs">
+    <script type="text/javascript">
+        /*介绍页底部横幅*/
+        var cpro_id = "u3211327";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>
+
+<div class="ad_wap_block hidden-sm hidden-md hidden-lg">
+    <script type="text/javascript">
+        /*介绍页底部横幅_wap*/
+        var cpro_id = "u3211541";
+    </script>
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/c.js"></script>
+</div>

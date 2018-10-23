@@ -1,0 +1,33 @@
+﻿<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+
+  <schedule>
+
+    <!--开始执行一个调度-->
+    <job>
+      <name>WatchSpiderServiceJob</name>
+      <group>WatchSpiderServiceGroup</group>
+      <description>WatchSpiderServiceJob</description>
+      <job-type>Watch.Spider.Service.Jobs.WatchSpiderServiceJob, Watch.Spider.Service</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+
+    <trigger>
+      <cron>
+
+        <name>WatchSpiderServiceJobTrigger</name>
+        <group>WatchSpiderServiceJobTriggerGroup</group>
+        <job-name>WatchSpiderServiceJob</job-name>
+        <job-group>WatchSpiderServiceGroup</job-group>
+
+        <cron-expression>10 * * * * ?</cron-expression>  
+      </cron>
+
+    </trigger>
+    <!--结束一个调度-->
+  </schedule>
+</job-scheduling-data>

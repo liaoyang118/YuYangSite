@@ -1,0 +1,55 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="params.ttinclude" #>
+<#@ include file="DbHelper.ttinclude" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace <#= ModelNamespaceStr #>
+{
+
+<# 
+    foreach (DbTable table in DbHelper.GetDbTables(ConnectionString,DataBaseName))
+    {
+		if(table.TableName.Contains("_T_"))
+        {
+			continue;
+		}
+#>
+	[Serializable]
+	public partial class <#=table.TableName#>
+    {
+        <# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+		  {
+		#>
+
+		#region <#=column.ColumnName#>
+		private <#= column.CSharpType#><# if(column.CommonType.IsValueType && column.IsNullable){#>?<#}#> _<#=column.ColumnName#>;
+       
+        /// <summary>
+        /// <#=column.Remark#>
+        /// </summary>        
+        public <#= column.CSharpType#><# if(column.CommonType.IsValueType && column.IsNullable){#>?<#}#> <#=column.ColumnName#> 
+		{ 
+			get { return _<#=column.ColumnName#>; } 
+			set { _<#=column.ColumnName#> = value; } 
+		
+		}
+		#endregion
+		<#
+		   }
+		#>
+
+    }
+<#		 
+    }
+#>
+	
+}

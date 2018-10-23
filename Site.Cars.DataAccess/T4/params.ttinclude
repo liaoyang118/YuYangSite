@@ -1,0 +1,22 @@
+﻿<#@ IntelliSenseLanguage processor="tangibleT4Editor" language="C#" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<# 
+	string ModelNamespaceStr="Site.Cars.DataAccess.Model";
+	string DataAccessNamespaceStr="Site.Cars.DataAccess.Access";
+	string ServiceNamespaceStr="Site.Cars.DataAccess.Service";
+	string ConnectionString="Data Source=.;Initial Catalog=Cars;User ID=sa;Password=USER1122@";
+	string DataBaseName="Cars";
+	string connectionNameString="Cars";
+	//需要分表操作的表，多表以逗号隔开，存储过程需要预先生成
+	string partialTable="";
+#>

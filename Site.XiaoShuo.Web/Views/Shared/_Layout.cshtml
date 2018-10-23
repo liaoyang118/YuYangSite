@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+@using Site.Untity;
+@{
+    string cIdStr = ViewContext.RouteData.Values["CateId"] == null ? "" : ViewContext.RouteData.Values["CateId"].ToString();
+    int cateId = cIdStr == "" ? 0 : cIdStr.ToInt32(-1);
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title-@UntityTool.GetConfigValue("SiteName")</title>
+    <meta name="keywords" content="@ViewBag.keywords" />
+    <meta name="description" content="@ViewBag.description" />
+
+    @Styles.Render("~/Content/css")
+
+</head>
+<body>
+    <!--导航条-->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" style="padding: 10px;" href="/"><img width="32" height="32" src="~/images/logo.png" alt="logo"></a>
+                <a class="navbar-brand" href="/">@UntityTool.GetConfigValue("SiteName")</a>
+            </div>
+            <form class="navbar-form navbar-right" role="search" action="/Common/Search" method="get">
+                <div class="form-group">
+                    <input type="text" name="key" id="txt_key" class="form-control" placeholder="输入书籍名称">
+                </div>
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;搜索小说</button>
+            </form>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li @(cateId == 0 ? "class=active" : "")><a href="/">首页</a></li>
+                    <li @(cateId == 1 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(1)">玄幻</a></li>
+                    <li @(cateId == 4 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(4)">修真</a></li>
+                    <li @(cateId == 2 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(2)">都市</a></li>
+                    <li @(cateId == 7 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(7)">恐怖</a></li>
+                    <li @(cateId == 3 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(3)">网游</a></li>
+                    <li @(cateId == 6 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(6)">科幻</a></li>
+                    <li @(cateId == 5 ? "class=active" : "")><a href="@UntityTool.GenerateListUrl(5)">其它</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+    <!--内容-->
+    <div class="container" role="main" style="margin-top: 70px;">
+        @RenderBody()
+        <hr>
+        <footer>
+            <p id="copyrights">
+                Copyright @@2017-2018
+                <a href="http://@UntityTool.GetConfigValue("SiteName")/" target="_blank" title="@UntityTool.GetConfigValue("Domain")">@UntityTool.GetConfigValue("SiteName")</a>
+                提供最新、最全的小说阅读&nbsp;&nbsp;<a href="http://www.miitbeian.gov.cn" title="粤ICP备15008454号" target="_blank">粤ICP备15008454号</a>
+            </p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/Scripts/js")
+
+
+    <!--百度统计-->
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?061412c674f38e7ef56722029fa9e0ef";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <!--百度链接提交-->
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+    <script>
+        $(function () {
+            $("form").submit(function () {
+                var _key = $("#txt_key").val();
+                if (_key.length == 0) {
+                    return false;
+                }
+            });
+        })
+    </script>
+</body>
+</html>

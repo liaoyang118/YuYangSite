@@ -1,0 +1,13 @@
+﻿1.SqlServer Model模板和DAL模板，都基于SqlServer数据库
+2.DAL生成基于储存过程，所以必须在数据库中生成对应的存储过程
+3.使用 Tool_CreateProc.sql 生成数据表基础存储过程；Tool_CreateProc_Partial.sql基于分表生成存储过程。表名规则可以修改脚本，Func.sql 数据类型转换
+4.分页查询中使用的到存储过程，必须在数据库中存在依赖存储过程：Proc_SelectPageBase.sql
+5.参数说明
+	params.ttinclude(此类包含文件后缀名可以随意写，官方建议不要用 .tt) 文件中：
+		NamespaceStr：生成的类文件的命名空间
+		ConnectionString：需要生成的数据库的连接字符串 
+		/*
+			Data Source=115.28.149.88;Initial Catalog=qds165409352_db;User ID=qds165409352;Password=52676442yang
+		*/
+		DataBaseName : 需要生成的数据库
+6.T4 模板文件可以拷贝到任意项目中使用，只需要文件齐全，以及包含文件路径正确即可

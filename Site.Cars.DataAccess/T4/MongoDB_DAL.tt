@@ -1,0 +1,306 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="params.ttinclude" #>
+<#@ include file="DbHelper.ttinclude" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Site.XiaoShuo.DataAccess.Base;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using DataAccess.Base;
+using System.Configuration;
+using System.Linq.Expressions;
+using <#= ModelNamespaceStr #>;
+
+namespace <#= DataAccessNamespaceStr #>
+{
+
+<# 
+	bool isPartialTable = false;
+    foreach (DbTable table in DbHelper.GetDbTables(ConnectionString,DataBaseName))
+    {
+		if(table.TableName.Contains("_T_"))
+        {
+			continue;
+		}
+
+		if(partialTable.Contains(table.TableName))
+        {
+			isPartialTable=true;
+		}
+		else
+        {
+			isPartialTable=false;
+		}
+		string mongoTableName = "Mongo_"+table.TableName;
+#>
+
+	[Serializable]
+	public partial class <#=mongoTableName#>Access : <#=isPartialTable?"Mongo_AccessBasePartial":"Mongo_AccessBase"  #><<#=mongoTableName#>>,IDisposable
+    {
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		<#
+			if(isPartialTable)
+            {
+		#>private string _dataTableNameFormat;
+		protected override string DataTableNameFormat
+		{
+			get { return _dataTableNameFormat; }
+			set { _dataTableNameFormat = value; }
+		}
+		<#
+            }
+			else
+            {
+		#>private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		<#}#>
+
+        
+
+        #region 00 IDisposable 实现
+        public <#=mongoTableName#>Access(string dbName) 
+        {
+			<#
+				if(isPartialTable)
+				{
+			#>DataTableNameFormat = "<#=mongoTableName#>_T_{0}";
+			<#
+				}
+				else
+				{
+			#>DataTableName = "<#=mongoTableName#>";
+			<#
+				} 
+			#>ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_<#=connectionNameString  #>"].ToString();
+			base.GetDatabase(dbName);
+        }
+
+        public <#=mongoTableName#>Access()
+        {
+			<#
+				if(isPartialTable)
+				{
+			#>DataTableNameFormat = "<#=mongoTableName#>_T_{0}";
+			<#
+				}
+				else
+				{
+			#>DataTableName = "<#=mongoTableName#>";
+			<#
+				} 
+			#>ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_<#=connectionNameString  #>"].ToString();
+			 base.GetDatabase("Mongo_<#=connectionNameString  #>");
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~<#=mongoTableName#>Access()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Mongodb_<#=mongoTableName#>_Insert
+		 public override string Insert(<#=mongoTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+				collection.InsertOne(obj);
+				return obj.Id.ToString();
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Mongodb_<#=mongoTableName#>_Delete
+		 public override int Delete(Expression<Func<<#=mongoTableName#>,bool>> filter <#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+				DeleteResult result= collection.DeleteOne<<#=mongoTableName#>>(filter);
+				return (int)result.DeletedCount;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Mongodb_<#=mongoTableName#>_Update
+		 public override int Update(Expression<Func<<#=mongoTableName#>, bool>> filter,<#=mongoTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+				
+				<#
+					string setFiled="Builders<"+mongoTableName+">.Update";
+					foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+				  {
+					setFiled+=".Set(\""+ column.ColumnName +"\",obj."+column.ColumnName+")";
+				  }
+				#>UpdateResult result= collection.UpdateOne<<#=mongoTableName#>>(filter,<#= setFiled #>);
+				int returnValue = (int)result.ModifiedCount;
+                return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Mongodb_<#=mongoTableName#>_SelectObject
+		 public override <#=mongoTableName#> SelectObject(Expression<Func<<#=mongoTableName#>, bool>> filter <#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+                <#=mongoTableName#> obj = collection.Find(filter).FirstOrDefault();
+                return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Mongodb_<#=mongoTableName#>_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<<#=mongoTableName#>> Select(Expression<Func<<#=mongoTableName#>, bool>> filter <#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+                IList<<#=mongoTableName#>> list = collection.Find(filter).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion 
+
+		#region 05 Mongodb_<#=mongoTableName#>_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<<#=mongoTableName#>> Select(Expression<Func<<#=mongoTableName#>, bool>> filter,SortDefinition<<#=mongoTableName#>> order <#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+                IList<<#=mongoTableName#>> list = collection.Find(filter).Sort(order).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+
+		#region 06 Mongodb_<#=mongoTableName#>_SelectPage
+		 public override IList<<#=mongoTableName#>> SelectPage(SortDefinition<<#=mongoTableName#>> order, Expression<Func<<#=mongoTableName#>, bool>> filter,  int pageIndex, int pageSize, <#= isPartialTable?"int tableIndex,":"" #>out int rowCount)
+		 {
+			try
+			{ 
+				IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+                var result = collection.Find(filter).Sort(order);
+                rowCount = (int)result.CountDocuments();
+
+                return result.ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 07 BatchInsert
+
+        public override void BatchInsert(IList<<#=mongoTableName#>> list <#= isPartialTable?",int tableIndex":"" #>)
+        {
+            try
+            {
+                IMongoCollection<<#=mongoTableName#>> collection = Database.GetCollection<<#=mongoTableName#>>(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
+                collection.InsertMany(list);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层：" + e.Message);
+            }
+        }
+
+        #endregion
+
+    }
+<#		 
+    }
+#>
+}
