@@ -293,12 +293,39 @@ namespace Spider.Main.Core
 
                         string title, detailUrl;
                         string times;
-
+                        HtmlNode node = null;
                         foreach (HtmlNode item in items)
                         {
-                            detailUrl = Domain + item.SelectSingleNode("child::div[1]/div[1]/div[2]/a[1]").Attributes["href"].Value;
-                            title = item.SelectSingleNode("child::div[1]/div[3]/span[1]/a[1]").InnerText;
-                            times = item.SelectSingleNode("child::div[1]/div[1]/div[2]/div[1]/var[@class=\"duration\"]").InnerText;
+                            node = item.SelectSingleNode("child::div[1]/div[1]/div[2]/a[1]");
+                            if (node != null)
+                            {
+                                detailUrl = Domain + node.Attributes["href"].Value;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                            node = item.SelectSingleNode("child::div[1]/div[3]/span[1]/a[1]");
+                            if (node != null)
+                            {
+                                title = node.InnerText;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                            node = item.SelectSingleNode("child::div[1]/div[1]/div[2]/div[1]/var[@class=\"duration\"]");
+                            if (node != null)
+                            {
+                                times = node.InnerText;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
 
                             //小说对象
                             VideoInfo vInfo = new VideoInfo();
@@ -308,6 +335,8 @@ namespace Spider.Main.Core
                             vInfo.v_timeLength = times;
                             vInfo.v_titile = title;
                             vInfo.v_status = (int)SiteEnum.VideoStatus.有效;
+                            vInfo.v_coverImgSrc = string.Empty;
+                            vInfo.v_playSrc = string.Empty;
 
                             if (_currentCateInfo != null)
                             {

@@ -181,7 +181,7 @@ namespace Spider.Main.Core
         {
             foreach (KeyValuePair<string, string> item in urlDic)
             {
-                if (item.Key == "Celebrity")
+                if (item.Key == "Japanese")
                 {
                     GetListByCate(item.Key, item.Value);
                     break;

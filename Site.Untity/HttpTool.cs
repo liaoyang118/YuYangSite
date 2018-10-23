@@ -205,7 +205,7 @@ namespace Site.Untity
                 });
             }
 
-            client.Timeout = TimeSpan.FromSeconds(40);
+            client.Timeout = TimeSpan.FromSeconds(180);
             client.DefaultRequestHeaders.Add("Accept", _accept);
             client.DefaultRequestHeaders.Add("Accept-Language", _acceptLanguage);
             client.DefaultRequestHeaders.Add("Accept-Encoding", _acceptEncoding);
