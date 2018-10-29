@@ -83,8 +83,8 @@
     </Compile>
     <Compile Include="T4\SQLServer_Model1.cs">
       <DependentUpon>SQLServer_Model.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="T4\SQLServer_Service.cs">
       <DependentUpon>SQLServer_Service.tt</DependentUpon>

@@ -849,6 +849,20 @@ namespace Site.Videos.DataAccess.Model
 		}
 		#endregion
 		
+		#region v_totalSecond
+		private int? _v_totalSecond;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public int? v_totalSecond 
+		{ 
+			get { return _v_totalSecond; } 
+			set { _v_totalSecond = value; } 
+		
+		}
+		#endregion
+		
     }
 	
 }

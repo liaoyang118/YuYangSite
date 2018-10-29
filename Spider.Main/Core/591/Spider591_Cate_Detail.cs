@@ -279,13 +279,19 @@ namespace Spider.Main.Core
                             {
                                 #region 下载网络视频到本地，生成本地路径
                                 string error;
-                                List<string> videoAndImageSrc = web.CaptureRemoteVedio(videoSrc, out error, "VideoUpload", percent =>
-                                {
-                                    main.WriteNotifyLog(string.Format("{0}:分类【{1}】,591视频【{2}】获取进度：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, percent));
-                                });
+                                //List<string> videoAndImageSrc = web.CaptureRemoteVedio(videoSrc, out error, "VideoUpload", percent =>
+                                //{
+                                //    main.WriteNotifyLog(string.Format("{0}:分类【{1}】,591视频【{2}】获取进度：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, percent));
+                                //});
+                                List<string> videoAndImageSrc = web.CaptureRemoteVedioByThunder(videoSrc, fInfo.v_titile, fInfo.v_totalSecond.Value, out error, "VideoUpload", (total, state) =>
+                                 {
+                                     main.WriteNotifyLog(string.Format("{0}:分类【{1}】,591视频【{2}】大小：【{3}】，状态【{4}】", LogTaskHead, _currentCateName, fInfo.v_titile, total, state));
+                                 });
+
+
                                 if (videoAndImageSrc.Count == 0)
                                 {
-                                    main.WriteErrorLog(string.Format("{0}:分类【{1}】,591视频【{2}】获取封面出错：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, error));
+                                    main.WriteErrorLog(string.Format("{0}:分类【{1}】,591视频【{2}】下载视频出错：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, error));
                                 }
                                 else
                                 {
@@ -299,7 +305,7 @@ namespace Spider.Main.Core
                                         fInfo.v_coverImgSrc = videoAndImageSrc[1];
                                     }
 
-                                    main.WriteSuccessLog(string.Format("{0}:分类【{1}】,591视频【{2}】获取视频成功：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, videoAndImageSrc[0]));
+                                    main.WriteSuccessLog(string.Format("{0}:分类【{1}】,591视频【{2}】下载视频成功：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, videoAndImageSrc[0]));
                                 }
                                 #endregion
                             }
@@ -316,8 +322,11 @@ namespace Spider.Main.Core
                     }
                     else
                     {
-                        //插入
-                        identityId = VideoInfoService.Insert(fInfo).ToString();
+                        if (!string.IsNullOrEmpty(fInfo.v_coverImgSrc))
+                        {
+                            //插入
+                            identityId = VideoInfoService.Insert(fInfo).ToString();
+                        }
                     }
                 }
                 else

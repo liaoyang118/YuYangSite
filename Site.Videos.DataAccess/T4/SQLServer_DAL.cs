@@ -1978,6 +1978,7 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@v_timeLength", DbType.String,obj.v_timeLength);
 			db.AddInParameter(dbCmd, "@v_createTime", DbType.DateTime,obj.v_createTime);
 			db.AddInParameter(dbCmd, "@v_status", DbType.Int32,obj.v_status);
+			db.AddInParameter(dbCmd, "@v_totalSecond", DbType.Int32,obj.v_totalSecond);
 						
 				int returnValue = db.ExecuteNonQuery(dbCmd);
 				int Id = (int)dbCmd.Parameters["@Id"].Value;
@@ -2027,6 +2028,7 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@v_timeLength", DbType.String,obj.v_timeLength);
 			db.AddInParameter(dbCmd, "@v_createTime", DbType.DateTime,obj.v_createTime);
 			db.AddInParameter(dbCmd, "@v_status", DbType.Int32,obj.v_status);
+			db.AddInParameter(dbCmd, "@v_totalSecond", DbType.Int32,obj.v_totalSecond);
 			
 			
 				int returnValue = db.ExecuteNonQuery(dbCmd);
@@ -2153,6 +2155,7 @@ namespace Site.Videos.DataAccess.Access
 				obj.v_timeLength = reader["v_timeLength"] == DBNull.Value ? default(string) : (string)reader["v_timeLength"];
 				obj.v_createTime = reader["v_createTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["v_createTime"];
 				obj.v_status = reader["v_status"] == DBNull.Value ? default(int) : (int)reader["v_status"];
+				obj.v_totalSecond = reader["v_totalSecond"] == DBNull.Value ? default(int) : (int)reader["v_totalSecond"];
 				
             }
             catch(Exception ex)

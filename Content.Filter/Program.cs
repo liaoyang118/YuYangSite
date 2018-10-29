@@ -109,7 +109,7 @@ namespace Content.Filter
                 HttpClientHelp web = new HttpClientHelp();
                 string error;
 
-                string imageSrc = "http://localhost:8900/mp4/test3.mp4";
+                string imageSrc = "http://localhost:8900/mp4/test4.mp4";
                 //string coverImageSrc = web.CaptureRemoteVedio(imageSrc, out error);
 
                 List<string> videoServerSrc = web.CaptureRemoteVedio(imageSrc, out error, "VideoUpload", percent =>

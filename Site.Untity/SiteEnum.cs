@@ -60,6 +60,14 @@ namespace Site.Untity
             有效 = 1
         }
 
+        public enum VideoDownloadStatus
+        {
+            任务创建中 = 0,
+            任务执行中 = 1,
+            任务结束 = 2,
+            任务中断 = 3
+        }
+
 
         #endregion
     }

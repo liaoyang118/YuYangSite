@@ -319,15 +319,37 @@ namespace Spider.Main.Core
                             node = item.SelectSingleNode("child::div[1]/div[1]/div[2]/div[1]/var[@class=\"duration\"]");
                             if (node != null)
                             {
-                                times = node.InnerText;
+                                times = node.InnerText.Trim(' ');
                             }
                             else
                             {
                                 continue;
                             }
 
+                            //时长小于 10min 的跳过
+                            string[] secends = times.Split(new[] { ":", "：" }, StringSplitOptions.RemoveEmptyEntries);
+                            int totalSecends = 0;
+                            int index = 0;
+                            foreach (string ss in secends)
+                            {
+                                if (index == 0)
+                                {
+                                    totalSecends += ss.ToInt32(0) * 60;
+                                }
+                                else
+                                {
+                                    totalSecends += ss.ToInt32(0);
+                                }
 
-                            //小说对象
+                                index++;
+                            }
+                            int limitSecend = UntityTool.GetConfigValue("LimitSecend").ToInt32(600);
+                            if (totalSecends < limitSecend)
+                            {
+                                continue;
+                            }
+
+                            //抓取对象
                             VideoInfo vInfo = new VideoInfo();
                             vInfo.v_createTime = DateTime.Now;
                             vInfo.v_id = UntityTool.GetGUID();
@@ -337,6 +359,7 @@ namespace Spider.Main.Core
                             vInfo.v_status = (int)SiteEnum.VideoStatus.有效;
                             vInfo.v_coverImgSrc = string.Empty;
                             vInfo.v_playSrc = string.Empty;
+                            vInfo.v_totalSecond = totalSecends;
 
                             if (_currentCateInfo != null)
                             {

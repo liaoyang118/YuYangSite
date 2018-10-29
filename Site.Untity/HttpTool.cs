@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Site.FFmpeg;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using static Site.Untity.SiteEnum;
 
 namespace Site.Untity
 {
@@ -64,7 +66,7 @@ namespace Site.Untity
             return result;
 
         }
-        
+
 
         /// <summary>
         /// 抓取远程视频，调用WCF存储在视频服务器
@@ -105,7 +107,6 @@ namespace Site.Untity
                 try
                 {
                     var stream = response.GetResponseStream();
-                    //var reader = new BinaryReader(stream);
                     byte[] bytes;
                     int totalCount = (int)response.ContentLength;
                     int offset = 0;
@@ -113,7 +114,10 @@ namespace Site.Untity
 
                     string currentMb = "0.00";
                     string totalMb = (totalCount * 1.00m / (1024 * 1024 * 1.00m)).ToString("#0.00");
-
+                    if ((totalCount * 1.00m / (1024 * 1024 * 1.00m)) < 400.00m)
+                    {
+                        return new List<string>();
+                    }
                     using (var ms = new MemoryStream())
                     {
                         byte[] buffer = new byte[totalCount];
@@ -152,6 +156,72 @@ namespace Site.Untity
             return urlResult;
 
         }
+
+        /// <summary>
+        /// 迅雷下载远程视频，将本地目录替换为网络目录
+        /// </summary>
+        /// <param name="vedioUrl"></param>
+        /// <param name="error"></param>
+        /// <param name="uploadConfigName"></param>
+        /// <param name="action"></param>
+        /// <returns>[0]视频地址，[1]视频截图地址 [2]...[3]... </returns>
+
+        public List<string> CaptureRemoteVedioByThunder(string videoUrl, string videoName, int totalSecond, out string error, string uploadConfigName = "VideoUpload", Action<string, string> action = null)
+        {
+            error = string.Empty;
+            List<string> urlResult = new List<string>();
+
+            try
+            {
+                #region 01 ThunderComLib 下载，只能下载，不能获取到下载的任务信息
+
+                //物理实际路径
+                string thunderPath = UntityTool.GetConfigValue("ThunderDownLoadPath");
+                string yyyy = DateTime.Now.ToString("yyyy/MM/dd");
+                string virtualWcfPath = string.Format("{0}{1}/", thunderPath, yyyy).Replace("/", "\\");
+
+                //网络路径
+                string saveFileName = UntityTool.Md5_32(videoName);
+                string fileNameAndExt = string.Format("{0}.mp4", saveFileName);
+                string domain = UntityTool.GetConfigValue("vDomain");
+                string netSrc = string.Format("{0}{1}/{2}", domain, yyyy, fileNameAndExt);
+
+                ThunderComLib engine = new ThunderComLib();
+                engine.AddTask(videoUrl, fileNameAndExt, virtualWcfPath); //格式 F:\迅雷下载\
+                //查询任务
+                VideoDownloadStatus status = VideoDownloadStatus.任务创建中;
+                do
+                {
+                    status = engine.DetectorDownloadProgress(saveFileName, "mp4", virtualWcfPath, action);
+                } while (status != VideoDownloadStatus.任务结束 && status != VideoDownloadStatus.任务中断);
+                #endregion
+
+                if (status == VideoDownloadStatus.任务结束)
+                {
+
+                    //生成截图
+                    FFmpegTool tool = new FFmpegTool();
+                    //绝对路径
+                    string thumbImgPhySrc = tool.CatchImg(virtualWcfPath + fileNameAndExt, ".mp4", "140*180", totalSecond, System.AppDomain.CurrentDomain.BaseDirectory + @"\\ffmpeg\\ffmpeg.exe");
+                    //网络路径
+                    string imgSrc = thumbImgPhySrc.Replace(thunderPath, domain).Replace("\\", "/"); ;
+
+                    //资源地址
+                    urlResult.Add(netSrc);
+                    urlResult.Add(imgSrc);
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                error = "抓取错误：" + e.Message;
+            }
+
+            return urlResult;
+
+        }
+
     }
 
     public class HttpClientHelp : HttpBase

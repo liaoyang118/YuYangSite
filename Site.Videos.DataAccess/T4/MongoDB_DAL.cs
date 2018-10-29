@@ -1629,7 +1629,7 @@ namespace Site.Videos.DataAccess.Access
 			{ 
 				IMongoCollection<Mongo_VideoInfo> collection = Database.GetCollection<Mongo_VideoInfo>(DataTableName);
 				
-				UpdateResult result= collection.UpdateOne<Mongo_VideoInfo>(filter,Builders<Mongo_VideoInfo>.Update.Set("Id",obj.Id).Set("v_id",obj.v_id).Set("v_c_id",obj.v_c_id).Set("v_c_name",obj.v_c_name).Set("v_titile",obj.v_titile).Set("v_intro",obj.v_intro).Set("v_coverImgSrc",obj.v_coverImgSrc).Set("v_playSrc",obj.v_playSrc).Set("v_timeLength",obj.v_timeLength).Set("v_createTime",obj.v_createTime).Set("v_status",obj.v_status));
+				UpdateResult result= collection.UpdateOne<Mongo_VideoInfo>(filter,Builders<Mongo_VideoInfo>.Update.Set("Id",obj.Id).Set("v_id",obj.v_id).Set("v_c_id",obj.v_c_id).Set("v_c_name",obj.v_c_name).Set("v_titile",obj.v_titile).Set("v_intro",obj.v_intro).Set("v_coverImgSrc",obj.v_coverImgSrc).Set("v_playSrc",obj.v_playSrc).Set("v_timeLength",obj.v_timeLength).Set("v_createTime",obj.v_createTime).Set("v_status",obj.v_status).Set("v_totalSecond",obj.v_totalSecond));
 				int returnValue = (int)result.ModifiedCount;
                 return returnValue;
 			}
