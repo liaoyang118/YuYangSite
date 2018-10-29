@@ -45,6 +45,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Channels" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Entity.cs" />
     <Compile Include="ExtendTool.cs" />
+    <Compile Include="FFmpegTool.cs" />
     <Compile Include="HttpTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteEnum.cs" />
@@ -81,12 +83,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\YYCMS\Site.FFmpeg\Site.FFmpeg.csproj">
-      <Project>{24a2b4cc-7574-4dc7-8a79-78dca5f93d00}</Project>
-      <Name>Site.FFmpeg</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

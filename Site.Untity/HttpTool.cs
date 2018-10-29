@@ -1,5 +1,4 @@
-﻿using Site.FFmpeg;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Site.Untity.SiteEnum;
 
@@ -412,6 +412,11 @@ namespace Site.Untity
                 throw new Exception("Http网络请求：" + ex.Message);
             }
         }
+
+
+
+
+
         #endregion
 
     }
@@ -471,6 +476,11 @@ namespace Site.Untity
                 request.Method = "GET";
                 request.ContentType = "text/html;charset=UTF-8";
                 request.Timeout = 1000 * 40;//超时时间 40秒
+                request.Accept = "text/html, application/xhtml+xml, image/jxr, */*";
+                request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36";
+                request.KeepAlive = true;
+                request.Headers.Add("Accept-Encoding", "gzip, deflate");
+
 
                 string retString = string.Empty;
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -485,11 +495,14 @@ namespace Site.Untity
                 }
                 else
                 {
-                    Stream myResponseStream = response.GetResponseStream();
-                    StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.Default);
-                    retString = myStreamReader.ReadToEnd();
-                    myStreamReader.Close();
-                    myResponseStream.Close();
+                    //Stream myResponseStream = response.GetResponseStream();
+                    //StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.Default);
+                    //retString = myStreamReader.ReadToEnd();
+                    //myStreamReader.Close();
+                    //myResponseStream.Close();
+
+                    retString = GetHtml(response);
+
                 }
                 return retString;
             }
@@ -497,6 +510,59 @@ namespace Site.Untity
             {
                 throw new Exception("Http网络请求：" + ex.Message);
             }
+        }
+
+
+
+        /// <summary>
+        /// 解析响应报文内容
+        /// </summary>
+        /// <param name="webResponse"></param>
+        /// <returns></returns>
+        public string GetHtml(HttpWebResponse webResponse)
+        {
+
+            string htmlCode = string.Empty;
+            //获取目标网站的编码格式
+            string contentype = webResponse.Headers["Content-Type"];
+            Regex regex = new Regex("charset\\s*=\\s*[\\W]?\\s*([\\w-]+)", RegexOptions.IgnoreCase);
+            if (webResponse.ContentEncoding.ToLower() == "gzip")//如果使用了GZip则先解压
+            {
+                using (System.IO.Stream streamReceive = webResponse.GetResponseStream())
+                {
+                    using (var zipStream = new System.IO.Compression.GZipStream(streamReceive, System.IO.Compression.CompressionMode.Decompress))
+                    {
+
+                        //匹配编码格式
+                        if (regex.IsMatch(contentype))
+                        {
+                            Encoding ending = Encoding.GetEncoding(regex.Match(contentype).Groups[1].Value.Trim());
+                            using (StreamReader sr = new System.IO.StreamReader(zipStream, ending))
+                            {
+                                htmlCode = sr.ReadToEnd();
+                            }
+                        }
+                        else
+                        {
+                            using (StreamReader sr = new System.IO.StreamReader(zipStream, Encoding.UTF8))
+                            {
+                                htmlCode = sr.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (System.IO.Stream streamReceive = webResponse.GetResponseStream())
+                {
+                    using (System.IO.StreamReader sr = new System.IO.StreamReader(streamReceive, Encoding.Default))
+                    {
+                        htmlCode = sr.ReadToEnd();
+                    }
+                }
+            }
+            return htmlCode;
         }
 
 

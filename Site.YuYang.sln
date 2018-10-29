@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site.Videos.DataAccess", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spider.Main", "Spider.Main\Spider.Main.csproj", "{C248F729-BDDC-4C58-995A-E1ADCCA2289A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site.FFmpeg", "..\YYCMS\Site.FFmpeg\Site.FFmpeg.csproj", "{24A2B4CC-7574-4DC7-8A79-78DCA5F93D00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site.Video.Web", "Site.Video.Web\Site.Video.Web.csproj", "{5D5E18AE-8E45-4246-9346-0B4FB823450D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,10 +99,10 @@ Global
 		{C248F729-BDDC-4C58-995A-E1ADCCA2289A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C248F729-BDDC-4C58-995A-E1ADCCA2289A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C248F729-BDDC-4C58-995A-E1ADCCA2289A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24A2B4CC-7574-4DC7-8A79-78DCA5F93D00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24A2B4CC-7574-4DC7-8A79-78DCA5F93D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24A2B4CC-7574-4DC7-8A79-78DCA5F93D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24A2B4CC-7574-4DC7-8A79-78DCA5F93D00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D5E18AE-8E45-4246-9346-0B4FB823450D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5E18AE-8E45-4246-9346-0B4FB823450D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5E18AE-8E45-4246-9346-0B4FB823450D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5E18AE-8E45-4246-9346-0B4FB823450D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,10 +121,10 @@ Global
 		{E0D87D61-9944-4472-A396-7B57925F851D} = {309E919B-41CB-4BF6-B6AD-468A6924B25C}
 		{129A6802-0674-4AB9-8DF5-0342BF894B63} = {9A21D526-9D8F-4FF6-B90F-688B5AC83301}
 		{C248F729-BDDC-4C58-995A-E1ADCCA2289A} = {3EA8426B-C8C7-4E2D-90DB-4D5770F3C748}
-		{24A2B4CC-7574-4DC7-8A79-78DCA5F93D00} = {5FA091BE-CA05-47B8-B26F-7031FFB89860}
+		{5D5E18AE-8E45-4246-9346-0B4FB823450D} = {309E919B-41CB-4BF6-B6AD-468A6924B25C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A9A73CCA-15F6-4AEF-A87C-87E1595006DD}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+		SolutionGuid = {A9A73CCA-15F6-4AEF-A87C-87E1595006DD}
 	EndGlobalSection
 EndGlobal

@@ -277,8 +277,8 @@ namespace Spider.Main.Core
             try
             {
                 string pageUrl = string.Format(_pageFormat, pageIndex);
-                HttpClientHelp web = new HttpClientHelp();
-                string result = web.Get(pageUrl);
+                WebRequestHelp web = new WebRequestHelp();
+                string result = web.WebRequestHttpGet(pageUrl);
 
                 //获取数据列表
 
