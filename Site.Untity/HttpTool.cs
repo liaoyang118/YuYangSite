@@ -177,6 +177,7 @@ namespace Site.Untity
 
                 //物理实际路径
                 string thunderPath = UntityTool.GetConfigValue("ThunderDownLoadPath");
+                string thumSize = UntityTool.GetConfigValue("ThumSize");//缩略图尺寸 355*200
                 string yyyy = DateTime.Now.ToString("yyyy/MM/dd");
                 string virtualWcfPath = string.Format("{0}{1}/", thunderPath, yyyy).Replace("/", "\\");
 
@@ -184,10 +185,17 @@ namespace Site.Untity
                 string saveFileName = UntityTool.Md5_32(videoName);
                 string fileNameAndExt = string.Format("{0}.mp4", saveFileName);
                 string domain = UntityTool.GetConfigValue("vDomain");
-                string netSrc = string.Format("{0}{1}/{2}", domain, yyyy, fileNameAndExt);
+
 
                 ThunderComLib engine = new ThunderComLib();
                 engine.AddTask(videoUrl, fileNameAndExt, virtualWcfPath); //格式 F:\迅雷下载\
+                int waitSecond = 5;
+                if (!Directory.Exists(virtualWcfPath))
+                {
+                    waitSecond = 15;
+                }
+                //系统等待5秒钟，初次任务创建任务时，比较慢
+                System.Threading.Thread.Sleep(1000 * waitSecond);
                 //查询任务
                 VideoDownloadStatus status = VideoDownloadStatus.任务创建中;
                 do
@@ -198,17 +206,29 @@ namespace Site.Untity
 
                 if (status == VideoDownloadStatus.任务结束)
                 {
-
                     //生成截图
                     FFmpegTool tool = new FFmpegTool();
-                    //绝对路径
-                    string thumbImgPhySrc = tool.CatchImg(virtualWcfPath + fileNameAndExt, ".mp4", "140*180", totalSecond, System.AppDomain.CurrentDomain.BaseDirectory + @"\\ffmpeg\\ffmpeg.exe");
-                    //网络路径
-                    string imgSrc = thumbImgPhySrc.Replace(thunderPath, domain).Replace("\\", "/"); ;
+
+                    string sourcePath = virtualWcfPath + fileNameAndExt;
+                    string configPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\\ffmpeg\\ffmpeg.exe";
+                    //剪切
+                    tool.ShearVideo(ref sourcePath, ".mp4", totalSecond, configPath);
+
+                    //截图绝对路径                    
+                    string thumSrc = tool.CatchImg(sourcePath, ".mp4", thumSize, totalSecond, System.AppDomain.CurrentDomain.BaseDirectory + @"\\ffmpeg\\ffmpeg.exe");
+
+                    //图片网络路径
+                    string videoSrc = sourcePath.Replace(thunderPath, domain).Replace("\\", "/");
+                    string imgSrc = thumSrc.Replace(thunderPath, domain).Replace("\\", "/");
 
                     //资源地址
-                    urlResult.Add(netSrc);
+                    urlResult.Add(videoSrc);
                     urlResult.Add(imgSrc);
+
+                    if (File.Exists(virtualWcfPath + fileNameAndExt))
+                    {
+                        File.Delete(virtualWcfPath + fileNameAndExt);
+                    }
 
                 }
 
