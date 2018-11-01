@@ -108,6 +108,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 AdvertisingInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<AdvertisingInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -236,6 +242,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 ComboInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<ComboInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -364,6 +376,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 NoticeInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<NoticeInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -492,6 +510,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 RechargeRecoder_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<RechargeRecoder> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -620,6 +644,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 UserInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<UserInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -748,6 +778,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 UserVisitsInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<UserVisitsInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -876,6 +912,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 VideoCate_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<VideoCate> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try
@@ -1004,6 +1046,12 @@ namespace Site.Videos.DataAccess.Service
 		#endregion
 
 		#region 06 VideoInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public static IList<VideoInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
 		 {
 			 try

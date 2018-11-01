@@ -1,4 +1,6 @@
 ﻿
+using Site.Videos.DataAccess.Model;
+using Site.Videos.DataAccess.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,10 @@ namespace Site.Video.Web.Controllers
     {
         public ActionResult Index()
         {
+            int rowCount;
+            List<VideoInfo> infos = VideoInfoService.SelectPage("*", "", "", 1, 10, out rowCount).ToList();
+
+            ViewData["list"] = infos;
             return View();
         }
 

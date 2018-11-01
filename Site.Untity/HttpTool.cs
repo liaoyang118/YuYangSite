@@ -200,6 +200,7 @@ namespace Site.Untity
                 VideoDownloadStatus status = VideoDownloadStatus.任务创建中;
                 do
                 {
+                    System.Threading.Thread.Sleep(500);//防止主界面假死
                     status = engine.DetectorDownloadProgress(saveFileName, "mp4", virtualWcfPath, action);
                 } while (status != VideoDownloadStatus.任务结束 && status != VideoDownloadStatus.任务中断);
                 #endregion

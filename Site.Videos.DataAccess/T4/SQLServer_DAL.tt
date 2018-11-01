@@ -339,6 +339,12 @@ namespace <#= DataAccessNamespaceStr #>
 		#endregion
 
 		#region 06 Proc_<#=table.TableName#>_SelectPage
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
 		 public override IList<<#=table.TableName#>> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, <#= isPartialTable?"int tableIndex,":"" #>out int rowCount)
 		 {
 			try

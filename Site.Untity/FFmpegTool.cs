@@ -43,6 +43,8 @@ namespace Site.Untity
             {
                 System.Diagnostics.Process process = System.Diagnostics.Process.Start(ImgstartInfo);
                 process.WaitForExit();
+
+                CloseFFmpegProcess();
             }
             catch (Exception e)
             {
@@ -90,6 +92,7 @@ namespace Site.Untity
             {
                 System.Diagnostics.Process process = System.Diagnostics.Process.Start(ImgstartInfo);
                 process.WaitForExit();
+                CloseFFmpegProcess();
             }
             catch (Exception e)
             {
@@ -99,6 +102,25 @@ namespace Site.Untity
             sourcePath = newVideoPath;
 
         }
+
+
+        /// <summary>
+        /// 关闭ffmpeg进程
+        /// </summary>
+        public void CloseFFmpegProcess()
+        {
+            System.Diagnostics.Process[] proc = System.Diagnostics.Process.GetProcessesByName("ffmpeg");
+            if (proc != null)
+            {
+                foreach (var item in proc)
+                {
+                    item.Kill();
+                }
+            }
+        }
+
+
+
     }
 
 }
