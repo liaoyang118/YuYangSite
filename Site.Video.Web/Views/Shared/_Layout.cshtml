@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Site.Video.Web.Tools;
+@using Site.Untity;
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -8,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title - @UntityTool.GetConfigValue("SiteName")</title>
     <!-- Bootstrap Core CSS -->
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
@@ -28,21 +30,30 @@
     <!-- Core JavaScript Files -->
     <script src="~/Scripts/bootstrap.min.js"></script>
 
+    @RenderSection("head", false)
+
 </head>
 <body>
     <header>
-        <!--Top-->
-        <nav id="top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 col-sm-12">
-                        <ul class="list-inline top-link link">
-                            <li><a href="#"><i class="fa fa fa-user-circle-o"></i> 当前用户</a></li>
-                        </ul>
+        @{
+            if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                <!--Top-->
+                <nav id="top">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <ul class="list-inline top-link link">
+                                    <li><a href="javascript:void(0);"><i class="fa fa fa-user-circle-o"></i> @User.Identity.Name</a></li>
+                                    <li><a href="/Account/LoginOut"><i class="fa fa fa-sign-out"></i>注销</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </nav>
+                </nav>
+            }
+
+        }
 
         <!--Navigation-->
         <nav id="menu" class="navbar">
@@ -53,16 +64,16 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html"><i class="fa fa-home"></i> Home</a></li>                       
-                        <li><a href="archive.html"><i class="fa fa-video-camera"></i> Videos</a></li>
-                        <li><a href="contact.html"><i class="fa fa-picture-o"></i> Gifs</a></li>
+                        <li><a href="index.html"><i class="fa fa-home"></i> 推荐</a></li>
+                        <li><a href="archive.html"><i class="fa fa-video-camera"></i> 正片</a></li>
+                        <li><a href="contact.html"><i class="fa fa-picture-o"></i> 动图</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-        @RenderSection("head_recoment",false)
+        @RenderSection("head_recoment", false)
     </header>
-    
+
     <!-- body -->
     @RenderBody()
 

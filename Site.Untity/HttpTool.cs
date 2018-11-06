@@ -173,7 +173,7 @@ namespace Site.Untity
 
             try
             {
-                #region 01 ThunderComLib 下载，只能下载，不能获取到下载的任务信息
+                #region 01 ThunderComLib 下载，只能下载，不能直接获取到下载的任务信息
 
                 //物理实际路径
                 string thunderPath = UntityTool.GetConfigValue("ThunderDownLoadPath");

@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = ViewBag.CateName;
+}
+@using Site.Videos.DataAccess.Model;
+@using Site.Untity;
+@{
+
+    IList<VideoInfo> list = ViewBag.list;
+
+    int pageIndex = ViewBag.pageIndex;
+    int pageSize = ViewBag.pageSize;
+    int rowCount = ViewBag.rowCount;
+}
+
+<div id="page-content" class="archive-page">
+
+    <div class="container">
+        <div class="row">
+            <div id="main-content" class="col-md-8">
+                @{
+                    if (list != null && list.Count > 0)
+                    {
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            <div style="text-align: center;">
+                                <article style="display:inline-block;">
+                                    <a href="#"><h2 class="vid-name" style="max-width:350px;">@list[i].v_titile.SubOmitString(15)</h2></a>
+                                    <div class="info">
+                                        <span><i class="fa fa-calendar"></i>@list[i].v_createTime.Value.ToStringFullDate()</span>
+                                    </div>
+                                    <div class="wrap-vid">
+                                        <div class="zoom-container" style="max-width:350px;">
+                                            <div class="zoom-caption">
+                                                <span>@list[i].v_timeLength</span>
+                                                <a href="single.html">
+                                                    <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
+                                                </a>
+                                                <p>@list[i].v_titile.SubOmitString(15)</p>
+                                            </div>
+                                            <img src="@list[i].v_coverImgSrc">
+                                        </div>
+                                    </div>
+                                </article>
+                                
+                                @{
+                                    i++;
+                                    if ((i) < list.Count)
+                                    {
+                                        <article style="display:inline-block;">
+                                            <a href="#"><h2 class="vid-name" style="max-width:350px;">@list[i].v_titile.SubOmitString(15)</h2></a>
+                                            <div class="info">
+                                                <span><i class="fa fa-calendar"></i>@list[i].v_createTime.Value.ToStringFullDate()</span>
+                                            </div>
+                                            <div class="wrap-vid">
+                                                <div class="zoom-container" style="max-width:350px;">
+                                                    <div class="zoom-caption">
+                                                        <span>@list[i].v_timeLength</span>
+                                                        <a href="single.html">
+                                                            <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
+                                                        </a>
+                                                        <p>@list[i].v_titile.SubOmitString(15)</p>
+                                                    </div>
+                                                    <img src="@list[i].v_coverImgSrc">
+                                                </div>
+                                            </div>
+                                        </article>
+                                    }
+                                }
+                                <div class="line"></div>
+                            </div>
+                        }
+                    }
+                }
+
+                <center>
+                    <ul class="pagination">
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    </ul>
+                </center>
+            </div>
+            @{
+                Html.RenderPartial("../Sidebar/Common_SideBar");
+            }
+        </div>
+    </div>
+
+</div>

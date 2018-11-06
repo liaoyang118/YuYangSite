@@ -8,6 +8,7 @@ namespace Site.Untity
 {
     public class SiteEnum
     {
+        #region 小说
         /// <summary>
         /// 小说分类
         /// </summary>
@@ -39,7 +40,7 @@ namespace Site.Untity
             未处理 = 0,
             已处理 = 1
         }
-
+        #endregion
 
         #region 汽车
 
@@ -68,6 +69,20 @@ namespace Site.Untity
             任务中断 = 3
         }
 
+
+        public enum AccountState
+        {
+            无效 = 0,
+            正常 = 1
+        }
+
+        public enum AccountLevel
+        {
+            普通用户 = 0,
+            周用户 = 1,
+            月用户 = 2,
+            年用户 = 3
+        }
 
         #endregion
     }

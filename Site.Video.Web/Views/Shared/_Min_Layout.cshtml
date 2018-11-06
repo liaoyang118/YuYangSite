@@ -1,0 +1,103 @@
+﻿@using Site.Video.Web.Tools;
+@using Site.Untity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>@ViewBag.Title - @UntityTool.GetConfigValue("SiteName")</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link href="~/Content/style.css" rel="stylesheet" />
+
+    <!-- Owl Carousel Assets -->
+    <link href="~/Content/owl.carousel.css" rel="stylesheet" />
+    <link href="~/Content/owl.theme.css" rel="stylesheet" />
+
+    <!-- Custom Fonts -->
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery-2.1.1.js"></script>
+
+    <!-- Core JavaScript Files -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    @RenderSection("head", false)
+
+</head>
+<body>
+    <header>
+        @{
+            if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                <!--Top-->
+                <nav id="top">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <ul class="list-inline top-link link">
+                                    <li><a href="javascript:void(0);"><i class="fa fa fa-user-circle-o"></i> @User.Identity.Name</a></li>
+                                    <li><a href="/Account/LoginOut"><i class="fa fa fa-sign-out"></i>注销</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            }
+
+        }
+
+        <!--Navigation-->
+        <nav id="menu" class="navbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <span id="heading" class="visible-xs">Categories</span>
+                    <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="index.html"><i class="fa fa-home"></i> 试看</a></li>
+                        <li><a href="archive.html"><i class="fa fa-video-camera"></i> 正片</a></li>
+                        <li><a href="contact.html"><i class="fa fa-picture-o"></i> 动图</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        @RenderSection("head_recoment", false)
+    </header>
+
+    <!-- body -->
+    @RenderBody()
+
+    <footer>
+        <div class="top-footer">
+            <ul class="footer-social list-inline">
+                <li><a href="javascript:return false;"><i class="fa fa-volume-up"></i> <span>提示：想要观看完整视频，请开通Vip会员！</span></a></li>
+            </ul>
+        </div>
+    </footer>
+    <!-- Footer -->
+    <!-- JS -->
+    <script src="~/Scripts/owl.carousel.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#owl-demo").owlCarousel({
+                autoPlay: 3000,
+                items: 5,
+                itemsDesktop: [1199, 4],
+                itemsDesktopSmall: [979, 4]
+            });
+
+        });
+    </script>
+
+</body>
+</html>

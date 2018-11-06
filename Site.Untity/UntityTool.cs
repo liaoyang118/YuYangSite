@@ -163,6 +163,8 @@ namespace Site.Untity
             return dt;
         }
 
+        #region 小说生成链接
+
 
         /// <summary>
         /// 生成分类列表分页Dome
@@ -453,6 +455,153 @@ namespace Site.Untity
 
         #endregion
 
+        #endregion
+
+        #region 591生成链接
+        public static string Create591ListPage(int interval, int pageSize, int pageIndex, int rowCount, string urlBase)
+        {
+            /*
+              <ul class="pagination">
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    </ul>
+            */
+            string result = string.Empty;
+
+            string pageHtml = "<ul class=\"pagination\">{0}</ul>";
+            string a_url = string.Empty;
+            int totalPage = (int)Math.Ceiling(rowCount * 1.00 / pageSize * 1.00);
+            if (totalPage > 1)
+            {
+                if (pageIndex != 1)
+                {
+                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\">首页</a></li>\r\n", GetListUrl(1, urlBase));
+                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span></a></li>\r\n", GetListUrl(pageIndex - 1, urlBase));
+                }
+                //页码条中间的间隔
+                int barInteval = interval;
+                int defaulStart = 1, defaultEnd = barInteval;
+                //生成页码条的 起始位置---间隔页位置
+                if (pageIndex % barInteval == 0)
+                {
+                    defaulStart = pageIndex - barInteval + 1;
+                    defaultEnd = pageIndex + barInteval;
+
+                    if (defaultEnd > totalPage)
+                    {
+                        defaultEnd = totalPage;
+                    }
+                }
+                //首页时
+                else if (pageIndex == 1)
+                {
+                    //判断总页数是否 大于 页码间隔
+                    if (totalPage > barInteval)
+                    {
+                        defaulStart = pageIndex;
+                        defaultEnd = pageIndex + barInteval - 1;
+                    }
+                    else
+                    {
+                        defaultEnd = totalPage;
+                    }
+                }
+                //尾页时
+                else if (pageIndex == totalPage)
+                {
+
+                    //判断总页数是否 大于 页码间隔
+                    if (totalPage > barInteval)
+                    {
+                        defaulStart = pageIndex - barInteval;
+                        defaultEnd = totalPage;
+                    }
+                    else
+                    {
+                        defaulStart = 1;
+                        defaultEnd = totalPage;
+                    }
+                }
+
+                //中间页时
+                else
+                {
+                    //判断总页数是否 大于 页码间隔
+                    if (totalPage > barInteval)
+                    {
+                        defaulStart = pageIndex - barInteval;
+                        if (defaulStart < 0)
+                        {
+                            defaulStart = 1;
+                        }
+                        defaultEnd = pageIndex + barInteval - 1;
+                    }
+                    else
+                    {
+                        defaultEnd = totalPage;
+                    }
+                }
+
+
+                //生成中间的页码条
+                for (int i = defaulStart; i <= defaultEnd; i++)
+                {
+                    a_url += string.Format("<li class=\"{2}\"><a href=\"{0}\">{1}</a></li>\r\n", Get591ListUrl(i, urlBase), i, i == pageIndex ? "active" : "");
+                }
+
+                if (pageIndex != totalPage)
+                {
+                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\"  aria-label=\"Next\" ><span aria-hidden=\"true\">»</span></a></li>\r\n", Get591ListUrl(pageIndex + 1, urlBase));
+                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\">尾页</a></li>\r\n", Get591ListUrl(totalPage, urlBase));
+                }
+
+                result = string.Format(pageHtml, a_url);
+            }
+
+            return result;
+        }
+
+        private static string Get591ListUrl(int current, string url)
+        {
+            string result = string.Empty;
+            if (url.Contains("?"))
+            {
+                result = url + "&page=" + current;
+            }
+            else
+            {
+                result = url + "?page=" + current;
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// 生成详情页URL
+        /// </summary>
+        /// <param name="c_id">分类</param>
+        /// <param name="v_gid">唯一ID</param>
+        /// <returns></returns>
+        public static string Generate591DetailUrl(int c_id, string v_gid)
+        {
+            return string.Format("http://{0}/Detail/{1}/{2}.html", domain, c_id, v_gid);
+        }
+
+
+        #endregion
 
         #region 图片上传 WCF服务
 

@@ -481,16 +481,16 @@ namespace Site.Videos.DataAccess.Model
 		}
 		#endregion
 		
-		#region 唯一Id
-		private string _唯一Id;
+		#region u_gid
+		private string _u_gid;
        
         /// <summary>
         /// 唯一Id
         /// </summary>        
-        public string 唯一Id 
+        public string u_gid 
 		{ 
-			get { return _唯一Id; } 
-			set { _唯一Id = value; } 
+			get { return _u_gid; } 
+			set { _u_gid = value; } 
 		
 		}
 		#endregion

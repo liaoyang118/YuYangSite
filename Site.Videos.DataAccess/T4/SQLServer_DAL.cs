@@ -1200,7 +1200,7 @@ namespace Site.Videos.DataAccess.Access
 			{ 
 			DbCommand dbCmd = db.GetStoredProcCommand("Proc_UserInfo_Insert");
 			db.AddOutParameter(dbCmd, "@Id", DbType.Int32,4);
-			db.AddInParameter(dbCmd, "@唯一Id", DbType.String,obj.唯一Id);
+			db.AddInParameter(dbCmd, "@u_gid", DbType.String,obj.u_gid);
 			db.AddInParameter(dbCmd, "@u_name", DbType.String,obj.u_name);
 			db.AddInParameter(dbCmd, "@u_pwd", DbType.String,obj.u_pwd);
 			db.AddInParameter(dbCmd, "@u_level", DbType.Int32,obj.u_level);
@@ -1246,7 +1246,7 @@ namespace Site.Videos.DataAccess.Access
 			{ 
 			DbCommand dbCmd = db.GetStoredProcCommand("Proc_UserInfo_UpdateById");
 			db.AddInParameter(dbCmd, "@Id", DbType.Int32,obj.Id);
-			db.AddInParameter(dbCmd, "@唯一Id", DbType.String,obj.唯一Id);
+			db.AddInParameter(dbCmd, "@u_gid", DbType.String,obj.u_gid);
 			db.AddInParameter(dbCmd, "@u_name", DbType.String,obj.u_name);
 			db.AddInParameter(dbCmd, "@u_pwd", DbType.String,obj.u_pwd);
 			db.AddInParameter(dbCmd, "@u_level", DbType.Int32,obj.u_level);
@@ -1375,7 +1375,7 @@ namespace Site.Videos.DataAccess.Access
             {
                 obj = new UserInfo();
 				obj.Id = reader["Id"] == DBNull.Value ? default(int) : (int)reader["Id"];
-				obj.唯一Id = reader["唯一Id"] == DBNull.Value ? default(string) : (string)reader["唯一Id"];
+				obj.u_gid = reader["u_gid"] == DBNull.Value ? default(string) : (string)reader["u_gid"];
 				obj.u_name = reader["u_name"] == DBNull.Value ? default(string) : (string)reader["u_name"];
 				obj.u_pwd = reader["u_pwd"] == DBNull.Value ? default(string) : (string)reader["u_pwd"];
 				obj.u_level = reader["u_level"] == DBNull.Value ? default(int) : (int)reader["u_level"];

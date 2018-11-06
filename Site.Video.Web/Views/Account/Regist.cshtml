@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Views/Shared/_Login_Layout.cshtml";
+    ViewBag.Title = "注册";
+}
+@section head{
+    <!--mvc自带验证-->
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+}
+
+<div id="page-content" class="contact-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div id="main-content" class="col-md-8">
+                <div class="box">
+                    <center>
+                        <div class="art-header">
+                            <h1 class="center">注 册</h1>
+                        </div>
+                    </center>
+                    <div class="art-content">
+                        <div id="contact_form">
+                            <form name="form1" id="ff" method="post" action="/account/Regist">
+                                <label>
+                                    <span>邮   箱:</span>
+                                    <input type="email" placeholder="xxxx@xxx.com" name="name" id="email" required="">
+                                </label>
+                                <label>
+                                    <span>密   码:</span>
+                                    <input type="password" name="pwd" id="password" required="">
+                                </label>
+                                <label>
+                                    <span>确认密码:</span>
+                                    <input type="password" name="confirmPwd" id="Sure_password" required="">
+                                </label>
+                                <center>
+                                    <input class="sendButton" type="submit" name="Submit" value="确定注册">
+                                    <span><a href="/Account/Login">已有账户,立即登录</a></span>
+                                </center>
+                            </form>
+                        </div>
+                        <div class="form-group">
+                            @Html.ValidationSummary("", new { @class = "text-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</div>
+
