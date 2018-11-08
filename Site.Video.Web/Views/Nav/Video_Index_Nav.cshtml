@@ -1,0 +1,26 @@
+﻿
+@{
+    string pageParam = Request.RequestContext.RouteData.Values["pageParam"]==null?"":Request.RequestContext.RouteData.Values["pageParam"].ToString();
+    string[] arr = pageParam.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+    string cateId="-";
+    if(arr.Length>0)
+    {
+        cateId=arr[0];
+    }
+}
+
+<nav id="menu" class="navbar">
+    <div class="container">
+        <div class="navbar-header">
+            <span id="heading" class="visible-xs">Categories</span>
+            <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                        <li @(cateId=="-" ?"class=current-menu-item":"")><a href="/" title="推荐"><i class="fa fa-home"></i> 推荐</a></li>
+                        <li @(cateId=="4" ?"class=current-menu-item":"")><a href="/list/4.html" title="正片"><i class="fa fa-home"></i> 正片</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

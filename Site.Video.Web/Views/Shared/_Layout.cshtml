@@ -55,36 +55,28 @@
 
         }
 
-        <!--Navigation-->
-        <nav id="menu" class="navbar">
-            <div class="container">
-                <div class="navbar-header">
-                    <span id="heading" class="visible-xs">Categories</span>
-                    <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
-                </div>
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="index.html"><i class="fa fa-home"></i> 推荐</a></li>
-                        <li><a href="archive.html"><i class="fa fa-video-camera"></i> 正片</a></li>
-                        <li><a href="contact.html"><i class="fa fa-picture-o"></i> 动图</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        @RenderSection("head_recoment", false)
+        <!--Navigation begin-->
+        @{
+            Html.RenderPartial("../Nav/Video_Index_Nav");
+        }
+        <!--Navigation end-->
+
+        @{
+            Html.RenderPartial("../Nav/Video_Index_Scroll");
+        }
+
     </header>
 
     <!-- body -->
     @RenderBody()
 
-    <footer>
-        <div class="top-footer">
-            <ul class="footer-social list-inline">
-                <li><a href="javascript:return false;"><i class="fa fa-volume-up"></i> <span>Reminder: announcement information will be displayed here</span></a></li>
-            </ul>
-        </div>
-    </footer>
-    <!-- Footer -->
+
+    <!--Footer begin-->
+    @{
+        Html.RenderPartial("../Foot/Video_Index_Foot");
+    }    
+    <!-- Footer end-->
+
     <!-- JS -->
     <script src="~/Scripts/owl.carousel.js"></script>
     <script>
