@@ -79,9 +79,16 @@ namespace Site.Untity
         public enum AccountLevel
         {
             普通用户 = 0,
-            周用户 = 1,
-            月用户 = 2,
-            年用户 = 3
+            试用用户 = 1,
+            周用户 = 2,
+            月用户 = 3,
+            年用户 = 4
+        }
+
+        public enum BasicStatus
+        {
+            无效 = 0,
+            有效 = 1
         }
 
         #endregion

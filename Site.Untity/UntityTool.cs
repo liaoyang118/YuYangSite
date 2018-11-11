@@ -145,7 +145,7 @@ namespace Site.Untity
 
         }
 
-        public static int GetTimeStamp()
+        public static int GetTimeSpan()
         {
             //TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             //return Convert.ToInt64(ts.TotalSeconds * 1000);
@@ -457,8 +457,8 @@ namespace Site.Untity
 
         #endregion
 
-        #region 591生成链接
-        public static string Create591ListPage(int interval, int pageSize, int pageIndex, int rowCount, string urlBase)
+        #region Video生成链接
+        public static string CreateVideoListPage(int interval, int pageSize, int pageIndex, int rowCount, string urlBase)
         {
             /*
               <ul class="pagination">
@@ -559,13 +559,13 @@ namespace Site.Untity
                 //生成中间的页码条
                 for (int i = defaulStart; i <= defaultEnd; i++)
                 {
-                    a_url += string.Format("<li class=\"{2}\"><a href=\"{0}\">{1}</a></li>\r\n", Get591ListUrl(i, urlBase), i, i == pageIndex ? "active" : "");
+                    a_url += string.Format("<li class=\"{2}\"><a href=\"{0}\">{1}</a></li>\r\n", GetVideoListUrl(i, urlBase), i, i == pageIndex ? "active" : "");
                 }
 
                 if (pageIndex != totalPage)
                 {
-                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\"  aria-label=\"Next\" ><span aria-hidden=\"true\">»</span></a></li>\r\n", Get591ListUrl(pageIndex + 1, urlBase));
-                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\">尾页</a></li>\r\n", Get591ListUrl(totalPage, urlBase));
+                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\"  aria-label=\"Next\" ><span aria-hidden=\"true\">»</span></a></li>\r\n", GetVideoListUrl(pageIndex + 1, urlBase));
+                    a_url += string.Format("<li class=\"hidden-xs\"><a href=\"{0}\">尾页</a></li>\r\n", GetVideoListUrl(totalPage, urlBase));
                 }
 
                 result = string.Format(pageHtml, a_url);
@@ -574,7 +574,7 @@ namespace Site.Untity
             return result;
         }
 
-        private static string Get591ListUrl(int current, string url)
+        private static string GetVideoListUrl(int current, string url)
         {
             string result = string.Empty;
             if (url.Contains("?"))
@@ -595,11 +595,21 @@ namespace Site.Untity
         /// <param name="c_id">分类</param>
         /// <param name="v_gid">唯一ID</param>
         /// <returns></returns>
-        public static string Generate591DetailUrl(int c_id, string v_gid)
+        public static string GenerateVideoDetailUrl(int c_id, string v_gid)
         {
             return string.Format("http://{0}/Detail/{1}/{2}.html", domain, c_id, v_gid);
         }
 
+        /// <summary>
+        /// 生成试看地址
+        /// </summary>
+        /// <param name="c_id"></param>
+        /// <param name="v_gid"></param>
+        /// <returns></returns>
+        public static string GenerateVideoMinDetailUrl(int c_id, string v_gid)
+        {
+            return string.Format("http://{0}/Detail/Min/{1}/{2}.html", domain, c_id, v_gid);
+        }
 
         #endregion
 

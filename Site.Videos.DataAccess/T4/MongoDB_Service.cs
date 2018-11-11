@@ -16,6 +16,158 @@ using Site.Videos.DataAccess.Access;
 namespace Site.Videos.DataAccess.Service
 {
 
+	public partial class Mongo_ActiveAccountInfoService
+    {
+
+        #region 01 Mongo_ActiveAccountInfo_Insert
+		 public static string Insert(Mongo_ActiveAccountInfo obj)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 Mongo_ActiveAccountInfo_Delete
+		 public static int Delete(Expression<Func<Mongo_ActiveAccountInfo,bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.Delete(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 Mongo_ActiveAccountInfo_Update
+		 public static int Update(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter,Mongo_ActiveAccountInfo obj)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.Update(filter,obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 Mongo_ActiveAccountInfo_SelectObject
+		 public static Mongo_ActiveAccountInfo SelectObject(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.SelectObject(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 Mongo_ActiveAccountInfo_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<Mongo_ActiveAccountInfo> Select(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.Select(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 Mongo_ActiveAccountInfo_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<Mongo_ActiveAccountInfo> Select(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter,SortDefinition<Mongo_ActiveAccountInfo> order)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.Select(filter,order);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion 
+
+
+
+		#region 06 Mongo_ActiveAccountInfo_SelectPage
+		 public static IList<Mongo_ActiveAccountInfo> SelectPage(SortDefinition<Mongo_ActiveAccountInfo> order, Expression<Func<Mongo_ActiveAccountInfo, bool>> filter, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					return access.SelectPage(order,filter,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 Mongo_ActiveAccountInfo_BatchInsert
+        public static void BatchInsert(IList<Mongo_ActiveAccountInfo> list)
+        {
+			try
+			{
+				using (var access = new Mongo_ActiveAccountInfoAccess())
+				{
+					access.BatchInsert(list);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
 	public partial class Mongo_AdvertisingInfoService
     {
 
@@ -612,6 +764,158 @@ namespace Site.Videos.DataAccess.Service
 			try
 			{
 				using (var access = new Mongo_RechargeRecoderAccess())
+				{
+					access.BatchInsert(list);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
+	public partial class Mongo_SendMailLogService
+    {
+
+        #region 01 Mongo_SendMailLog_Insert
+		 public static string Insert(Mongo_SendMailLog obj)
+		 {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 Mongo_SendMailLog_Delete
+		 public static int Delete(Expression<Func<Mongo_SendMailLog,bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.Delete(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 Mongo_SendMailLog_Update
+		 public static int Update(Expression<Func<Mongo_SendMailLog, bool>> filter,Mongo_SendMailLog obj)
+		 {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.Update(filter,obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 Mongo_SendMailLog_SelectObject
+		 public static Mongo_SendMailLog SelectObject(Expression<Func<Mongo_SendMailLog, bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.SelectObject(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 Mongo_SendMailLog_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<Mongo_SendMailLog> Select(Expression<Func<Mongo_SendMailLog, bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.Select(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 Mongo_SendMailLog_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<Mongo_SendMailLog> Select(Expression<Func<Mongo_SendMailLog, bool>> filter,SortDefinition<Mongo_SendMailLog> order)
+		 {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.Select(filter,order);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion 
+
+
+
+		#region 06 Mongo_SendMailLog_SelectPage
+		 public static IList<Mongo_SendMailLog> SelectPage(SortDefinition<Mongo_SendMailLog> order, Expression<Func<Mongo_SendMailLog, bool>> filter, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new Mongo_SendMailLogAccess())
+				{
+					return access.SelectPage(order,filter,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 Mongo_SendMailLog_BatchInsert
+        public static void BatchInsert(IList<Mongo_SendMailLog> list)
+        {
+			try
+			{
+				using (var access = new Mongo_SendMailLogAccess())
 				{
 					access.BatchInsert(list);
 				}

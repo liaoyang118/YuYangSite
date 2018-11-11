@@ -6,6 +6,7 @@ using Site.Videos.DataAccess.Service.PartialService.Search;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -35,7 +36,7 @@ namespace Site.Video.Web.Controllers
             {
                 if (list.Count > 1)
                 {
-                    ModelState.AddModelError("500", "该账号存在多个同名账号，请联系客服处理！");
+                    ModelState.AddModelError("500", "该账号存在多个相同账号，不能使用！");
                 }
                 else
                 {
@@ -99,8 +100,8 @@ namespace Site.Video.Web.Controllers
             {
                 UserInfoSearchInfo search = new UserInfoSearchInfo
                 {
-                    Account = name,
-                    AccountState = (int)SiteEnum.AccountState.正常
+                    Account = name
+                    //AccountState = (int)SiteEnum.AccountState.正常
                 };
 
                 IList<UserInfo> list = UserInfoService.Select(search.ToWhereString());
@@ -116,29 +117,55 @@ namespace Site.Video.Web.Controllers
                     uInfo.u_name = name;
                     uInfo.u_pwd = UntityTool.Md5_32(pwd);
                     uInfo.u_regTime = DateTime.Now;
-                    uInfo.u_status = (int)SiteEnum.AccountState.正常;
+                    uInfo.u_status = (int)SiteEnum.AccountState.无效;
                     uInfo.u_gid = UntityTool.GetGUID();
+                    uInfo.u_expriseTime = DateTime.Now;
+
                     int result = UserInfoService.Insert(uInfo);
                     if (result > 0)
                     {
-                        //保存用户
-                        HttpContextUntity.CurrentUser = uInfo;
+                        #region 自动登录
+                        ////保存用户
+                        //HttpContextUntity.CurrentUser = uInfo;
 
-                        #region ticket 方法
+                        //#region ticket 方法
 
-                        //创建一个新的票据，将客户ip记入ticket的userdata 
-                        FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
-                        1, name, DateTime.Now, DateTime.Now.AddHours(2), false, uInfo.Id.ToString());
-                        //将票据加密 
-                        string authTicket = FormsAuthentication.Encrypt(ticket);
-                        //将加密后的票据保存为cookie 
-                        HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, authTicket);
+                        ////创建一个新的票据，将客户ip记入ticket的userdata 
+                        //FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                        //1, name, DateTime.Now, DateTime.Now.AddHours(2), false, uInfo.Id.ToString());
+                        ////将票据加密 
+                        //string authTicket = FormsAuthentication.Encrypt(ticket);
+                        ////将加密后的票据保存为cookie 
+                        //HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, authTicket);
 
-                        //使用加入了userdata的新cookie 
-                        Response.Cookies.Add(cookie);
+                        ////使用加入了userdata的新cookie 
+                        //Response.Cookies.Add(cookie);
+                        //#endregion
+
+                        //return RedirectToAction("index", "home"); 
                         #endregion
 
-                        return RedirectToAction("index", "home");
+                        ActiveAccountInfo aInfo = new ActiveAccountInfo();
+                        aInfo.Account = name;
+                        aInfo.CreateTime = DateTime.Now;
+                        aInfo.GUID = UntityTool.GetGUID();
+                        aInfo.IsActive = false;
+                        aInfo.TimeSpan = UntityTool.GetTimeSpan().ToString();
+                        aInfo.Token = UntityTool.Md5_32(aInfo.Account + aInfo.TimeSpan);
+                        aInfo.ActiveTime = DateTime.Now;
+
+                        result = ActiveAccountInfoService.Insert(aInfo);
+                        if (result > 0)
+                        {
+                            bool isSuccess = SendActiveMail(aInfo);
+
+                            return RedirectToAction("Notify", "Account", new { msg = HttpUtility.UrlEncode("注册成功，稍等5分钟将会发送一封激活邮件到您的注册邮箱，请登录邮箱激活账户！") });
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("500", "注册失败，请稍后再试！");
+                        }
+
                     }
                     else
                     {
@@ -155,6 +182,84 @@ namespace Site.Video.Web.Controllers
         {
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
+        }
+
+        [AllowAnonymous]
+        public ActionResult Notify(string msg)
+        {
+            ViewBag.Message = HttpUtility.UrlDecode(msg);
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ActiveMail(string gid, string at, string ts)
+        {
+            ActiveAccountInfo aInfo = ActiveAccountInfoService.Select(string.Format(" where GUID='{0}'", gid)).FirstOrDefault();
+            string message = string.Empty;
+            if (aInfo != null)
+            {
+                if (!aInfo.IsActive)
+                {
+                    if (aInfo.Token == UntityTool.Md5_32(at + ts))
+                    {
+
+                        aInfo.IsActive = true;
+                        aInfo.ActiveTime = DateTime.Now;
+                        ActiveAccountInfoService.Update(aInfo);
+
+                        UserInfo uInfo = UserInfoService.Select(string.Format(" where u_name = '{0}'", aInfo.Account)).FirstOrDefault();
+                        uInfo.u_status = (int)SiteEnum.AccountState.正常;
+                        UserInfoService.Update(uInfo);
+
+                        message = "激活成功，<a href=\"/Account/Login\">立即登录</a>！";
+                    }
+                    else
+                    {
+                        message = "激活失败，没有该账户的注册信息！";
+                    }
+                }
+                else
+                {
+                    message = "该账户已经激活，无需重复激活！";
+                }
+            }
+            else
+            {
+                message = "激活失败，没有该账户的注册信息！";
+            }
+
+            return RedirectToAction("Notify", "Account", new { msg = HttpUtility.UrlEncode(message) });
+        }
+
+
+        public bool SendActiveMail(ActiveAccountInfo aInfo)
+        {
+            string url = string.Format("http://{0}/Account/ActiveMail?gid={1}&at={2}&ts={3}", UntityTool.GetConfigValue("Domain"), aInfo.GUID, aInfo.Account, aInfo.TimeSpan);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("请点击以下链接，激活账户，如果点击无效，复制该链接到浏览器地址中访问。\r\n");
+            sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">{0}</a>", url);
+            string content = sb.ToString();
+
+            SentMail.SentMail sm = new SentMail.SentMail();
+            sm.Init("591community@gmail.com", "账号激活", aInfo.Account, content, false);
+            string error;
+            sm.SentNetMail(out error);
+
+
+            bool isSendSuccess = string.IsNullOrEmpty(error) ? true : false;
+            SendMailLog smInfo = new SendMailLog();
+            smInfo.CreateTime = DateTime.Now;
+            smInfo.Email = aInfo.Account;
+            smInfo.IsSuccess = isSendSuccess;
+            smInfo.Remark = error;
+            smInfo.SendContent = content;
+            smInfo.SendTime = DateTime.Now;
+            smInfo.Title = "账号激活";
+
+            SendMailLogService.Insert(smInfo);
+
+            return isSendSuccess;
         }
 
     }

@@ -31,18 +31,19 @@ namespace SentMail
                 }
                 catch (Exception e)
                 {
-                    error = e.Message;
+                    error = e.Message + (e.InnerException == null ? "" : e.InnerException.Message);
                 }
             }
         }
 
-        public void Init(string name,string title,string to,string content)
+        public void Init(string name, string title, string to, string content, bool enableSSL = false)
         {
             smtp = new SmtpClient(); //实例化一个SmtpClient
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network; //将smtp的出站方式设为 Network
-            smtp.EnableSsl = false;//smtp服务器是否启用SSL加密
+            smtp.EnableSsl = enableSSL;//smtp服务器是否启用SSL加密
             smtp.Host = _config.Smtp; //指定 smtp 服务器地址
             smtp.Port = _config.Port; //指定 smtp 服务器的端口，默认是25，如果采用默认端口，可省去
+            smtp.UseDefaultCredentials = false;
             //认证
             smtp.Credentials = new NetworkCredential(_config.Account, _config.Pwd);
             mm = new MailMessage(); //实例化一个邮件类
@@ -61,7 +62,7 @@ namespace SentMail
 
             //添加附件，第二个参数，表示附件的文件类型，可以不用指定
             //mm.Attachments.Add(new Attachment(@"C:\Users\Administrator\Desktop\lln.docx", System.Net.Mime.MediaTypeNames.Application.Rtf));
-            
+
         }
     }
 }

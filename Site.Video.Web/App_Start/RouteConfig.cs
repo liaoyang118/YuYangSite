@@ -20,6 +20,19 @@ namespace Site.Video.Web
             );
 
             routes.MapRoute(
+              name: "Detail",
+              url: "Detail/{cateId}/{vid}.html",
+              defaults: new { controller = "Detail", action = "Index" }
+            );
+
+            routes.MapRoute(
+              name: "Min",
+              url: "Detail/Min/{cateId}/{vid}.html",
+              defaults: new { controller = "Detail", action = "Min" }
+            );
+
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

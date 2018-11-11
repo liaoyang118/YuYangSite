@@ -148,7 +148,7 @@ namespace Spider.Main.Core
                             cateInfo = VideoCateService.Select(string.Format(" where c_name='{0}'", cateName)).FirstOrDefault();
                             if (cateInfo == null)
                             {
-                                cates.Add(cateInfo);
+                                cates.Add(new VideoCate() { c_name = cateName });
                             }
                         }
                         if (cates.Count > 0)

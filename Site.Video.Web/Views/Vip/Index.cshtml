@@ -1,7 +1,8 @@
-﻿
+﻿@using Site.Videos.DataAccess.Model;
 @{
     Layout = "~/Views/Shared/_Min_Layout.cshtml";
     ViewBag.Title = "开通VIP";
+    List<ComboInfo> list = ViewData["list"] as List<ComboInfo>;
 }
 @section head{
 }
@@ -14,28 +15,36 @@
                 <div class="box">
                     <center>
                         <div class="art-header">
-                            <h1 class="center">注 册</h1>
+                            <h1 class="center">开  通  VIP</h1>
                         </div>
                     </center>
                     <div class="art-content">
                         <div id="contact_form">
-                            <form name="form1" id="ff" method="post" action="/Vip/Regist">                              
-                                <label>
-                                    <span><input type="radio" name="optionsRadios" id="optionsRadios1" value="option2"></span>
-                                    Option two can be something else and selecting it will deselect option one
-                                </label>
-                                <label>
-                                    <span><input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"></span>
-                                    Option two can be something else and selecting it will deselect option one
-                                </label>
-                                <label>
-                                    <span><input type="radio" name="optionsRadios" id="optionsRadios3" value="option2"></span>
-                                    Option two can be something else and selecting it will deselect option one
-                                </label>
-                                <center>
-                                    <input class="sendButton" type="submit" name="Submit" value="确定注册">
-                                </center>
-                            </form>
+                            <div class="row">
+                                @{
+                                    if (list.Count > 0)
+                                    {
+                                        int blockNum = 12 / list.Count;
+                                        foreach (var item in list)
+                                        {
+
+                                            <div class="col-sm-12 col-md-@blockNum">
+                                                <div class="thumbnail" style="height: 256px;">
+                                                    <a href="/Vip/Dredge?code=@item.c_id" title="@item.c_title" target="_blank">
+                                                        <img class="lazy" src="~/images/@string.Format("vip{0}.png",item.c_days)" width="300" height="150" alt="@item.c_title">
+                                                    </a>
+                                                    <div class="caption">
+                                                        <h3>
+                                                            <a href="/Vip/Dredge?code=@item.c_id" title="@item.c_title" target="_blank">@string.Format("{0}元/{1}天", item.c_num, item.c_days)<br><small>@item.c_intro</small><br /><span style="font-size:18px;">立即开通</span></a>
+                                                        </h3>
+                                                        <p></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

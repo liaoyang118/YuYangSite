@@ -113,7 +113,7 @@ namespace Spider.Main.Core
             try
             {
                 HttpClientHelp web = new HttpClientHelp();
-                string result = web.Get(Domain + "?v=" + UntityTool.GetTimeStamp());
+                string result = web.Get(Domain + "?v=" + UntityTool.GetTimeSpan());
                 if (!string.IsNullOrEmpty(result))
                 {
                     Regex reg = new Regex(@"<div [^>/]*?class=""h_nemu""[^>/]*>(.*?)<\/div>");

@@ -112,7 +112,7 @@ namespace Spider.Main.Core
             try
             {
                 HttpClientHelp web = new HttpClientHelp();
-                string result = web.Get(Domain + "?v=" + UntityTool.GetTimeStamp());
+                string result = web.Get(Domain + "?v=" + UntityTool.GetTimeSpan());
                 if (!string.IsNullOrEmpty(result))
                 {
                     #region 正则表达式

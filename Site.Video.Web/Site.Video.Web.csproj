@@ -310,6 +310,9 @@
     <Content Include="images\banner.jpg" />
     <Content Include="images\grabbing.png" />
     <Content Include="images\user.png" />
+    <Content Include="images\vip3.png" />
+    <Content Include="images\vip30.png" />
+    <Content Include="images\vip7.png" />
     <Content Include="Scripts\bootstrap-hover-dropdown.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
@@ -348,6 +351,8 @@
     <Content Include="Views\Sidebar\Min_Tags_SideBar_Partial.cshtml" />
     <Content Include="Views\Sidebar\Tags_SideBar_Partial.cshtml" />
     <Content Include="Views\Vip\Index.cshtml" />
+    <Content Include="Views\Account\Notify.cshtml" />
+    <Content Include="Views\Shared\_Detail_Min_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -361,6 +366,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Site.Mail\SentMail.csproj">
+      <Project>{3fa14bb2-ffae-4972-8450-261426fae235}</Project>
+      <Name>SentMail</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Site.Untity\Site.Untity.csproj">
       <Project>{422e16e1-a23a-4e46-95d3-840f7e44f2be}</Project>
       <Name>Site.Untity</Name>

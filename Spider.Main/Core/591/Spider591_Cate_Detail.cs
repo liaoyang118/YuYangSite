@@ -305,6 +305,11 @@ namespace Spider.Main.Core
                                         fInfo.v_coverImgSrc = videoAndImageSrc[1];
                                     }
 
+                                    if (videoAndImageSrc.Count > 2)
+                                    {
+                                        fInfo.v_min_playSrc = videoAndImageSrc[2];
+                                    }
+
                                     main.WriteSuccessLog(string.Format("{0}:分类【{1}】,591视频【{2}】下载视频成功：【{3}】", LogTaskHead, _currentCateName, fInfo.v_titile, videoAndImageSrc[0]));
                                 }
                                 #endregion

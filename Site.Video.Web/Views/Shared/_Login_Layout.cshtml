@@ -42,9 +42,31 @@
                 <nav id="top">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12 col-sm-12">
+                            <div class="col-md-6 col-sm-12">
+                                <strong>591社区</strong>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
                                 <ul class="list-inline top-link link">
-                                    <li><a href="#"><i class="fa fa fa-user-circle-o"></i> 当前用户</a></li>
+                                    <li><a href="javascript:void(0);"><i class="fa fa fa-user-circle-o"></i> @User.Identity.Name</a></li>
+                                    <li><a href="/Account/LoginOut"><i class="fa fa fa-sign-out"></i>注销</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            }
+            else
+            {
+                <nav id="top">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <strong>591社区</strong>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <ul class="list-inline top-link link">
+                                    <li><a href="/Account/Login"><i class="fa fa fa-sign-in"></i> 登录</a></li>
+                                    <li><a href="/Account/Regist"><i class="fa fa fa-address-card-o"></i> 注册</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -55,21 +77,10 @@
         }
 
         <!--Navigation-->
-        <nav id="menu" class="navbar">
-            <div class="container">
-                <div class="navbar-header">
-                    <span id="heading" class="visible-xs">Categories</span>
-                    <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
-                </div>
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="index.html"><i class="fa fa-home"></i> 试看</a></li>
-                        <li><a href="archive.html"><i class="fa fa-video-camera"></i> 正片</a></li>
-                        <li><a href="contact.html"><i class="fa fa-picture-o"></i> 动图</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        @{ 
+            Html.RenderPartial("../Nav/Video_Index_Min_Nav");
+        }
+
         @RenderSection("head_recoment", false)
     </header>
 

@@ -1,6 +1,12 @@
-﻿
+﻿@using Site.Videos.DataAccess.Model;
+@using Site.Common;
 @{
-    ViewBag.Title = "Detail";
+    VideoCate vcInfo = ViewData["cateInfo"] as VideoCate;
+    VideoInfo vInfo = ViewData["vInfo"] as VideoInfo;
+}
+@{
+    Layout = "~/Views/Shared/_Min_Layout.cshtml";
+    ViewBag.Title = vInfo.v_titile + "-" + vcInfo.c_name;
 }
 
 <div id="page-content" class="single-page">
@@ -8,7 +14,7 @@
         <div class="row">
             <div id="main-content" class="col-md-8">
                 <div class="wrap-vid">
-                    <video src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" width="760" height="400" controls="controls" contextmenu="123"></video>
+                    <video src="@vInfo.v_min_playSrc" width="760" height="400" controls="controls" contextmenu="123"></video>
                 </div>
                 <div class="share">
                     <ul class="list-inline center">
@@ -136,7 +142,7 @@
                 </div>
             </div>
             @{
-                Html.RenderPartial("../Sidebar/Common_SideBar");
+                Html.RenderPartial("../Sidebar/Video_Detail_Sidebar");
             }
         </div>
     </div>

@@ -33,12 +33,12 @@
                                 </label>
                                 <center>
                                     <input class="sendButton" type="submit" name="Submit" value="登录">
-                                    <span><a href="/Account/Regist">暂无账户,立即注册</a></span>
+                                    <span><a href="/Account/Regist" style="color:blue;">暂无账户,立即注册</a></span>
                                 </center>
                             </form>
                         </div>
                         <div class="form-group">
-                            @Html.ValidationSummary("", new { @class = "text-primary" })
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>

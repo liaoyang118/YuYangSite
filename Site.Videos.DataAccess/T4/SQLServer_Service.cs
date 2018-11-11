@@ -14,6 +14,140 @@ using Site.Videos.DataAccess.Access;
 namespace Site.Videos.DataAccess.Service
 {
 
+	public partial class ActiveAccountInfoService
+    {
+
+        #region 01 ActiveAccountInfo_Insert
+		 public static int Insert(ActiveAccountInfo obj)
+		 {
+			try
+			{
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 ActiveAccountInfo_Delete
+		 public static int Delete(int id)
+		 {
+			try
+			{
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.Delete(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 ActiveAccountInfo_Update
+		 public static int Update(ActiveAccountInfo obj)
+		 {
+			try
+			{
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.Update(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 ActiveAccountInfo_SelectObject
+		 public static ActiveAccountInfo SelectObject(int id)
+		 {
+			try
+			{
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.SelectObject(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 ActiveAccountInfo_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<ActiveAccountInfo> Select(string whereStr)
+		 {
+			try
+			{
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.Select(whereStr);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 06 ActiveAccountInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public static IList<ActiveAccountInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.SelectPage(cloumns,order,whereStr,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 ActiveAccountInfo_SqlBulkCopyBatchInsert
+        public static int SqlBulkCopyBatchInsert(List<ActiveAccountInfo> list,int count)
+        {
+			try
+			{
+				using (var access = new ActiveAccountInfoAccess())
+				{
+					return access.SqlBulkCopyBatchInsert(list, count);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
 	public partial class AdvertisingInfoService
     {
 
@@ -538,6 +672,140 @@ namespace Site.Videos.DataAccess.Service
 			try
 			{
 				using (var access = new RechargeRecoderAccess())
+				{
+					return access.SqlBulkCopyBatchInsert(list, count);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
+	public partial class SendMailLogService
+    {
+
+        #region 01 SendMailLog_Insert
+		 public static int Insert(SendMailLog obj)
+		 {
+			try
+			{
+				using (var access = new SendMailLogAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 SendMailLog_Delete
+		 public static int Delete(int id)
+		 {
+			try
+			{
+				using (var access = new SendMailLogAccess())
+				{
+					return access.Delete(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 SendMailLog_Update
+		 public static int Update(SendMailLog obj)
+		 {
+			try
+			{
+				using (var access = new SendMailLogAccess())
+				{
+					return access.Update(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 SendMailLog_SelectObject
+		 public static SendMailLog SelectObject(int id)
+		 {
+			try
+			{
+				using (var access = new SendMailLogAccess())
+				{
+					return access.SelectObject(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 SendMailLog_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<SendMailLog> Select(string whereStr)
+		 {
+			try
+			{
+				using (var access = new SendMailLogAccess())
+				{
+					return access.Select(whereStr);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 06 SendMailLog_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public static IList<SendMailLog> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new SendMailLogAccess())
+				{
+					return access.SelectPage(cloumns,order,whereStr,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 SendMailLog_SqlBulkCopyBatchInsert
+        public static int SqlBulkCopyBatchInsert(List<SendMailLog> list,int count)
+        {
+			try
+			{
+				using (var access = new SendMailLogAccess())
 				{
 					return access.SqlBulkCopyBatchInsert(list, count);
 				}

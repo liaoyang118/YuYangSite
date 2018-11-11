@@ -359,6 +359,7 @@ namespace Spider.Main.Core
                             vInfo.v_status = (int)SiteEnum.VideoStatus.有效;
                             vInfo.v_coverImgSrc = string.Empty;
                             vInfo.v_playSrc = string.Empty;
+                            vInfo.v_min_playSrc = string.Empty;
                             vInfo.v_totalSecond = totalSecends;
 
                             if (_currentCateInfo != null)

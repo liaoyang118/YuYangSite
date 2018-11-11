@@ -18,6 +18,221 @@ namespace Site.Videos.DataAccess.Access
 
 
 	[Serializable]
+	public partial class Mongo_ActiveAccountInfoAccess : Mongo_AccessBase<Mongo_ActiveAccountInfo>,IDisposable
+    {
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public Mongo_ActiveAccountInfoAccess(string dbName) 
+        {
+			DataTableName = "Mongo_ActiveAccountInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_Video"].ToString();
+			base.GetDatabase(dbName);
+        }
+
+        public Mongo_ActiveAccountInfoAccess()
+        {
+			DataTableName = "Mongo_ActiveAccountInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_Video"].ToString();
+			 base.GetDatabase("Mongo_Video");
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~Mongo_ActiveAccountInfoAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Mongodb_Mongo_ActiveAccountInfo_Insert
+		 public override string Insert(Mongo_ActiveAccountInfo obj)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+				collection.InsertOne(obj);
+				return obj.Id.ToString();
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Mongodb_Mongo_ActiveAccountInfo_Delete
+		 public override int Delete(Expression<Func<Mongo_ActiveAccountInfo,bool>> filter )
+		 {
+			try
+			{ 
+			
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+				DeleteResult result= collection.DeleteOne<Mongo_ActiveAccountInfo>(filter);
+				return (int)result.DeletedCount;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Mongodb_Mongo_ActiveAccountInfo_Update
+		 public override int Update(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter,Mongo_ActiveAccountInfo obj)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+				
+				UpdateResult result= collection.UpdateOne<Mongo_ActiveAccountInfo>(filter,Builders<Mongo_ActiveAccountInfo>.Update.Set("Id",obj.Id).Set("GUID",obj.GUID).Set("Account",obj.Account).Set("TimeSpan",obj.TimeSpan).Set("Token",obj.Token).Set("IsActive",obj.IsActive).Set("ActiveTime",obj.ActiveTime).Set("CreateTime",obj.CreateTime));
+				int returnValue = (int)result.ModifiedCount;
+                return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Mongodb_Mongo_ActiveAccountInfo_SelectObject
+		 public override Mongo_ActiveAccountInfo SelectObject(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+                Mongo_ActiveAccountInfo obj = collection.Find(filter).FirstOrDefault();
+                return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Mongodb_Mongo_ActiveAccountInfo_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<Mongo_ActiveAccountInfo> Select(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+                IList<Mongo_ActiveAccountInfo> list = collection.Find(filter).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion 
+
+		#region 05 Mongodb_Mongo_ActiveAccountInfo_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<Mongo_ActiveAccountInfo> Select(Expression<Func<Mongo_ActiveAccountInfo, bool>> filter,SortDefinition<Mongo_ActiveAccountInfo> order )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+                IList<Mongo_ActiveAccountInfo> list = collection.Find(filter).Sort(order).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+
+		#region 06 Mongodb_Mongo_ActiveAccountInfo_SelectPage
+		 public override IList<Mongo_ActiveAccountInfo> SelectPage(SortDefinition<Mongo_ActiveAccountInfo> order, Expression<Func<Mongo_ActiveAccountInfo, bool>> filter,  int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+                var result = collection.Find(filter).Sort(order);
+                rowCount = (int)result.CountDocuments();
+
+                return result.ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 07 BatchInsert
+
+        public override void BatchInsert(IList<Mongo_ActiveAccountInfo> list )
+        {
+            try
+            {
+                IMongoCollection<Mongo_ActiveAccountInfo> collection = Database.GetCollection<Mongo_ActiveAccountInfo>(DataTableName);
+                collection.InsertMany(list);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层：" + e.Message);
+            }
+        }
+
+        #endregion
+
+    }
+
+	[Serializable]
 	public partial class Mongo_AdvertisingInfoAccess : Mongo_AccessBase<Mongo_AdvertisingInfo>,IDisposable
     {
 		 private string _connectionStr;
@@ -878,6 +1093,221 @@ namespace Site.Videos.DataAccess.Access
     }
 
 	[Serializable]
+	public partial class Mongo_SendMailLogAccess : Mongo_AccessBase<Mongo_SendMailLog>,IDisposable
+    {
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public Mongo_SendMailLogAccess(string dbName) 
+        {
+			DataTableName = "Mongo_SendMailLog";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_Video"].ToString();
+			base.GetDatabase(dbName);
+        }
+
+        public Mongo_SendMailLogAccess()
+        {
+			DataTableName = "Mongo_SendMailLog";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_Video"].ToString();
+			 base.GetDatabase("Mongo_Video");
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~Mongo_SendMailLogAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Mongodb_Mongo_SendMailLog_Insert
+		 public override string Insert(Mongo_SendMailLog obj)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+				collection.InsertOne(obj);
+				return obj.Id.ToString();
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Mongodb_Mongo_SendMailLog_Delete
+		 public override int Delete(Expression<Func<Mongo_SendMailLog,bool>> filter )
+		 {
+			try
+			{ 
+			
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+				DeleteResult result= collection.DeleteOne<Mongo_SendMailLog>(filter);
+				return (int)result.DeletedCount;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Mongodb_Mongo_SendMailLog_Update
+		 public override int Update(Expression<Func<Mongo_SendMailLog, bool>> filter,Mongo_SendMailLog obj)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+				
+				UpdateResult result= collection.UpdateOne<Mongo_SendMailLog>(filter,Builders<Mongo_SendMailLog>.Update.Set("Id",obj.Id).Set("Email",obj.Email).Set("Title",obj.Title).Set("SendTime",obj.SendTime).Set("SendContent",obj.SendContent).Set("IsSuccess",obj.IsSuccess).Set("Remark",obj.Remark).Set("CreateTime",obj.CreateTime));
+				int returnValue = (int)result.ModifiedCount;
+                return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Mongodb_Mongo_SendMailLog_SelectObject
+		 public override Mongo_SendMailLog SelectObject(Expression<Func<Mongo_SendMailLog, bool>> filter )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+                Mongo_SendMailLog obj = collection.Find(filter).FirstOrDefault();
+                return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Mongodb_Mongo_SendMailLog_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<Mongo_SendMailLog> Select(Expression<Func<Mongo_SendMailLog, bool>> filter )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+                IList<Mongo_SendMailLog> list = collection.Find(filter).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion 
+
+		#region 05 Mongodb_Mongo_SendMailLog_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<Mongo_SendMailLog> Select(Expression<Func<Mongo_SendMailLog, bool>> filter,SortDefinition<Mongo_SendMailLog> order )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+                IList<Mongo_SendMailLog> list = collection.Find(filter).Sort(order).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+
+		#region 06 Mongodb_Mongo_SendMailLog_SelectPage
+		 public override IList<Mongo_SendMailLog> SelectPage(SortDefinition<Mongo_SendMailLog> order, Expression<Func<Mongo_SendMailLog, bool>> filter,  int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+                var result = collection.Find(filter).Sort(order);
+                rowCount = (int)result.CountDocuments();
+
+                return result.ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 07 BatchInsert
+
+        public override void BatchInsert(IList<Mongo_SendMailLog> list )
+        {
+            try
+            {
+                IMongoCollection<Mongo_SendMailLog> collection = Database.GetCollection<Mongo_SendMailLog>(DataTableName);
+                collection.InsertMany(list);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层：" + e.Message);
+            }
+        }
+
+        #endregion
+
+    }
+
+	[Serializable]
 	public partial class Mongo_UserInfoAccess : Mongo_AccessBase<Mongo_UserInfo>,IDisposable
     {
 		 private string _connectionStr;
@@ -1629,7 +2059,7 @@ namespace Site.Videos.DataAccess.Access
 			{ 
 				IMongoCollection<Mongo_VideoInfo> collection = Database.GetCollection<Mongo_VideoInfo>(DataTableName);
 				
-				UpdateResult result= collection.UpdateOne<Mongo_VideoInfo>(filter,Builders<Mongo_VideoInfo>.Update.Set("Id",obj.Id).Set("v_id",obj.v_id).Set("v_c_id",obj.v_c_id).Set("v_c_name",obj.v_c_name).Set("v_titile",obj.v_titile).Set("v_intro",obj.v_intro).Set("v_coverImgSrc",obj.v_coverImgSrc).Set("v_playSrc",obj.v_playSrc).Set("v_timeLength",obj.v_timeLength).Set("v_createTime",obj.v_createTime).Set("v_status",obj.v_status).Set("v_totalSecond",obj.v_totalSecond));
+				UpdateResult result= collection.UpdateOne<Mongo_VideoInfo>(filter,Builders<Mongo_VideoInfo>.Update.Set("Id",obj.Id).Set("v_id",obj.v_id).Set("v_c_id",obj.v_c_id).Set("v_c_name",obj.v_c_name).Set("v_titile",obj.v_titile).Set("v_intro",obj.v_intro).Set("v_coverImgSrc",obj.v_coverImgSrc).Set("v_playSrc",obj.v_playSrc).Set("v_min_playSrc",obj.v_min_playSrc).Set("v_timeLength",obj.v_timeLength).Set("v_createTime",obj.v_createTime).Set("v_status",obj.v_status).Set("v_totalSecond",obj.v_totalSecond));
 				int returnValue = (int)result.ModifiedCount;
                 return returnValue;
 			}

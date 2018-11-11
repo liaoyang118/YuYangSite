@@ -103,6 +103,58 @@ namespace Site.Untity
 
         }
 
+        /// <summary>
+        /// 截切指定时长的视频
+        /// </summary>
+        /// <param name="sourcePath">源文件绝对路径</param>
+        /// <param name="minFileName">新文件名称，带后缀</param>
+        /// <param name="totalSecond">总长度 秒</param>
+        /// <param name="shearSecond">剪切长度 秒</param>
+        /// <param name="configPath">配置文件路径</param>
+        /// <returns></returns>
+        public string ShearMinVideo(string sourcePath, string minFileName, int totalSecond, int shearSecond = 60, string configPath = "")
+        {
+
+            string ffmpeg = string.Empty;
+            if (!string.IsNullOrEmpty(configPath))
+            {
+                ffmpeg = configPath;
+            }
+            else
+            {
+                ffmpeg = System.Web.HttpContext.Current.Server.MapPath("~\\ffmpeg\\ffmpeg.exe");
+            }
+            string newVideoPath = string.Empty;
+
+            if (shearSecond > totalSecond)
+            {
+                shearSecond = 60;
+            }
+            int begin = (totalSecond / 2) - shearSecond;
+            int index = sourcePath.LastIndexOf("\\");
+            newVideoPath = sourcePath.Substring(0, index) + "\\" + minFileName;
+
+
+            //初始化 ffmpeg
+            System.Diagnostics.ProcessStartInfo ImgstartInfo = new System.Diagnostics.ProcessStartInfo(ffmpeg);
+            ImgstartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+            //ffmpeg  -ss 10 -t 15 -i test.mp4 -codec copy cut.mp4
+            string arg = string.Format("-ss {0} -t {1} -i {2} -codec copy {3}", begin, shearSecond, sourcePath, newVideoPath);
+            ImgstartInfo.Arguments = arg;
+
+            try
+            {
+                System.Diagnostics.Process process = System.Diagnostics.Process.Start(ImgstartInfo);
+                process.WaitForExit();
+                CloseFFmpegProcess();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("剪切错误:" + e.Message);
+            }
+            return newVideoPath;
+        }
 
         /// <summary>
         /// 关闭ffmpeg进程

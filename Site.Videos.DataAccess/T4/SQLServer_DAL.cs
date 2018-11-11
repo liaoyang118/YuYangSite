@@ -17,6 +17,283 @@ namespace Site.Videos.DataAccess.Access
 
 
 	[Serializable]
+	public partial class ActiveAccountInfoAccess : AccessBase<ActiveAccountInfo>,IDisposable
+    {
+
+		Database db;
+
+		DatabaseProviderFactory factory = new DatabaseProviderFactory();//6.0 创建方式
+
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public ActiveAccountInfoAccess(string configName)
+        {
+			db = factory.Create(configName);
+			DataTableName = "ActiveAccountInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        public ActiveAccountInfoAccess()
+        {
+            db = factory.Create("Video");
+			DataTableName = "ActiveAccountInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~ActiveAccountInfoAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Proc_ActiveAccountInfo_Insert
+		 public override int Insert(ActiveAccountInfo obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveAccountInfo_Insert");
+			db.AddOutParameter(dbCmd, "@Id", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@GUID", DbType.String,obj.GUID);
+			db.AddInParameter(dbCmd, "@Account", DbType.String,obj.Account);
+			db.AddInParameter(dbCmd, "@TimeSpan", DbType.String,obj.TimeSpan);
+			db.AddInParameter(dbCmd, "@Token", DbType.String,obj.Token);
+			db.AddInParameter(dbCmd, "@IsActive", DbType.Boolean,obj.IsActive);
+			db.AddInParameter(dbCmd, "@ActiveTime", DbType.DateTime,obj.ActiveTime);
+			db.AddInParameter(dbCmd, "@CreateTime", DbType.DateTime,obj.CreateTime);
+						
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				int Id = (int)dbCmd.Parameters["@Id"].Value;
+				return Id;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Proc_ActiveAccountInfo_Delete
+		 public override int Delete(int id)
+		 {
+			try
+			{ 
+			
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveAccountInfo_DeleteById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Proc_ActiveAccountInfo_Update
+		 public override int Update(ActiveAccountInfo obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveAccountInfo_UpdateById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,obj.Id);
+			db.AddInParameter(dbCmd, "@GUID", DbType.String,obj.GUID);
+			db.AddInParameter(dbCmd, "@Account", DbType.String,obj.Account);
+			db.AddInParameter(dbCmd, "@TimeSpan", DbType.String,obj.TimeSpan);
+			db.AddInParameter(dbCmd, "@Token", DbType.String,obj.Token);
+			db.AddInParameter(dbCmd, "@IsActive", DbType.Boolean,obj.IsActive);
+			db.AddInParameter(dbCmd, "@ActiveTime", DbType.DateTime,obj.ActiveTime);
+			db.AddInParameter(dbCmd, "@CreateTime", DbType.DateTime,obj.CreateTime);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Proc_ActiveAccountInfo_SelectObject
+		 public override ActiveAccountInfo SelectObject(int id)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveAccountInfo_SelectById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			ActiveAccountInfo obj=null;
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						obj=Object2Model(reader);
+					}
+                }
+				return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Proc_ActiveAccountInfo_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<ActiveAccountInfo> Select(string whereStr)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveAccountInfo_SelectList");
+			db.AddInParameter(dbCmd, "@whereStr", DbType.String,whereStr);
+						IList<ActiveAccountInfo> list= new List<ActiveAccountInfo>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						ActiveAccountInfo obj= Object2Model(reader);
+						list.Add(obj);
+					}
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 06 Proc_ActiveAccountInfo_SelectPage
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<ActiveAccountInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveAccountInfo_SelectPage");
+			db.AddOutParameter(dbCmd, "@rowCount", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@cloumns", DbType.String,cloumns);
+			db.AddInParameter(dbCmd, "@pageIndex", DbType.Int32,pageIndex);
+			db.AddInParameter(dbCmd, "@pageSize", DbType.Int32,pageSize);
+			db.AddInParameter(dbCmd, "@orderBy", DbType.String,order);
+			db.AddInParameter(dbCmd, "@where", DbType.String,whereStr);
+			
+			List<ActiveAccountInfo> list= new List<ActiveAccountInfo>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						ActiveAccountInfo obj= Object2Model(reader);
+						list.Add(obj);
+					}
+					reader.NextResult();
+					rowCount = (int)dbCmd.Parameters["@rowCount"].Value;
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+		#region Object2Model
+
+        public ActiveAccountInfo Object2Model(IDataReader reader)
+        {
+            ActiveAccountInfo obj = null;
+            try
+            {
+                obj = new ActiveAccountInfo();
+				obj.Id = reader["Id"] == DBNull.Value ? default(int) : (int)reader["Id"];
+				obj.GUID = reader["GUID"] == DBNull.Value ? default(string) : (string)reader["GUID"];
+				obj.Account = reader["Account"] == DBNull.Value ? default(string) : (string)reader["Account"];
+				obj.TimeSpan = reader["TimeSpan"] == DBNull.Value ? default(string) : (string)reader["TimeSpan"];
+				obj.Token = reader["Token"] == DBNull.Value ? default(string) : (string)reader["Token"];
+				obj.IsActive = reader["IsActive"] == DBNull.Value ? default(bool) : (bool)reader["IsActive"];
+				obj.ActiveTime = reader["ActiveTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["ActiveTime"];
+				obj.CreateTime = reader["CreateTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["CreateTime"];
+				
+            }
+            catch(Exception ex)
+            {
+                obj = null;
+            }
+            return obj;
+        }
+
+
+
+        #endregion
+
+
+    }
+
+	[Serializable]
 	public partial class AdvertisingInfoAccess : AccessBase<AdvertisingInfo>,IDisposable
     {
 
@@ -1122,6 +1399,283 @@ namespace Site.Videos.DataAccess.Access
     }
 
 	[Serializable]
+	public partial class SendMailLogAccess : AccessBase<SendMailLog>,IDisposable
+    {
+
+		Database db;
+
+		DatabaseProviderFactory factory = new DatabaseProviderFactory();//6.0 创建方式
+
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public SendMailLogAccess(string configName)
+        {
+			db = factory.Create(configName);
+			DataTableName = "SendMailLog";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        public SendMailLogAccess()
+        {
+            db = factory.Create("Video");
+			DataTableName = "SendMailLog";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~SendMailLogAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Proc_SendMailLog_Insert
+		 public override int Insert(SendMailLog obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_SendMailLog_Insert");
+			db.AddOutParameter(dbCmd, "@Id", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@Email", DbType.String,obj.Email);
+			db.AddInParameter(dbCmd, "@Title", DbType.String,obj.Title);
+			db.AddInParameter(dbCmd, "@SendTime", DbType.DateTime,obj.SendTime);
+			db.AddInParameter(dbCmd, "@SendContent", DbType.String,obj.SendContent);
+			db.AddInParameter(dbCmd, "@IsSuccess", DbType.Boolean,obj.IsSuccess);
+			db.AddInParameter(dbCmd, "@Remark", DbType.String,obj.Remark);
+			db.AddInParameter(dbCmd, "@CreateTime", DbType.DateTime,obj.CreateTime);
+						
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				int Id = (int)dbCmd.Parameters["@Id"].Value;
+				return Id;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Proc_SendMailLog_Delete
+		 public override int Delete(int id)
+		 {
+			try
+			{ 
+			
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_SendMailLog_DeleteById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Proc_SendMailLog_Update
+		 public override int Update(SendMailLog obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_SendMailLog_UpdateById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,obj.Id);
+			db.AddInParameter(dbCmd, "@Email", DbType.String,obj.Email);
+			db.AddInParameter(dbCmd, "@Title", DbType.String,obj.Title);
+			db.AddInParameter(dbCmd, "@SendTime", DbType.DateTime,obj.SendTime);
+			db.AddInParameter(dbCmd, "@SendContent", DbType.String,obj.SendContent);
+			db.AddInParameter(dbCmd, "@IsSuccess", DbType.Boolean,obj.IsSuccess);
+			db.AddInParameter(dbCmd, "@Remark", DbType.String,obj.Remark);
+			db.AddInParameter(dbCmd, "@CreateTime", DbType.DateTime,obj.CreateTime);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Proc_SendMailLog_SelectObject
+		 public override SendMailLog SelectObject(int id)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_SendMailLog_SelectById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			SendMailLog obj=null;
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						obj=Object2Model(reader);
+					}
+                }
+				return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Proc_SendMailLog_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<SendMailLog> Select(string whereStr)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_SendMailLog_SelectList");
+			db.AddInParameter(dbCmd, "@whereStr", DbType.String,whereStr);
+						IList<SendMailLog> list= new List<SendMailLog>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						SendMailLog obj= Object2Model(reader);
+						list.Add(obj);
+					}
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 06 Proc_SendMailLog_SelectPage
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<SendMailLog> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_SendMailLog_SelectPage");
+			db.AddOutParameter(dbCmd, "@rowCount", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@cloumns", DbType.String,cloumns);
+			db.AddInParameter(dbCmd, "@pageIndex", DbType.Int32,pageIndex);
+			db.AddInParameter(dbCmd, "@pageSize", DbType.Int32,pageSize);
+			db.AddInParameter(dbCmd, "@orderBy", DbType.String,order);
+			db.AddInParameter(dbCmd, "@where", DbType.String,whereStr);
+			
+			List<SendMailLog> list= new List<SendMailLog>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						SendMailLog obj= Object2Model(reader);
+						list.Add(obj);
+					}
+					reader.NextResult();
+					rowCount = (int)dbCmd.Parameters["@rowCount"].Value;
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+		#region Object2Model
+
+        public SendMailLog Object2Model(IDataReader reader)
+        {
+            SendMailLog obj = null;
+            try
+            {
+                obj = new SendMailLog();
+				obj.Id = reader["Id"] == DBNull.Value ? default(int) : (int)reader["Id"];
+				obj.Email = reader["Email"] == DBNull.Value ? default(string) : (string)reader["Email"];
+				obj.Title = reader["Title"] == DBNull.Value ? default(string) : (string)reader["Title"];
+				obj.SendTime = reader["SendTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["SendTime"];
+				obj.SendContent = reader["SendContent"] == DBNull.Value ? default(string) : (string)reader["SendContent"];
+				obj.IsSuccess = reader["IsSuccess"] == DBNull.Value ? default(bool) : (bool)reader["IsSuccess"];
+				obj.Remark = reader["Remark"] == DBNull.Value ? default(string) : (string)reader["Remark"];
+				obj.CreateTime = reader["CreateTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["CreateTime"];
+				
+            }
+            catch(Exception ex)
+            {
+                obj = null;
+            }
+            return obj;
+        }
+
+
+
+        #endregion
+
+
+    }
+
+	[Serializable]
 	public partial class UserInfoAccess : AccessBase<UserInfo>,IDisposable
     {
 
@@ -2017,6 +2571,7 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@v_intro", DbType.String,obj.v_intro);
 			db.AddInParameter(dbCmd, "@v_coverImgSrc", DbType.String,obj.v_coverImgSrc);
 			db.AddInParameter(dbCmd, "@v_playSrc", DbType.String,obj.v_playSrc);
+			db.AddInParameter(dbCmd, "@v_min_playSrc", DbType.String,obj.v_min_playSrc);
 			db.AddInParameter(dbCmd, "@v_timeLength", DbType.String,obj.v_timeLength);
 			db.AddInParameter(dbCmd, "@v_createTime", DbType.DateTime,obj.v_createTime);
 			db.AddInParameter(dbCmd, "@v_status", DbType.Int32,obj.v_status);
@@ -2067,6 +2622,7 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@v_intro", DbType.String,obj.v_intro);
 			db.AddInParameter(dbCmd, "@v_coverImgSrc", DbType.String,obj.v_coverImgSrc);
 			db.AddInParameter(dbCmd, "@v_playSrc", DbType.String,obj.v_playSrc);
+			db.AddInParameter(dbCmd, "@v_min_playSrc", DbType.String,obj.v_min_playSrc);
 			db.AddInParameter(dbCmd, "@v_timeLength", DbType.String,obj.v_timeLength);
 			db.AddInParameter(dbCmd, "@v_createTime", DbType.DateTime,obj.v_createTime);
 			db.AddInParameter(dbCmd, "@v_status", DbType.Int32,obj.v_status);
@@ -2200,6 +2756,7 @@ namespace Site.Videos.DataAccess.Access
 				obj.v_intro = reader["v_intro"] == DBNull.Value ? default(string) : (string)reader["v_intro"];
 				obj.v_coverImgSrc = reader["v_coverImgSrc"] == DBNull.Value ? default(string) : (string)reader["v_coverImgSrc"];
 				obj.v_playSrc = reader["v_playSrc"] == DBNull.Value ? default(string) : (string)reader["v_playSrc"];
+				obj.v_min_playSrc = reader["v_min_playSrc"] == DBNull.Value ? default(string) : (string)reader["v_min_playSrc"];
 				obj.v_timeLength = reader["v_timeLength"] == DBNull.Value ? default(string) : (string)reader["v_timeLength"];
 				obj.v_createTime = reader["v_createTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["v_createTime"];
 				obj.v_status = reader["v_status"] == DBNull.Value ? default(int) : (int)reader["v_status"];

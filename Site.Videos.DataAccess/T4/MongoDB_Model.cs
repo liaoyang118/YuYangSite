@@ -11,6 +11,118 @@ namespace Site.Videos.DataAccess.Model
 {
 
 	[Serializable]
+	public partial class Mongo_ActiveAccountInfo
+    {
+		#region
+		/// <summary>
+        /// Monogdb 自带唯一ID
+        /// </summary>
+		public ObjectId Id{get;set;}
+
+		#endregion
+
+
+        
+		#region GUID
+		private string _GUID;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string GUID 
+		{ 
+			get { return _GUID; } 
+			set { _GUID = value; } 
+		
+		}
+		#endregion
+		
+		#region Account
+		private string _Account;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string Account 
+		{ 
+			get { return _Account; } 
+			set { _Account = value; } 
+		
+		}
+		#endregion
+		
+		#region TimeSpan
+		private string _TimeSpan;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string TimeSpan 
+		{ 
+			get { return _TimeSpan; } 
+			set { _TimeSpan = value; } 
+		
+		}
+		#endregion
+		
+		#region Token
+		private string _Token;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string Token 
+		{ 
+			get { return _Token; } 
+			set { _Token = value; } 
+		
+		}
+		#endregion
+		
+		#region IsActive
+		private bool _IsActive;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public bool IsActive 
+		{ 
+			get { return _IsActive; } 
+			set { _IsActive = value; } 
+		
+		}
+		#endregion
+		
+		#region ActiveTime
+		private DateTime? _ActiveTime;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime? ActiveTime 
+		{ 
+			get { return _ActiveTime; } 
+			set { _ActiveTime = value; } 
+		
+		}
+		#endregion
+		
+		#region CreateTime
+		private DateTime _CreateTime;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime CreateTime 
+		{ 
+			get { return _CreateTime; } 
+			set { _CreateTime = value; } 
+		
+		}
+		#endregion
+		
+    }
+	[Serializable]
 	public partial class Mongo_AdvertisingInfo
     {
 		#region
@@ -445,6 +557,118 @@ namespace Site.Videos.DataAccess.Model
 		
     }
 	[Serializable]
+	public partial class Mongo_SendMailLog
+    {
+		#region
+		/// <summary>
+        /// Monogdb 自带唯一ID
+        /// </summary>
+		public ObjectId Id{get;set;}
+
+		#endregion
+
+
+        
+		#region Email
+		private string _Email;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string Email 
+		{ 
+			get { return _Email; } 
+			set { _Email = value; } 
+		
+		}
+		#endregion
+		
+		#region Title
+		private string _Title;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string Title 
+		{ 
+			get { return _Title; } 
+			set { _Title = value; } 
+		
+		}
+		#endregion
+		
+		#region SendTime
+		private DateTime _SendTime;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime SendTime 
+		{ 
+			get { return _SendTime; } 
+			set { _SendTime = value; } 
+		
+		}
+		#endregion
+		
+		#region SendContent
+		private string _SendContent;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string SendContent 
+		{ 
+			get { return _SendContent; } 
+			set { _SendContent = value; } 
+		
+		}
+		#endregion
+		
+		#region IsSuccess
+		private bool _IsSuccess;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public bool IsSuccess 
+		{ 
+			get { return _IsSuccess; } 
+			set { _IsSuccess = value; } 
+		
+		}
+		#endregion
+		
+		#region Remark
+		private string _Remark;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string Remark 
+		{ 
+			get { return _Remark; } 
+			set { _Remark = value; } 
+		
+		}
+		#endregion
+		
+		#region CreateTime
+		private DateTime _CreateTime;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime CreateTime 
+		{ 
+			get { return _CreateTime; } 
+			set { _CreateTime = value; } 
+		
+		}
+		#endregion
+		
+    }
+	[Serializable]
 	public partial class Mongo_UserInfo
     {
 		#region
@@ -803,6 +1027,20 @@ namespace Site.Videos.DataAccess.Model
 		{ 
 			get { return _v_playSrc; } 
 			set { _v_playSrc = value; } 
+		
+		}
+		#endregion
+		
+		#region v_min_playSrc
+		private string _v_min_playSrc;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string v_min_playSrc 
+		{ 
+			get { return _v_min_playSrc; } 
+			set { _v_min_playSrc = value; } 
 		
 		}
 		#endregion

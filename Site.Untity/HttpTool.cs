@@ -209,22 +209,26 @@ namespace Site.Untity
                 {
                     //生成截图
                     FFmpegTool tool = new FFmpegTool();
-
                     string sourcePath = virtualWcfPath + fileNameAndExt;
                     string configPath = System.AppDomain.CurrentDomain.BaseDirectory + @"\\ffmpeg\\ffmpeg.exe";
+
                     //剪切
                     tool.ShearVideo(ref sourcePath, ".mp4", totalSecond, configPath);
+                    //截图                
+                    string thumSrc = tool.CatchImg(sourcePath, ".mp4", thumSize, totalSecond, configPath);
+                    //试看截取
+                    string minFileName = UntityTool.Md5_32(videoUrl) + ".mp4";
+                    string minSrc = tool.ShearMinVideo(sourcePath, minFileName, totalSecond, 60, configPath);
 
-                    //截图绝对路径                    
-                    string thumSrc = tool.CatchImg(sourcePath, ".mp4", thumSize, totalSecond, System.AppDomain.CurrentDomain.BaseDirectory + @"\\ffmpeg\\ffmpeg.exe");
-
-                    //图片网络路径
+                    //网络路径
                     string videoSrc = sourcePath.Replace(thunderPath, domain).Replace("\\", "/");
                     string imgSrc = thumSrc.Replace(thunderPath, domain).Replace("\\", "/");
+                    string minVideoSrc = minSrc.Replace(thunderPath, domain).Replace("\\", "/");
 
                     //资源地址
                     urlResult.Add(videoSrc);
                     urlResult.Add(imgSrc);
+                    urlResult.Add(minVideoSrc);
 
                     if (File.Exists(virtualWcfPath + fileNameAndExt))
                     {
