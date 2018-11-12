@@ -168,6 +168,158 @@ namespace Site.Videos.DataAccess.Service
         #endregion
 
     }
+	public partial class Mongo_ActiveVipInfoService
+    {
+
+        #region 01 Mongo_ActiveVipInfo_Insert
+		 public static string Insert(Mongo_ActiveVipInfo obj)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 Mongo_ActiveVipInfo_Delete
+		 public static int Delete(Expression<Func<Mongo_ActiveVipInfo,bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.Delete(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 Mongo_ActiveVipInfo_Update
+		 public static int Update(Expression<Func<Mongo_ActiveVipInfo, bool>> filter,Mongo_ActiveVipInfo obj)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.Update(filter,obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 Mongo_ActiveVipInfo_SelectObject
+		 public static Mongo_ActiveVipInfo SelectObject(Expression<Func<Mongo_ActiveVipInfo, bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.SelectObject(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 Mongo_ActiveVipInfo_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<Mongo_ActiveVipInfo> Select(Expression<Func<Mongo_ActiveVipInfo, bool>> filter)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.Select(filter);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 Mongo_ActiveVipInfo_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<Mongo_ActiveVipInfo> Select(Expression<Func<Mongo_ActiveVipInfo, bool>> filter,SortDefinition<Mongo_ActiveVipInfo> order)
+		 {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.Select(filter,order);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion 
+
+
+
+		#region 06 Mongo_ActiveVipInfo_SelectPage
+		 public static IList<Mongo_ActiveVipInfo> SelectPage(SortDefinition<Mongo_ActiveVipInfo> order, Expression<Func<Mongo_ActiveVipInfo, bool>> filter, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					return access.SelectPage(order,filter,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 Mongo_ActiveVipInfo_BatchInsert
+        public static void BatchInsert(IList<Mongo_ActiveVipInfo> list)
+        {
+			try
+			{
+				using (var access = new Mongo_ActiveVipInfoAccess())
+				{
+					access.BatchInsert(list);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
 	public partial class Mongo_AdvertisingInfoService
     {
 

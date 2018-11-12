@@ -588,7 +588,7 @@ namespace Site.Untity
 
             return result;
         }
-        
+
         /// <summary>
         /// 生成详情页URL
         /// </summary>
@@ -651,6 +651,29 @@ namespace Site.Untity
             (channel as IDisposable).Dispose();
             return result;
         }
+        #endregion
+
+        #region 读取文件
+
+        /// <summary>
+        /// 读取文件为文本
+        /// </summary>
+        /// <param name="filePath">文件绝对路径</param>
+        /// <returns></returns>
+        public static string ReadFile(string filePath)
+        {
+            string result = string.Empty;
+            if (File.Exists(filePath))
+            {
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    result = sr.ReadToEnd();
+                }
+            }
+
+            return result;
+        }
+
         #endregion
 
     }

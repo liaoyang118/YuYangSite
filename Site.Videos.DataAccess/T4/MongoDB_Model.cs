@@ -123,6 +123,132 @@ namespace Site.Videos.DataAccess.Model
 		
     }
 	[Serializable]
+	public partial class Mongo_ActiveVipInfo
+    {
+		#region
+		/// <summary>
+        /// Monogdb 自带唯一ID
+        /// </summary>
+		public ObjectId Id{get;set;}
+
+		#endregion
+
+
+        
+		#region u_id
+		private int _u_id;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public int u_id 
+		{ 
+			get { return _u_id; } 
+			set { _u_id = value; } 
+		
+		}
+		#endregion
+		
+		#region u_name
+		private string _u_name;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string u_name 
+		{ 
+			get { return _u_name; } 
+			set { _u_name = value; } 
+		
+		}
+		#endregion
+		
+		#region c_days
+		private int _c_days;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public int c_days 
+		{ 
+			get { return _c_days; } 
+			set { _c_days = value; } 
+		
+		}
+		#endregion
+		
+		#region c_num
+		private int _c_num;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public int c_num 
+		{ 
+			get { return _c_num; } 
+			set { _c_num = value; } 
+		
+		}
+		#endregion
+		
+		#region active_code
+		private string _active_code;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string active_code 
+		{ 
+			get { return _active_code; } 
+			set { _active_code = value; } 
+		
+		}
+		#endregion
+		
+		#region IsPay
+		private bool _IsPay;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public bool IsPay 
+		{ 
+			get { return _IsPay; } 
+			set { _IsPay = value; } 
+		
+		}
+		#endregion
+		
+		#region pay_time
+		private DateTime _pay_time;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime pay_time 
+		{ 
+			get { return _pay_time; } 
+			set { _pay_time = value; } 
+		
+		}
+		#endregion
+		
+		#region create_time
+		private DateTime _create_time;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime create_time 
+		{ 
+			get { return _create_time; } 
+			set { _create_time = value; } 
+		
+		}
+		#endregion
+		
+    }
+	[Serializable]
 	public partial class Mongo_AdvertisingInfo
     {
 		#region

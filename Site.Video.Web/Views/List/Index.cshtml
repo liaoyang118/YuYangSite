@@ -72,28 +72,12 @@
                     }
                 }
 
-                <center>
-                    <ul class="pagination">
-                        <li>
-                            <a href="#" aria-label="Previous">
-                                <span aria-hidden="true">«</span>
-                            </a>
-                        </li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li>
-                            <a href="#" aria-label="Next">
-                                <span aria-hidden="true">»</span>
-                            </a>
-                        </li>
-                    </ul>
-                </center>
+                            <center>
+                                @Html.Raw(UntityTool.CreateListPage(3, pageSize, pageIndex, rowCount, string.Format("/List/{0}.html", ViewBag.c_id)))
+                            </center>
             </div>
             @{
-                Html.RenderPartial("../Sidebar/Common_SideBar");
+                Html.RenderPartial("../Sidebar/Video_Index_Sidebar");
             }
         </div>
     </div>

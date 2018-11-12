@@ -27,10 +27,8 @@ namespace Site.Video.Web.Controllers
         {
             UserInfoSearchInfo search = new UserInfoSearchInfo
             {
-                Account = name,
-                AccountState = (int)SiteEnum.AccountState.正常
+                Account = name
             };
-
             IList<UserInfo> list = UserInfoService.Select(search.ToWhereString());
             if (list.Count > 0)
             {
@@ -41,37 +39,59 @@ namespace Site.Video.Web.Controllers
                 else
                 {
                     UserInfo uInfo = list.FirstOrDefault();
-                    string md5Str = UntityTool.Md5_32(pwd);
-                    if (md5Str == uInfo.u_pwd)
+                    if ((int)SiteEnum.AccountState.正常 == uInfo.u_status)
                     {
-                        //保存用户
-                        HttpContextUntity.CurrentUser = uInfo;
-                        string remenber = Request["remenber"] ?? string.Empty;
-
-                        #region ticket 方法
-
-                        //创建一个新的票据，将客户ip记入ticket的userdata 
-                        FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
-                        1, name, DateTime.Now, DateTime.Now.AddHours(2), false, uInfo.Id.ToString());
-                        //将票据加密 
-                        string authTicket = FormsAuthentication.Encrypt(ticket);
-                        //将加密后的票据保存为cookie 
-                        HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, authTicket);
-                        if (!string.IsNullOrEmpty(remenber))
+                        string md5Str = UntityTool.Md5_32(pwd);
+                        if (md5Str == uInfo.u_pwd)
                         {
-                            cookie.Expires = DateTime.Now.AddDays(1);
-                        }
-                        //使用加入了userdata的新cookie 
-                        Response.Cookies.Add(cookie);
-                        //取值
-                        //((System.Web.Security.FormsIdentity)this.Context.User.Identity).Ticket.UserData
-                        #endregion
+                            //保存用户
+                            HttpContextUntity.CurrentUser = uInfo;
+                            string remenber = Request["remenber"] ?? string.Empty;
 
-                        return RedirectToAction("index", "home");
+                            #region ticket 方法
+
+                            //创建一个新的票据，将客户ip记入ticket的userdata 
+                            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                            1, name, DateTime.Now, DateTime.Now.AddHours(2), false, uInfo.Id.ToString());
+                            //将票据加密 
+                            string authTicket = FormsAuthentication.Encrypt(ticket);
+                            //将加密后的票据保存为cookie 
+                            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, authTicket);
+                            if (!string.IsNullOrEmpty(remenber))
+                            {
+                                cookie.Expires = DateTime.Now.AddDays(1);
+                            }
+                            //使用加入了userdata的新cookie 
+                            Response.Cookies.Add(cookie);
+                            //取值
+                            //((System.Web.Security.FormsIdentity)this.Context.User.Identity).Ticket.UserData
+                            #endregion
+
+                            return RedirectToAction("index", "home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("403", "密码错误，请确认！");
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("403", "密码错误，请确认！");
+                        ActiveAccountInfo aInfo = new ActiveAccountInfo();
+                        aInfo.Account = name;
+                        aInfo.CreateTime = DateTime.Now;
+                        aInfo.GUID = UntityTool.GetGUID();
+                        aInfo.IsActive = false;
+                        aInfo.TimeSpan = UntityTool.GetTimeSpan().ToString();
+                        aInfo.Token = UntityTool.Md5_32(aInfo.Account + aInfo.TimeSpan);
+                        aInfo.ActiveTime = DateTime.Now;
+
+                        int result = ActiveAccountInfoService.Insert(aInfo);
+                        if (result > 0)
+                        {
+                            bool isSuccess = SendActiveMail(aInfo);
+                            return RedirectToAction("Notify", "Account", new { msg = HttpUtility.UrlEncode("该账户未激活，已经发送激活链接到注册账户的邮箱中，请打开邮箱，并激活账户！") });
+                        }
+                        ModelState.AddModelError("503", "账号异常，请稍后重新尝试！");
                     }
                 }
             }
@@ -232,21 +252,23 @@ namespace Site.Video.Web.Controllers
         }
 
 
-        public bool SendActiveMail(ActiveAccountInfo aInfo)
+        private bool SendActiveMail(ActiveAccountInfo aInfo)
         {
             string url = string.Format("http://{0}/Account/ActiveMail?gid={1}&at={2}&ts={3}", UntityTool.GetConfigValue("Domain"), aInfo.GUID, aInfo.Account, aInfo.TimeSpan);
 
+            //内容
             StringBuilder sb = new StringBuilder();
             sb.Append("请点击以下链接，激活账户，如果点击无效，复制该链接到浏览器地址中访问。\r\n");
             sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">{0}</a>", url);
             string content = sb.ToString();
 
+            //发送邮件
             SentMail.SentMail sm = new SentMail.SentMail();
-            sm.Init("591community@gmail.com", "账号激活", aInfo.Account, content, false);
+            sm.Init(UntityTool.GetConfigValue("mailAccount"), "账号激活", aInfo.Account, content, true);
             string error;
             sm.SentNetMail(out error);
 
-
+            //记录日志
             bool isSendSuccess = string.IsNullOrEmpty(error) ? true : false;
             SendMailLog smInfo = new SendMailLog();
             smInfo.CreateTime = DateTime.Now;
@@ -256,8 +278,8 @@ namespace Site.Video.Web.Controllers
             smInfo.SendContent = content;
             smInfo.SendTime = DateTime.Now;
             smInfo.Title = "账号激活";
-
             SendMailLogService.Insert(smInfo);
+
 
             return isSendSuccess;
         }

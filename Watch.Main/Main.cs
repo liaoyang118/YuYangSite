@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Site.Untity;
+using Site.Videos.DataAccess.Model;
+using Site.Videos.DataAccess.Service;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -70,22 +73,69 @@ namespace Watch.Main
                 string code = string.Empty;
 
 
+                Info obj = null;
+                ActiveVipInfo avInfo = null;
+                UserInfo uInfo = null;
                 foreach (HtmlAgilityPack.HtmlNode item in nodes)
                 {
-                    time = item.SelectSingleNode("child::td[1]/p[1]").InnerText + " " + item.SelectSingleNode("child::td[1]/p[2]").InnerText;
-                    code = item.SelectSingleNode("child::td[3]/p[1]").InnerText;
-                    money = item.SelectSingleNode("child::td[6]/span[1]").InnerText;
+                    try
+                    {
+                        time = item.SelectSingleNode("child::td[1]/p[1]").InnerText + " " + item.SelectSingleNode("child::td[1]/p[2]").InnerText.ToSafeString();
+                        code = item.SelectSingleNode("child::td[3]/p[1]").InnerText.ToSafeString().Trim(' ');
+                        money = item.SelectSingleNode("child::td[6]/span[1]").InnerText.ToSafeString().Replace("+", "").Trim(' ');
 
-                    if (list.Count >= 10)
-                    {
-                        list.Clear();
+                        if (list.Count >= 10)
+                        {
+                            list.Clear();
+                        }
+                        obj = new Info()
+                        {
+                            Time = time,
+                            Money = money,
+                            OnlyCode = code
+                        };
+
+                        if (code.ToLower().Contains("vip"))
+                        {
+                            list.Add(obj);
+                            //检测Vip
+                            avInfo = ActiveVipInfoService.Select(string.Format(" where active_code='{0}' and IsPay=0 ", code.ToLower())).FirstOrDefault();
+                            if (avInfo != null)
+                            {
+                                decimal currentMoney = decimal.Parse(money.Trim(' '));
+                                if (currentMoney >= avInfo.c_num)
+                                {
+                                    avInfo.IsPay = true;
+                                    avInfo.pay_time = DateTime.Now;
+
+                                    uInfo = UserInfoService.SelectObject(avInfo.u_id);
+                                    uInfo.u_expriseTime = DateTime.Now.AddDays(avInfo.c_days);
+                                    uInfo.u_status = (int)SiteEnum.BasicStatus.有效;
+                                    switch (avInfo.c_days)
+                                    {
+                                        case 3:
+                                            uInfo.u_level = (int)SiteEnum.AccountLevel.试用用户;
+                                            break;
+                                        case 7:
+                                            uInfo.u_level = (int)SiteEnum.AccountLevel.周用户;
+                                            break;
+                                        case 30:
+                                            uInfo.u_level = (int)SiteEnum.AccountLevel.月用户;
+                                            break;
+                                        case 365:
+                                            uInfo.u_level = (int)SiteEnum.AccountLevel.年用户;
+                                            break;
+                                    }
+                                    UserInfoService.Update(uInfo);
+                                    ActiveVipInfoService.Update(avInfo);
+                                }
+                            }
+                        }
                     }
-                    list.Add(new Info()
+                    catch (Exception ex)
                     {
-                        Time = time,
-                        Money = money,
-                        OnlyCode = code
-                    });
+
+                    }
                 }
 
                 dataGridView1.DataSource = list;

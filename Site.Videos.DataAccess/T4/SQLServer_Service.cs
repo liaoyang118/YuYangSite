@@ -148,6 +148,140 @@ namespace Site.Videos.DataAccess.Service
         #endregion
 
     }
+	public partial class ActiveVipInfoService
+    {
+
+        #region 01 ActiveVipInfo_Insert
+		 public static int Insert(ActiveVipInfo obj)
+		 {
+			try
+			{
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 ActiveVipInfo_Delete
+		 public static int Delete(int id)
+		 {
+			try
+			{
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.Delete(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 ActiveVipInfo_Update
+		 public static int Update(ActiveVipInfo obj)
+		 {
+			try
+			{
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.Update(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 ActiveVipInfo_SelectObject
+		 public static ActiveVipInfo SelectObject(int id)
+		 {
+			try
+			{
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.SelectObject(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 ActiveVipInfo_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<ActiveVipInfo> Select(string whereStr)
+		 {
+			try
+			{
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.Select(whereStr);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 06 ActiveVipInfo_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public static IList<ActiveVipInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.SelectPage(cloumns,order,whereStr,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 ActiveVipInfo_SqlBulkCopyBatchInsert
+        public static int SqlBulkCopyBatchInsert(List<ActiveVipInfo> list,int count)
+        {
+			try
+			{
+				using (var access = new ActiveVipInfoAccess())
+				{
+					return access.SqlBulkCopyBatchInsert(list, count);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
 	public partial class AdvertisingInfoService
     {
 

@@ -294,6 +294,286 @@ namespace Site.Videos.DataAccess.Access
     }
 
 	[Serializable]
+	public partial class ActiveVipInfoAccess : AccessBase<ActiveVipInfo>,IDisposable
+    {
+
+		Database db;
+
+		DatabaseProviderFactory factory = new DatabaseProviderFactory();//6.0 创建方式
+
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public ActiveVipInfoAccess(string configName)
+        {
+			db = factory.Create(configName);
+			DataTableName = "ActiveVipInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        public ActiveVipInfoAccess()
+        {
+            db = factory.Create("Video");
+			DataTableName = "ActiveVipInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~ActiveVipInfoAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Proc_ActiveVipInfo_Insert
+		 public override int Insert(ActiveVipInfo obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveVipInfo_Insert");
+			db.AddOutParameter(dbCmd, "@Id", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@u_id", DbType.Int32,obj.u_id);
+			db.AddInParameter(dbCmd, "@u_name", DbType.String,obj.u_name);
+			db.AddInParameter(dbCmd, "@c_days", DbType.Int32,obj.c_days);
+			db.AddInParameter(dbCmd, "@c_num", DbType.Int32,obj.c_num);
+			db.AddInParameter(dbCmd, "@active_code", DbType.String,obj.active_code);
+			db.AddInParameter(dbCmd, "@IsPay", DbType.Boolean,obj.IsPay);
+			db.AddInParameter(dbCmd, "@pay_time", DbType.DateTime,obj.pay_time);
+			db.AddInParameter(dbCmd, "@create_time", DbType.DateTime,obj.create_time);
+						
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				int Id = (int)dbCmd.Parameters["@Id"].Value;
+				return Id;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Proc_ActiveVipInfo_Delete
+		 public override int Delete(int id)
+		 {
+			try
+			{ 
+			
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveVipInfo_DeleteById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Proc_ActiveVipInfo_Update
+		 public override int Update(ActiveVipInfo obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveVipInfo_UpdateById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,obj.Id);
+			db.AddInParameter(dbCmd, "@u_id", DbType.Int32,obj.u_id);
+			db.AddInParameter(dbCmd, "@u_name", DbType.String,obj.u_name);
+			db.AddInParameter(dbCmd, "@c_days", DbType.Int32,obj.c_days);
+			db.AddInParameter(dbCmd, "@c_num", DbType.Int32,obj.c_num);
+			db.AddInParameter(dbCmd, "@active_code", DbType.String,obj.active_code);
+			db.AddInParameter(dbCmd, "@IsPay", DbType.Boolean,obj.IsPay);
+			db.AddInParameter(dbCmd, "@pay_time", DbType.DateTime,obj.pay_time);
+			db.AddInParameter(dbCmd, "@create_time", DbType.DateTime,obj.create_time);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Proc_ActiveVipInfo_SelectObject
+		 public override ActiveVipInfo SelectObject(int id)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveVipInfo_SelectById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			ActiveVipInfo obj=null;
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						obj=Object2Model(reader);
+					}
+                }
+				return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Proc_ActiveVipInfo_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<ActiveVipInfo> Select(string whereStr)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveVipInfo_SelectList");
+			db.AddInParameter(dbCmd, "@whereStr", DbType.String,whereStr);
+						IList<ActiveVipInfo> list= new List<ActiveVipInfo>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						ActiveVipInfo obj= Object2Model(reader);
+						list.Add(obj);
+					}
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 06 Proc_ActiveVipInfo_SelectPage
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<ActiveVipInfo> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_ActiveVipInfo_SelectPage");
+			db.AddOutParameter(dbCmd, "@rowCount", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@cloumns", DbType.String,cloumns);
+			db.AddInParameter(dbCmd, "@pageIndex", DbType.Int32,pageIndex);
+			db.AddInParameter(dbCmd, "@pageSize", DbType.Int32,pageSize);
+			db.AddInParameter(dbCmd, "@orderBy", DbType.String,order);
+			db.AddInParameter(dbCmd, "@where", DbType.String,whereStr);
+			
+			List<ActiveVipInfo> list= new List<ActiveVipInfo>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						ActiveVipInfo obj= Object2Model(reader);
+						list.Add(obj);
+					}
+					reader.NextResult();
+					rowCount = (int)dbCmd.Parameters["@rowCount"].Value;
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+		#region Object2Model
+
+        public ActiveVipInfo Object2Model(IDataReader reader)
+        {
+            ActiveVipInfo obj = null;
+            try
+            {
+                obj = new ActiveVipInfo();
+				obj.Id = reader["Id"] == DBNull.Value ? default(int) : (int)reader["Id"];
+				obj.u_id = reader["u_id"] == DBNull.Value ? default(int) : (int)reader["u_id"];
+				obj.u_name = reader["u_name"] == DBNull.Value ? default(string) : (string)reader["u_name"];
+				obj.c_days = reader["c_days"] == DBNull.Value ? default(int) : (int)reader["c_days"];
+				obj.c_num = reader["c_num"] == DBNull.Value ? default(int) : (int)reader["c_num"];
+				obj.active_code = reader["active_code"] == DBNull.Value ? default(string) : (string)reader["active_code"];
+				obj.IsPay = reader["IsPay"] == DBNull.Value ? default(bool) : (bool)reader["IsPay"];
+				obj.pay_time = reader["pay_time"] == DBNull.Value ? default(DateTime) : (DateTime)reader["pay_time"];
+				obj.create_time = reader["create_time"] == DBNull.Value ? default(DateTime) : (DateTime)reader["create_time"];
+				
+            }
+            catch(Exception ex)
+            {
+                obj = null;
+            }
+            return obj;
+        }
+
+
+
+        #endregion
+
+
+    }
+
+	[Serializable]
 	public partial class AdvertisingInfoAccess : AccessBase<AdvertisingInfo>,IDisposable
     {
 

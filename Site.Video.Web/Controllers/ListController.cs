@@ -16,7 +16,7 @@ namespace Site.Video.Web.Controllers
         [Vip]
         public ActionResult Index(int cid, int? page)
         {
-            int pageSize = 15;
+            int pageSize = 10;
             int rowCount;
             int pageIndex = page == null ? 1 : page.Value;
 
@@ -35,7 +35,7 @@ namespace Site.Video.Web.Controllers
             ViewBag.rowCount = rowCount;
 
             ViewBag.CateName = cInfo.c_name;
-            ViewBag.CId = cInfo.c_id;
+            ViewBag.c_id = cInfo.c_id;
 
             return View();
         }

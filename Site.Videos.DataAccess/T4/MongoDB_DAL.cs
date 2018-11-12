@@ -233,6 +233,221 @@ namespace Site.Videos.DataAccess.Access
     }
 
 	[Serializable]
+	public partial class Mongo_ActiveVipInfoAccess : Mongo_AccessBase<Mongo_ActiveVipInfo>,IDisposable
+    {
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public Mongo_ActiveVipInfoAccess(string dbName) 
+        {
+			DataTableName = "Mongo_ActiveVipInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_Video"].ToString();
+			base.GetDatabase(dbName);
+        }
+
+        public Mongo_ActiveVipInfoAccess()
+        {
+			DataTableName = "Mongo_ActiveVipInfo";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Mongo_Video"].ToString();
+			 base.GetDatabase("Mongo_Video");
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~Mongo_ActiveVipInfoAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Mongodb_Mongo_ActiveVipInfo_Insert
+		 public override string Insert(Mongo_ActiveVipInfo obj)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+				collection.InsertOne(obj);
+				return obj.Id.ToString();
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Mongodb_Mongo_ActiveVipInfo_Delete
+		 public override int Delete(Expression<Func<Mongo_ActiveVipInfo,bool>> filter )
+		 {
+			try
+			{ 
+			
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+				DeleteResult result= collection.DeleteOne<Mongo_ActiveVipInfo>(filter);
+				return (int)result.DeletedCount;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Mongodb_Mongo_ActiveVipInfo_Update
+		 public override int Update(Expression<Func<Mongo_ActiveVipInfo, bool>> filter,Mongo_ActiveVipInfo obj)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+				
+				UpdateResult result= collection.UpdateOne<Mongo_ActiveVipInfo>(filter,Builders<Mongo_ActiveVipInfo>.Update.Set("Id",obj.Id).Set("u_id",obj.u_id).Set("u_name",obj.u_name).Set("c_days",obj.c_days).Set("c_num",obj.c_num).Set("active_code",obj.active_code).Set("IsPay",obj.IsPay).Set("pay_time",obj.pay_time).Set("create_time",obj.create_time));
+				int returnValue = (int)result.ModifiedCount;
+                return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mongodb数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Mongodb_Mongo_ActiveVipInfo_SelectObject
+		 public override Mongo_ActiveVipInfo SelectObject(Expression<Func<Mongo_ActiveVipInfo, bool>> filter )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+                Mongo_ActiveVipInfo obj = collection.Find(filter).FirstOrDefault();
+                return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Mongodb_Mongo_ActiveVipInfo_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<Mongo_ActiveVipInfo> Select(Expression<Func<Mongo_ActiveVipInfo, bool>> filter )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+                IList<Mongo_ActiveVipInfo> list = collection.Find(filter).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion 
+
+		#region 05 Mongodb_Mongo_ActiveVipInfo_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <returns></returns>
+		 public override IList<Mongo_ActiveVipInfo> Select(Expression<Func<Mongo_ActiveVipInfo, bool>> filter,SortDefinition<Mongo_ActiveVipInfo> order )
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+                IList<Mongo_ActiveVipInfo> list = collection.Find(filter).Sort(order).ToList();
+
+                return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+
+		#region 06 Mongodb_Mongo_ActiveVipInfo_SelectPage
+		 public override IList<Mongo_ActiveVipInfo> SelectPage(SortDefinition<Mongo_ActiveVipInfo> order, Expression<Func<Mongo_ActiveVipInfo, bool>> filter,  int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+				IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+                var result = collection.Find(filter).Sort(order);
+                rowCount = (int)result.CountDocuments();
+
+                return result.ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 07 BatchInsert
+
+        public override void BatchInsert(IList<Mongo_ActiveVipInfo> list )
+        {
+            try
+            {
+                IMongoCollection<Mongo_ActiveVipInfo> collection = Database.GetCollection<Mongo_ActiveVipInfo>(DataTableName);
+                collection.InsertMany(list);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Mongodb数据层：" + e.Message);
+            }
+        }
+
+        #endregion
+
+    }
+
+	[Serializable]
 	public partial class Mongo_AdvertisingInfoAccess : Mongo_AccessBase<Mongo_AdvertisingInfo>,IDisposable
     {
 		 private string _connectionStr;
