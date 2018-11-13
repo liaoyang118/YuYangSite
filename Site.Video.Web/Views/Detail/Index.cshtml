@@ -1,8 +1,9 @@
 ﻿@using Site.Videos.DataAccess.Model;
-@using Site.Common;
+@using Site.Untity;
 @{
     VideoCate vcInfo = ViewData["cateInfo"] as VideoCate;
     VideoInfo vInfo = ViewData["vInfo"] as VideoInfo;
+    List<VideoInfo> vList = ViewData["list"] as List<VideoInfo>;
 }
 @{
     Layout = "~/Views/Shared/_Min_Layout.cshtml";
@@ -16,148 +17,86 @@
                 <div class="wrap-vid">
                     <video src="@vInfo.v_playSrc" width="760" height="400" controls="controls" contextmenu="123"></video>
                 </div>
-
                 <div class="line"></div>
-
-                <div class="box">
-                    <div class="box-header">
-                        <h2><i class="fa fa-globe"></i> 精彩推荐</h2>
-                    </div>
-                    <div class="box-content">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="wrap-vid">
-                                    <div class="zoom-container">
-                                        <div class="zoom-caption">
-                                            <span>Video's Tag</span>
-                                            <a href="single.html">
-                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
-                                            </a>
-                                            <p>Video's Name</p>
-                                        </div>
-                                        <img src="~/images/7.jpg">
-                                    </div>
-                                    <h3 class="vid-name"><a href="#">Video's Name</a></h3>
-                                    <div class="info">
-                                        <h5>By <a href="#">Kelvin</a></h5>
-                                        <span><i class="fa fa-calendar"></i>25/3/2015</span>
-                                        <span><i class="fa fa-heart"></i>1,200</span>
-                                    </div>
-                                </div>
+                @{
+                    if (vList.Count > 3)
+                    {
+                        <div class="box">
+                            <div class="box-header">
+                                <h2><i class="fa fa-globe"></i> 精彩推荐</h2>
                             </div>
-                            <div class="col-md-4">
-                                <div class="wrap-vid">
-                                    <div class="zoom-container">
-                                        <div class="zoom-caption">
-                                            <span>Video's Tag</span>
-                                            <a href="single.html">
-                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
-                                            </a>
-                                            <p>Video's Name</p>
-                                        </div>
-                                        <img src="~/images/8.jpg">
-                                    </div>
-                                    <h3 class="vid-name"><a href="#">Video's Name</a></h3>
-                                    <div class="info">
-                                        <h5>By <a href="#">Kelvin</a></h5>
-                                        <span><i class="fa fa-calendar"></i>25/3/2015</span>
-                                        <span><i class="fa fa-heart"></i>1,200</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="wrap-vid">
-                                    <div class="zoom-container">
-                                        <div class="zoom-caption">
-                                            <span>Video's Tag</span>
-                                            <a href="single.html">
-                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
-                                            </a>
-                                            <p>Video's Name</p>
-                                        </div>
-                                        <img src="~/images/9.jpg">
-                                    </div>
-                                    <h3 class="vid-name"><a href="#">Video's Name</a></h3>
-                                    <div class="info">
-                                        <h5>By <a href="#">Kelvin</a></h5>
-                                        <span><i class="fa fa-calendar"></i>25/3/2015</span>
-                                        <span><i class="fa fa-heart"></i>1,200</span>
-                                    </div>
+                            <div class="box-content">
+                                <div class="row">
+                                    @{
+                                        for (int i = 0; i < 3; i++)
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="wrap-vid">
+                                                    <div class="zoom-container">
+                                                        <div class="zoom-caption">
+                                                            <span>@vList[i].v_timeLength</span>
+                                                            <a href="@UntityTool.GenerateVideoDetailUrl(vList[i].v_c_id.Value,vList[i].Id)" target="_blank">
+                                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
+                                                            </a>
+                                                            <p>@vList[i].v_titile.SubOmitString(15)</p>
+                                                        </div>
+                                                        <img src="~/images/7.jpg">
+                                                    </div>
+                                                    <h3 class="vid-name"><a href="@UntityTool.GenerateVideoDetailUrl(vList[i].v_c_id.Value,vList[i].Id)" target="_blank">@vList[i].v_titile.SubOmitString(15)</a></h3>
+                                                    <div class="info">
+                                                        <span><i class="fa fa-calendar"></i>@vList[i].v_createTime.Value.ToStringFullDate()</span>
+                                                        <span><i class="fa fa-heart"></i>1,200</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="line"></div>
-                <div class="box">
-                    <div class="box-header">
-                        <h2><i class="fa fa-globe"></i> 更多</h2>
-                    </div>
-                    <div class="box-content">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="wrap-vid">
-                                    <div class="zoom-container">
-                                        <div class="zoom-caption">
-                                            <span>Video's Tag</span>
-                                            <a href="single.html">
-                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
-                                            </a>
-                                            <p>Video's Name</p>
-                                        </div>
-                                        <img src="~/images/7.jpg">
-                                    </div>
-                                    <h3 class="vid-name"><a href="#">Video's Name</a></h3>
-                                    <div class="info">
-                                        <h5>By <a href="#">Kelvin</a></h5>
-                                        <span><i class="fa fa-calendar"></i>25/3/2015</span>
-                                        <span><i class="fa fa-heart"></i>1,200</span>
-                                    </div>
-                                </div>
+                    }
+                }
+
+                @{
+                    if (vList.Count > 5)
+                    {
+
+                        <div class="line"></div>
+                        <div class="box">
+                            <div class="box-header">
+                                <h2><i class="fa fa-globe"></i> 更多</h2>
                             </div>
-                            <div class="col-md-4">
-                                <div class="wrap-vid">
-                                    <div class="zoom-container">
-                                        <div class="zoom-caption">
-                                            <span>Video's Tag</span>
-                                            <a href="single.html">
-                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
-                                            </a>
-                                            <p>Video's Name</p>
-                                        </div>
-                                        <img src="~/images/8.jpg">
-                                    </div>
-                                    <h3 class="vid-name"><a href="#">Video's Name</a></h3>
-                                    <div class="info">
-                                        <h5>By <a href="#">Kelvin</a></h5>
-                                        <span><i class="fa fa-calendar"></i>25/3/2015</span>
-                                        <span><i class="fa fa-heart"></i>1,200</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="wrap-vid">
-                                    <div class="zoom-container">
-                                        <div class="zoom-caption">
-                                            <span>Video's Tag</span>
-                                            <a href="single.html">
-                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
-                                            </a>
-                                            <p>Video's Name</p>
-                                        </div>
-                                        <img src="~/images/9.jpg">
-                                    </div>
-                                    <h3 class="vid-name"><a href="#">Video's Name</a></h3>
-                                    <div class="info">
-                                        <h5>By <a href="#">Kelvin</a></h5>
-                                        <span><i class="fa fa-calendar"></i>25/3/2015</span>
-                                        <span><i class="fa fa-heart"></i>1,200</span>
-                                    </div>
+                            <div class="box-content">
+                                <div class="row">
+                                    @{
+                                        for (int i = 3; i < 6; i++)
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="wrap-vid">
+                                                    <div class="zoom-container">
+                                                        <div class="zoom-caption">
+                                                            <span>@vList[i].v_timeLength</span>
+                                                            <a href="@UntityTool.GenerateVideoDetailUrl(vList[i].v_c_id.Value,vList[i].Id)" target="_blank">
+                                                                <i class="fa fa-play-circle-o fa-5x" style="color: #fff"></i>
+                                                            </a>
+                                                            <p>@vList[i].v_titile.SubOmitString(15)</p>
+                                                        </div>
+                                                        <img src="~/images/7.jpg">
+                                                    </div>
+                                                    <h3 class="vid-name"><a href="@UntityTool.GenerateVideoDetailUrl(vList[i].v_c_id.Value,vList[i].Id)">@vList[i].v_titile.SubOmitString(15)</a></h3>
+                                                    <div class="info">
+                                                        <span><i class="fa fa-calendar"></i>@vList[i].v_createTime.Value.ToStringFullDate()</span>
+                                                        <span><i class="fa fa-heart"></i>1,200</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    }
+                }
             </div>
             @{
                 Html.RenderPartial("../Sidebar/Video_Detail_Sidebar");

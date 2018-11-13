@@ -593,22 +593,22 @@ namespace Site.Untity
         /// 生成详情页URL
         /// </summary>
         /// <param name="c_id">分类</param>
-        /// <param name="v_gid">唯一ID</param>
+        /// <param name="vid">唯一ID</param>
         /// <returns></returns>
-        public static string GenerateVideoDetailUrl(int c_id, string v_gid)
+        public static string GenerateVideoDetailUrl(int c_id, int vid)
         {
-            return string.Format("http://{0}/Detail/{1}/{2}.html", domain, c_id, v_gid);
+            return string.Format("http://{0}/Detail/{1}/{2}.html", domain, c_id, vid);
         }
 
         /// <summary>
         /// 生成试看地址
         /// </summary>
-        /// <param name="c_id"></param>
-        /// <param name="v_gid"></param>
+        /// <param name="c_id">分类</param>
+        /// <param name="vid">唯一ID</param>
         /// <returns></returns>
-        public static string GenerateVideoMinDetailUrl(int c_id, string v_gid)
+        public static string GenerateVideoMinDetailUrl(int c_id, int vid)
         {
-            return string.Format("http://{0}/Detail/Min/{1}/{2}.html", domain, c_id, v_gid);
+            return string.Format("http://{0}/Detail/Min/{1}/{2}.html", domain, c_id, vid);
         }
 
         #endregion
