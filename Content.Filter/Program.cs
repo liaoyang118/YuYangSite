@@ -9,6 +9,9 @@ using Site.Untity;
 using Site.XiaoShuo.DataAccess.Model;
 using Site.XiaoShuo.DataAccess.Service;
 using Site.XiaoShuo.DataAccess.Service.PartialService.Search;
+using Site.Videos.DataAccess.Model;
+using Site.Videos.DataAccess.Service;
+using Site.Videos.DataAccess.Service.PartialService.Search;
 
 namespace Content.Filter
 {
@@ -104,28 +107,53 @@ namespace Content.Filter
 
             #region WCF测试
 
+            //try
+            //{
+            //    HttpClientHelp web = new HttpClientHelp();
+            //    string error;
+
+            //    string imageSrc = "http://localhost:8900/mp4/test4.mp4";
+            //    //string coverImageSrc = web.CaptureRemoteVedio(imageSrc, out error);
+
+            //    List<string> videoServerSrc = web.CaptureRemoteVedio(imageSrc, out error, "VideoUpload", percent =>
+            //    {
+            //        Console.WriteLine(string.Format("进度【{0}】", percent));
+            //    });
+
+            //    Console.WriteLine(error);
+
+            //    Console.WriteLine(videoServerSrc[0]);
+            //    Console.WriteLine(videoServerSrc[1]);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+            #endregion
+
+            #region MySql测试
+
             try
             {
-                HttpClientHelp web = new HttpClientHelp();
-                string error;
+                MySql_VideoCate cate = new MySql_VideoCate();
+                cate.c_name = "test";
 
-                string imageSrc = "http://localhost:8900/mp4/test4.mp4";
-                //string coverImageSrc = web.CaptureRemoteVedio(imageSrc, out error);
+                int result = MySql_VideoCateService.Insert(cate);
 
-                List<string> videoServerSrc = web.CaptureRemoteVedio(imageSrc, out error, "VideoUpload", percent =>
+                if (result > 0)
                 {
-                    Console.WriteLine(string.Format("进度【{0}】", percent));
-                });
-
-                Console.WriteLine(error);
-
-                Console.WriteLine(videoServerSrc[0]);
-                Console.WriteLine(videoServerSrc[1]);
+                    Console.WriteLine("插入成功");
+                }
+                else
+                {
+                    Console.WriteLine("插入失败");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("出错了：" + ex.Message);
             }
+
             #endregion
 
 

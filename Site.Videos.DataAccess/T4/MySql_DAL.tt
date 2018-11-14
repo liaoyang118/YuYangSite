@@ -1,0 +1,572 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="params.ttinclude" #>
+<#@ include file="DbHelper.ttinclude" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
+using System.Data.Common;
+using System.Data;
+using DataAccess.Base;
+using System.Configuration;
+using <#= ModelNamespaceStr #>;
+
+namespace <#= DataAccessNamespaceStr #>
+{
+
+<# 
+	bool isPartialTable = false;
+    foreach (DbTable table in DbHelper.GetDbTables(ConnectionString,DataBaseName))
+    {
+		if(table.TableName.Contains("_T_"))
+        {
+			continue;
+		}
+
+		if(partialTable.Contains(table.TableName))
+        {
+			isPartialTable=true;
+		}
+		else
+        {
+			isPartialTable=false;
+		}
+		string mysqlTableName = "MySql_"+table.TableName;
+#>
+
+	[Serializable]
+	public partial class <#=mysqlTableName#>Access : <#=isPartialTable?"MySql_AccessBasePartial":"MySql_AccessBase"  #><<#=mysqlTableName#>>,IDisposable
+    {
+
+		private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		<#
+			if(isPartialTable)
+            {
+		#>private string _dataTableNameFormat;
+		protected override string DataTableNameFormat
+		{
+			get { return _dataTableNameFormat; }
+			set { _dataTableNameFormat = value; }
+		}
+		<#
+            }
+			else
+            {
+		#>private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		<#}#>
+
+        
+
+        #region 00 IDisposable 实现
+        public <#=mysqlTableName#>Access(string configName)
+        {
+			<#
+				if(isPartialTable)
+				{
+			#>DataTableNameFormat = "<#=table.TableName#>_T_{0}";
+			<#
+				}
+				else
+				{
+			#>DataTableName = "<#=table.TableName#>";
+			<#
+				} 
+			#>ConnectionStr = ConfigurationManager.ConnectionStrings[configName].ToString();
+			GetCommand();
+
+        }
+
+        public <#=mysqlTableName#>Access()
+        {
+			<#
+				if(isPartialTable)
+				{
+			#>DataTableNameFormat = "<#=table.TableName#>_T_{0}";
+			<#
+				}
+				else
+				{
+			#>DataTableName = "<#=table.TableName#>";
+			<#
+				} 
+			#>ConnectionStr = ConfigurationManager.ConnectionStrings["MySql_<#=connectionNameString  #>"].ToString();
+            GetCommand();
+
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~<#=mysqlTableName#>Access()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Proc_<#=mysqlTableName#>_Insert
+		 public override int Insert(<#=mysqlTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+				Command.CommandText="Proc_<#=table.TableName#>_Insert";
+				Command.CommandTimeout=30;
+				Command.CommandType= CommandType.StoredProcedure;                
+
+				<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+				  {
+					if(column.IsIdentity)
+					{
+				#>Command.Parameters.Add(new MySqlParameter("@<#=column.ColumnName#>", MySqlDbType.<#=column.MySqlDbType#>,4));
+				Command.Parameters["@<#=column.ColumnName#>"].Direction = ParameterDirection.Output;
+				<#	
+					}
+					else
+					{
+				#>Command.Parameters.Add(new MySqlParameter("@<#=column.ColumnName#>", MySqlDbType.<#=column.MySqlDbType#>));
+				Command.Parameters["@<#=column.ColumnName#>"].Value=obj.<#=column.ColumnName#>;					
+				<#	
+					}
+				  }
+				  if(isPartialTable)
+				  {
+				#>Command.Parameters.Add(new MySqlParameter("@TableIndex", MySqlDbType.Int32,tableIndex));
+				  Command.Parameters["@TableIndex"].Value=tableIndex;
+				<#  
+				  }
+				#>
+			
+				int returnValue = Command.ExecuteNonQuery();
+				DisposeCommand();
+                DisposeConnection();
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mysql数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Proc_<#=mysqlTableName#>_Delete
+		 public override int Delete(int id<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+				  {
+					if(column.IsIdentity)
+					{
+				#>Command.CommandText="Proc_<#=table.TableName#>_DeleteBy<#=column.ColumnName#>";
+				Command.CommandTimeout=30;
+				Command.CommandType= CommandType.StoredProcedure;
+				Command.Parameters.Add(new MySqlParameter("@<#=column.ColumnName#>", MySqlDbType.<#=column.MySqlDbType#>,4));
+				
+			<#	
+					break;
+				}
+			  }
+			  if(isPartialTable)
+			  {
+				#>Command.Parameters.Add(new MySqlParameter("@TableIndex", MySqlDbType.Int32,tableIndex));
+				  Command.Parameters["@TableIndex"].Value=tableIndex;
+				<#  
+			  }
+			#>
+				int returnValue = Command.ExecuteNonQuery();
+				DisposeCommand();
+                DisposeConnection();
+
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mysql数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Proc_<#=mysqlTableName#>_Update
+		 public override int Update(<#=mysqlTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+			  {
+				if(column.IsIdentity)
+				{
+				#>Command.CommandText="Proc_<#=table.TableName#>_UpdateBy<#=column.ColumnName#>";
+				Command.CommandTimeout=30;
+				Command.CommandType= CommandType.StoredProcedure;
+				Command.Parameters.Add(new MySqlParameter("@<#=column.ColumnName#>", MySqlDbType.<#=column.MySqlDbType#>,4));
+				Command.Parameters["@<#=column.ColumnName#>"].Value=obj.<#=column.ColumnName#>;
+				<#
+					}
+					else
+					{
+				#>Command.Parameters.Add(new MySqlParameter("@<#=column.ColumnName#>", MySqlDbType.<#=column.MySqlDbType#>));
+				Command.Parameters["@<#=column.ColumnName#>"].Value=obj.<#=column.ColumnName#>;	
+				<#	
+					}
+					}
+					if(isPartialTable)
+					{
+				#>Command.Parameters.Add(new MySqlParameter("@TableIndex", MySqlDbType.Int32,tableIndex));
+					Command.Parameters["@TableIndex"].Value=tableIndex;
+				<#  
+					}
+				#>
+
+			
+				int returnValue = Command.ExecuteNonQuery();
+				DisposeCommand();
+                DisposeConnection();
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("Mysql数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Proc_<#=mysqlTableName#>_SelectObject
+		 public override <#=mysqlTableName#> SelectObject(int id<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+			  {
+				if(column.IsIdentity)
+				{
+			#>Command.CommandText="Proc_<#=table.TableName#>_SelectBy<#=column.ColumnName#>";
+			Command.CommandTimeout=30;
+			Command.CommandType= CommandType.StoredProcedure;
+			Command.Parameters.Add(new MySqlParameter("@<#=column.ColumnName#>", MySqlDbType.<#=column.MySqlDbType#>,4));
+			Command.Parameters["@<#=column.ColumnName#>"].Value=id;
+			<#
+					break;
+				}
+			  }
+			  if(isPartialTable)
+			  {
+			#>Command.Parameters.Add(new MySqlParameter("@TableIndex", MySqlDbType.Int32,tableIndex));
+			  Command.Parameters["@TableIndex"].Value=tableIndex;
+			<#  
+			  }
+			#>
+
+			<#=mysqlTableName#> obj=null;
+			
+               using(IDataReader reader = Command.ExecuteReader())
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						obj=Object2Model(reader);
+					}
+                }
+
+				DisposeCommand();
+                DisposeConnection();
+				return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("MySql数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Proc_<#=mysqlTableName#>_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<<#=mysqlTableName#>> Select(string whereStr<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{ 
+			Command.CommandText="Proc_<#=table.TableName#>_SelectList";
+			Command.CommandTimeout=30;
+			Command.CommandType= CommandType.StoredProcedure;
+			Command.Parameters.Add(new MySqlParameter("@whereStr", MySqlDbType.String));
+			Command.Parameters["@whereStr"].Value=whereStr;
+			<#
+			  if(isPartialTable)
+			  {
+			#>Command.Parameters.Add(new MySqlParameter("@TableIndex", MySqlDbType.Int32,tableIndex));
+			  Command.Parameters["@TableIndex"].Value=tableIndex;
+			<#  
+			  }
+			#>
+			IList<<#=mysqlTableName#>> list= new List<<#=mysqlTableName#>>();
+			
+               using(IDataReader reader = Command.ExecuteReader())
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						<#=mysqlTableName#> obj= Object2Model(reader);
+						list.Add(obj);
+					}
+                }
+				DisposeCommand();
+                DisposeConnection();
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("MySql数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 06 Proc_<#=mysqlTableName#>_SelectPage
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<<#=mysqlTableName#>> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, <#= isPartialTable?"int tableIndex,":"" #>out int rowCount)
+		 {
+			try
+			{ 
+			Command.CommandText="Proc_<#=table.TableName#>_SelectPage";
+			Command.CommandTimeout=30;
+			Command.CommandType= CommandType.StoredProcedure;
+
+			Command.Parameters.Add(new MySqlParameter("@rowCount", MySqlDbType.Int32,4));
+			Command.Parameters["@rowCount"].Direction = ParameterDirection.Output;
+
+			Command.Parameters.Add(new MySqlParameter("@cloumns", MySqlDbType.String));
+			Command.Parameters["@cloumns"].Value=cloumns;
+			Command.Parameters.Add(new MySqlParameter("@pageIndex", MySqlDbType.Int32));
+			Command.Parameters["@pageIndex"].Value=pageIndex;
+			Command.Parameters.Add(new MySqlParameter("@pageSize", MySqlDbType.Int32));
+			Command.Parameters["@pageSize"].Value=pageSize;
+			Command.Parameters.Add(new MySqlParameter("@orderBy", MySqlDbType.String));
+			Command.Parameters["@orderBy"].Value=order;
+			Command.Parameters.Add(new MySqlParameter("@where", MySqlDbType.String));
+			Command.Parameters["@where"].Value=whereStr;
+
+			<#
+			  if(isPartialTable)
+			  {
+			#>Command.Parameters.Add(new MySqlParameter("@TableIndex", MySqlDbType.Int32,tableIndex));
+			  Command.Parameters["@TableIndex"].Value=tableIndex;
+			<#  
+			  }
+			#>
+
+			List<<#=mysqlTableName#>> list= new List<<#=mysqlTableName#>>();
+			
+               using(IDataReader reader = Command.ExecuteReader())
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						<#=mysqlTableName#> obj= Object2Model(reader);
+						list.Add(obj);
+					}
+					reader.NextResult();
+					rowCount = (int)Command.Parameters["@rowCount"].Value;
+                }
+				DisposeCommand();
+                DisposeConnection();
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("MySql数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+		#region 07 Proc__<#=mysqlTableName#>_BatchInsert
+
+		/// <summary>
+        /// 批量插入，必须先开启Mysql数据库的多条模式
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+		public override int BatchInsert(IList<<#=mysqlTableName#>> list)
+        {
+
+			try
+			{
+				//必须先开启数据库的多条模式
+				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
+				StringBuilder sb = new StringBuilder();
+				sb.Append("INSERT INTO ");
+				sb.Append("<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>");
+				sb.Append(" (");
+
+				<#
+				  List<DbColumn> columnList=DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName);
+				  int i=1;
+				  foreach(DbColumn column in columnList)
+				  {
+					if(!column.IsIdentity)
+					{
+				#>sb.Append("<#=column.ColumnName#>");	
+				<#
+					
+						if(i!=columnList.Count-1)
+						{	
+				#>sb.Append(",");		
+				<#
+						}	
+						i++;
+					}
+				  }
+				#>sb.Append(") VALUES ");
+				int _index=0;
+				foreach(<#=mysqlTableName#> item in list)
+				{
+				sb.Append("(");
+				<#
+					int j=1;
+					foreach(DbColumn column2 in columnList)
+					{
+						if(column2.IsIdentity){continue;}
+				#>
+				<#
+				switch (column2.DbType)
+				{
+					case "String":#>sb.Append("\""+item.<#=column2.ColumnName#>+"\"");
+						<#
+						break;
+						case "DateTime":
+						if(column2.IsNullable)
+						{#>sb.Append("\""+item.<#=column2.ColumnName#>.Value.ToString("yyyy-MM-dd HH:mm:ss")+"\"");
+						<#}
+						else
+						{#>sb.Append("\""+item.<#=column2.ColumnName#>.ToString("yyyy-MM-dd HH:mm:ss")+"\"");
+						<#}
+						break;
+						default:#>sb.Append(item.<#=column2.ColumnName#>);
+						<#
+						break;
+
+				}
+				if(j!=columnList.Count-1)
+				{
+			#>
+			sb.Append(",");
+			<#
+				}
+			#>
+			<#
+				j++;
+			}
+			#>sb.Append(")");
+					if(_index<list.Count-1)
+					{
+						sb.Append(",");
+					}
+						_index++;
+				}
+            
+				string sql=sb.ToString();
+
+				Command.CommandText=sql;
+				Command.CommandTimeout=30;
+				Command.CommandType= CommandType.StoredProcedure;
+
+
+				int returnValue = Command.ExecuteNonQuery();
+				DisposeCommand();
+				DisposeConnection();
+				return returnValue;
+			}
+            catch (Exception e)
+            {
+                throw new Exception("MySql数据层："+e.Message);
+            }
+        }
+
+		#endregion
+
+
+		#region Object2Model
+
+        public <#=mysqlTableName#> Object2Model(IDataReader reader)
+        {
+            <#=mysqlTableName#> obj = null;
+            try
+            {
+                obj = new <#=mysqlTableName#>();
+				<# foreach(DbColumn column in DbHelper.GetDbColumns(ConnectionString, DataBaseName, table.TableName))
+				  {
+				#>obj.<#=column.ColumnName#> = reader["<#=column.ColumnName#>"] == DBNull.Value ? default(<#=column.CSharpType#>) : (<#=column.CSharpType#>)reader["<#=column.ColumnName#>"];
+				<#	
+				  }
+				#>
+
+            }
+            catch(Exception ex)
+            {
+                obj = null;
+            }
+            return obj;
+        }
+
+
+
+        #endregion
+
+
+    }
+<#		 
+    }
+#>
+}

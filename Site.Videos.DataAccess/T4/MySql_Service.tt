@@ -1,0 +1,182 @@
+﻿<#@ template  debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ include file="params.ttinclude" #>
+<#@ include file="DbHelper.ttinclude" #>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.Common;
+using System.Data;
+using <#= ModelNamespaceStr #>;
+using <#= DataAccessNamespaceStr #>;
+
+namespace <#= ServiceNamespaceStr #>
+{
+
+<# 
+	bool isPartialTable = false;
+    foreach (DbTable table in DbHelper.GetDbTables(ConnectionString,DataBaseName))
+    {
+		if(table.TableName.Contains("_T_"))
+        {
+			continue;
+		}
+
+		if(partialTable.Contains(table.TableName))
+        {
+			isPartialTable=true;
+		}
+		else
+        {
+			isPartialTable=false;
+		}
+		string mysqlTableName = "MySql_"+table.TableName;
+#>
+	public partial class <#=mysqlTableName#>Service
+    {
+
+        #region 01 <#=mysqlTableName#>_Insert
+		 public static int Insert(<#=mysqlTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.Insert(obj<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 <#=mysqlTableName#>_Delete
+		 public static int Delete(int id<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.Delete(id<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 <#=mysqlTableName#>_Update
+		 public static int Update(<#=mysqlTableName#> obj<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.Update(obj<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 <#=mysqlTableName#>_SelectObject
+		 public static <#=mysqlTableName#> SelectObject(int id<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.SelectObject(id<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 <#=mysqlTableName#>_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<<#=mysqlTableName#>> Select(string whereStr<#= isPartialTable?",int tableIndex":"" #>)
+		 {
+			try
+			{
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.Select(whereStr<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 06 <#=mysqlTableName#>_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public static IList<<#=mysqlTableName#>> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, <#= isPartialTable?"int tableIndex,":"" #>out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.SelectPage(cloumns,order,whereStr,pageIndex,pageSize,<#= isPartialTable?"tableIndex,":"" #>out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 <#=mysqlTableName#>_BatchInsert
+        public static int BatchInsert(List<<#=mysqlTableName#>> list<#= isPartialTable?",int tableIndex":"" #>)
+        {
+			try
+			{
+				using (var access = new <#=mysqlTableName#>Access())
+				{
+					return access.BatchInsert(list<#= isPartialTable?",tableIndex":"" #>);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
+<#		 
+    }
+#>
+}
