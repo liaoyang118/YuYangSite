@@ -447,7 +447,7 @@ namespace <#= DataAccessNamespaceStr #>
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>");
+				sb.Append(<#= isPartialTable?"string.Format(DataTableNameFormat,tableIndex)":"DataTableName" #>);
 				sb.Append(" (");
 
 				<#
@@ -520,7 +520,7 @@ namespace <#= DataAccessNamespaceStr #>
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();

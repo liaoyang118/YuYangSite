@@ -27,7 +27,7 @@ namespace Site.Video.Web.Controllers
         {
             if (HttpContextUntity.CurrentUser != null)
             {
-                UserInfo uInfo = HttpContextUntity.CurrentUser;
+                MySql_UserInfo uInfo = HttpContextUntity.CurrentUser;
                 if (uInfo.u_level != (int)SiteEnum.AccountLevel.普通用户)
                 {
                     if (uInfo.u_expriseTime != null && uInfo.u_expriseTime.Value < DateTime.Now.AddDays(1))

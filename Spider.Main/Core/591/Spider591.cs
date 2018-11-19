@@ -133,9 +133,9 @@ namespace Spider.Main.Core
                         string cateName;
                         string url;
 
-                        List<VideoCate> cates = new List<VideoCate>();
+                        List<MySql_VideoCate> cates = new List<MySql_VideoCate>();
 
-                        VideoCate cateInfo = null;
+                        MySql_VideoCate cateInfo = null;
                         foreach (HtmlNode item in items)
                         {
                             cateName = item.SelectSingleNode("child::div[1]/h5[1]/a[1]").Attributes["data-mxptext"].Value;
@@ -145,15 +145,15 @@ namespace Spider.Main.Core
 
                             urlDic[cateName] = Domain + url;
 
-                            cateInfo = VideoCateService.Select(string.Format(" where c_name='{0}'", cateName)).FirstOrDefault();
+                            cateInfo = MySql_VideoCateService.Select(string.Format(" where c_name='{0}'", cateName)).FirstOrDefault();
                             if (cateInfo == null)
                             {
-                                cates.Add(new VideoCate() { c_name = cateName });
+                                cates.Add(new MySql_VideoCate() { c_name = cateName });
                             }
                         }
                         if (cates.Count > 0)
                         {
-                            VideoCateService.SqlBulkCopyBatchInsert(cates, cates.Count);
+                            MySql_VideoCateService.BatchInsert(cates);
                         }
                     }
                     else

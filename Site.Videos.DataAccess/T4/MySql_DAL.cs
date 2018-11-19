@@ -326,7 +326,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("GUID");	
@@ -372,7 +372,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -735,7 +735,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("u_id");	
@@ -785,7 +785,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -1141,7 +1141,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("a_id");	
@@ -1183,7 +1183,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -1537,7 +1537,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("c_id");	
@@ -1579,7 +1579,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -1937,7 +1937,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("n_id");	
@@ -1983,7 +1983,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -2346,7 +2346,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("r_id");	
@@ -2396,7 +2396,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -2756,7 +2756,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("Email");	
@@ -2802,7 +2802,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -3161,7 +3161,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("u_gid");	
@@ -3207,7 +3207,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -3562,7 +3562,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("u_id");	
@@ -3604,7 +3604,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -3938,7 +3938,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("c_name");	
@@ -3960,7 +3960,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();
@@ -4333,7 +4333,7 @@ namespace Site.Videos.DataAccess.Access
 				//INSERT INTO table (field1,field2,field3) VALUES ('a',"b","c"), ('a',"b","c"),('a',"b","c");
 				StringBuilder sb = new StringBuilder();
 				sb.Append("INSERT INTO ");
-				sb.Append("DataTableName");
+				sb.Append(DataTableName);
 				sb.Append(" (");
 
 				sb.Append("v_id");	
@@ -4399,7 +4399,7 @@ namespace Site.Videos.DataAccess.Access
 
 				Command.CommandText=sql;
 				Command.CommandTimeout=30;
-				Command.CommandType= CommandType.StoredProcedure;
+				Command.CommandType= CommandType.Text;
 
 
 				int returnValue = Command.ExecuteNonQuery();

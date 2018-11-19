@@ -28,7 +28,7 @@ namespace Spider.Main.Core
         /// <summary>
         /// 当前分类对象
         /// </summary>
-        VideoCate _currentCateInfo;
+        MySql_VideoCate _currentCateInfo;
 
         /// <summary>
         /// 并发页数
@@ -130,7 +130,7 @@ namespace Spider.Main.Core
 
 
             htmlDoc = new HtmlDocument();
-            _currentCateInfo = VideoCateService.Select(string.Format(" where c_name='{0}'", _currentCateName)).FirstOrDefault();
+            _currentCateInfo = MySql_VideoCateService.Select(string.Format(" where c_name='{0}'", _currentCateName)).FirstOrDefault();
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Spider.Main.Core
         //线程获取当前页的数据
         private void PageThreadRun(object obj)
         {
-            List<KeyValuePair<VideoInfo, string>> watingGetCarsList = new List<KeyValuePair<VideoInfo, string>>();
+            List<KeyValuePair<MySql_VideoInfo, string>> watingGetCarsList = new List<KeyValuePair<MySql_VideoInfo, string>>();
 
             int pageIndex = (int)obj;
             try
@@ -350,7 +350,7 @@ namespace Spider.Main.Core
                             }
 
                             //抓取对象
-                            VideoInfo vInfo = new VideoInfo();
+                            MySql_VideoInfo vInfo = new MySql_VideoInfo();
                             vInfo.v_createTime = DateTime.Now;
                             vInfo.v_id = UntityTool.GetGUID();
                             vInfo.v_intro = string.Empty;
@@ -368,7 +368,7 @@ namespace Spider.Main.Core
                                 vInfo.v_c_name = _currentCateInfo.c_name;
                             }
 
-                            watingGetCarsList.Add(new KeyValuePair<VideoInfo, string>(vInfo, detailUrl));
+                            watingGetCarsList.Add(new KeyValuePair<MySql_VideoInfo, string>(vInfo, detailUrl));
                         }
                     }
                     else
@@ -394,40 +394,6 @@ namespace Spider.Main.Core
             {
                 main.WriteErrorLog(string.Format("{0}:分类【{1}】,获取第【{2}】页数据出错，详情：【{3}】", LogTaskHead, _currentCateName, pageIndex, ex.Message));
             }
-        }
-
-        //获取分类
-        private int GetCateId(string cateName)
-        {
-            int cateId = 0;
-            switch (cateName)
-            {
-                case "武侠修真":
-                    cateId = (int)SiteEnum.Cate.修真;
-                    break;
-                case "玄幻魔法":
-                    cateId = (int)SiteEnum.Cate.玄幻;
-                    break;
-                case "都市言情":
-                    cateId = (int)SiteEnum.Cate.都市;
-                    break;
-                case "网游动漫":
-                    cateId = (int)SiteEnum.Cate.网游;
-                    break;
-                case "其他":
-                    cateId = (int)SiteEnum.Cate.其他;
-                    break;
-                case "科幻小说":
-                    cateId = (int)SiteEnum.Cate.科幻;
-                    break;
-                case "恐怖灵异":
-                    cateId = (int)SiteEnum.Cate.恐怖;
-                    break;
-                default:
-                    cateId = (int)SiteEnum.Cate.其他;
-                    break;
-            }
-            return cateId;
         }
 
         //轮询监控线程

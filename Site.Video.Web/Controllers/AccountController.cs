@@ -29,7 +29,7 @@ namespace Site.Video.Web.Controllers
             {
                 Account = name
             };
-            IList<UserInfo> list = UserInfoService.Select(search.ToWhereString());
+            IList<MySql_UserInfo> list = MySql_UserInfoService.Select(search.ToWhereString());
             if (list.Count > 0)
             {
                 if (list.Count > 1)
@@ -38,7 +38,7 @@ namespace Site.Video.Web.Controllers
                 }
                 else
                 {
-                    UserInfo uInfo = list.FirstOrDefault();
+                    MySql_UserInfo uInfo = list.FirstOrDefault();
                     if ((int)SiteEnum.AccountState.正常 == uInfo.u_status)
                     {
                         string md5Str = UntityTool.Md5_32(pwd);
@@ -76,7 +76,7 @@ namespace Site.Video.Web.Controllers
                     }
                     else
                     {
-                        ActiveAccountInfo aInfo = new ActiveAccountInfo();
+                        MySql_ActiveAccountInfo aInfo = new MySql_ActiveAccountInfo();
                         aInfo.Account = name;
                         aInfo.CreateTime = DateTime.Now;
                         aInfo.GUID = UntityTool.GetGUID();
@@ -85,7 +85,7 @@ namespace Site.Video.Web.Controllers
                         aInfo.Token = UntityTool.Md5_32(aInfo.Account + aInfo.TimeSpan);
                         aInfo.ActiveTime = DateTime.Now;
 
-                        int result = ActiveAccountInfoService.Insert(aInfo);
+                        int result = MySql_ActiveAccountInfoService.Insert(aInfo);
                         if (result > 0)
                         {
                             bool isSuccess = SendActiveMail(aInfo);
@@ -124,14 +124,14 @@ namespace Site.Video.Web.Controllers
                     //AccountState = (int)SiteEnum.AccountState.正常
                 };
 
-                IList<UserInfo> list = UserInfoService.Select(search.ToWhereString());
+                IList<MySql_UserInfo> list = MySql_UserInfoService.Select(search.ToWhereString());
                 if (list.Count > 0)
                 {
                     ModelState.AddModelError("404", "该注册账户已存在，请更换注册账号后重新尝试！");
                 }
                 else
                 {
-                    UserInfo uInfo = new UserInfo();
+                    MySql_UserInfo uInfo = new MySql_UserInfo();
                     uInfo.u_expriseTime = null;
                     uInfo.u_level = (int)SiteEnum.AccountLevel.普通用户;
                     uInfo.u_name = name;
@@ -141,7 +141,7 @@ namespace Site.Video.Web.Controllers
                     uInfo.u_gid = UntityTool.GetGUID();
                     uInfo.u_expriseTime = DateTime.Now;
 
-                    int result = UserInfoService.Insert(uInfo);
+                    int result = MySql_UserInfoService.Insert(uInfo);
                     if (result > 0)
                     {
                         #region 自动登录
@@ -165,7 +165,7 @@ namespace Site.Video.Web.Controllers
                         //return RedirectToAction("index", "home"); 
                         #endregion
 
-                        ActiveAccountInfo aInfo = new ActiveAccountInfo();
+                        MySql_ActiveAccountInfo aInfo = new MySql_ActiveAccountInfo();
                         aInfo.Account = name;
                         aInfo.CreateTime = DateTime.Now;
                         aInfo.GUID = UntityTool.GetGUID();
@@ -174,7 +174,7 @@ namespace Site.Video.Web.Controllers
                         aInfo.Token = UntityTool.Md5_32(aInfo.Account + aInfo.TimeSpan);
                         aInfo.ActiveTime = DateTime.Now;
 
-                        result = ActiveAccountInfoService.Insert(aInfo);
+                        result = MySql_ActiveAccountInfoService.Insert(aInfo);
                         if (result > 0)
                         {
                             bool isSuccess = SendActiveMail(aInfo);
@@ -252,7 +252,7 @@ namespace Site.Video.Web.Controllers
         }
 
 
-        private bool SendActiveMail(ActiveAccountInfo aInfo)
+        private bool SendActiveMail(MySql_ActiveAccountInfo aInfo)
         {
             string url = string.Format("http://{0}/Account/ActiveMail?gid={1}&at={2}&ts={3}", UntityTool.GetConfigValue("Domain"), aInfo.GUID, aInfo.Account, aInfo.TimeSpan);
 
@@ -270,7 +270,7 @@ namespace Site.Video.Web.Controllers
 
             //记录日志
             bool isSendSuccess = string.IsNullOrEmpty(error) ? true : false;
-            SendMailLog smInfo = new SendMailLog();
+            MySql_SendMailLog smInfo = new MySql_SendMailLog();
             smInfo.CreateTime = DateTime.Now;
             smInfo.Email = aInfo.Account;
             smInfo.IsSuccess = isSendSuccess;
@@ -278,7 +278,7 @@ namespace Site.Video.Web.Controllers
             smInfo.SendContent = content;
             smInfo.SendTime = DateTime.Now;
             smInfo.Title = "账号激活";
-            SendMailLogService.Insert(smInfo);
+            MySql_SendMailLogService.Insert(smInfo);
 
 
             return isSendSuccess;

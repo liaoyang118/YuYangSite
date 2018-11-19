@@ -22,7 +22,7 @@ namespace Site.Video.Web.Filder
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             string httpMethod = filterContext.RequestContext.HttpContext.Request.HttpMethod.ToLower();
-            UserInfo uInfo = HttpContextUntity.CurrentUser;
+            MySql_UserInfo uInfo = HttpContextUntity.CurrentUser;
             if (uInfo == null)
             {
                 base.OnAuthorization(filterContext);
