@@ -45,17 +45,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watch.Main", "Watch.Main\Wa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rabbit.Core", "Rabbit.Core\Rabbit.Core.csproj", "{3A0C9409-B169-4899-AA8B-E498E5F46B6D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06 CommonProcedure", "06 CommonProcedure", "{7A4EC442-CBFB-4DCF-938C-847D3018FB0A}"
-	ProjectSection(SolutionItems) = preProject
-		C:\Users\yang.liao\Desktop\dbo.f_GetCSharpDataTypeBySqlUserType.UserDefinedFunction.sql = C:\Users\yang.liao\Desktop\dbo.f_GetCSharpDataTypeBySqlUserType.UserDefinedFunction.sql
-		C:\Users\yang.liao\Desktop\dbo.Tool_CreateDALByMSEnterlibry.StoredProcedure.sql = C:\Users\yang.liao\Desktop\dbo.Tool_CreateDALByMSEnterlibry.StoredProcedure.sql
-		C:\Users\yang.liao\Desktop\dbo.Tool_CreateModel.StoredProcedure.sql = C:\Users\yang.liao\Desktop\dbo.Tool_CreateModel.StoredProcedure.sql
-		C:\Users\yang.liao\Desktop\dbo.Tool_CreateProc.StoredProcedure.sql = C:\Users\yang.liao\Desktop\dbo.Tool_CreateProc.StoredProcedure.sql
-		C:\Users\yang.liao\Desktop\dbo.Tool_CreateProc_MySql.StoredProcedure.sql = C:\Users\yang.liao\Desktop\dbo.Tool_CreateProc_MySql.StoredProcedure.sql
-		C:\Users\yang.liao\Desktop\dbo.Tool_CreateProc_Partial.StoredProcedure.sql = C:\Users\yang.liao\Desktop\dbo.Tool_CreateProc_Partial.StoredProcedure.sql
-		C:\Users\yang.liao\Desktop\dbo.Tool_DeleteTable.StoredProcedure.sql = C:\Users\yang.liao\Desktop\dbo.Tool_DeleteTable.StoredProcedure.sql
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
