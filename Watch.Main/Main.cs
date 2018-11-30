@@ -129,6 +129,17 @@ namespace Watch.Main
                                     UserInfoService.Update(uInfo);
                                     ActiveVipInfoService.Update(avInfo);
                                 }
+                                //插入充值记录
+                                RechargeRecoder recoder = new RechargeRecoder();
+                                recoder.r_createTime = DateTime.Now;
+                                recoder.r_c_days = avInfo.c_days;
+                                recoder.r_c_id = string.Empty;
+                                recoder.r_c_title = uInfo.u_level.ToString();
+                                recoder.r_id = UntityTool.GetGUID();
+                                recoder.r_money = currentMoney;
+                                recoder.r_u_expriseTime = DateTime.Now.AddDays(avInfo.c_days);
+                                recoder.r_u_id = avInfo.u_id.ToString();
+                                RechargeRecoderService.Insert(recoder);
                             }
                         }
                     }
