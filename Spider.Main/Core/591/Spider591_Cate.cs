@@ -28,7 +28,7 @@ namespace Spider.Main.Core
         /// <summary>
         /// 当前分类对象
         /// </summary>
-        MySql_VideoCate _currentCateInfo;
+        VideoCate _currentCateInfo;
 
         /// <summary>
         /// 并发页数
@@ -130,7 +130,7 @@ namespace Spider.Main.Core
 
 
             htmlDoc = new HtmlDocument();
-            _currentCateInfo = MySql_VideoCateService.Select(string.Format(" where c_name='{0}'", _currentCateName)).FirstOrDefault();
+            _currentCateInfo = VideoCateService.Select(string.Format(" where c_name='{0}'", _currentCateName)).FirstOrDefault();
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Spider.Main.Core
         //线程获取当前页的数据
         private void PageThreadRun(object obj)
         {
-            List<KeyValuePair<MySql_VideoInfo, string>> watingGetCarsList = new List<KeyValuePair<MySql_VideoInfo, string>>();
+            List<KeyValuePair<VideoInfo, string>> watingGetCarsList = new List<KeyValuePair<VideoInfo, string>>();
 
             int pageIndex = (int)obj;
             try
@@ -350,7 +350,7 @@ namespace Spider.Main.Core
                             }
 
                             //抓取对象
-                            MySql_VideoInfo vInfo = new MySql_VideoInfo();
+                            VideoInfo vInfo = new VideoInfo();
                             vInfo.v_createTime = DateTime.Now;
                             vInfo.v_id = UntityTool.GetGUID();
                             vInfo.v_intro = string.Empty;
@@ -368,7 +368,7 @@ namespace Spider.Main.Core
                                 vInfo.v_c_name = _currentCateInfo.c_name;
                             }
 
-                            watingGetCarsList.Add(new KeyValuePair<MySql_VideoInfo, string>(vInfo, detailUrl));
+                            watingGetCarsList.Add(new KeyValuePair<VideoInfo, string>(vInfo, detailUrl));
                         }
                     }
                     else

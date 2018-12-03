@@ -133,9 +133,9 @@ namespace Spider.Main.Core
                         string cateName;
                         string url;
 
-                        List<MySql_VideoCate> cates = new List<MySql_VideoCate>();
+                        List<VideoCate> cates = new List<VideoCate>();
 
-                        MySql_VideoCate cateInfo = null;
+                        VideoCate cateInfo = null;
                         foreach (HtmlNode item in items)
                         {
                             cateName = item.SelectSingleNode("child::div[1]/h5[1]/a[1]").Attributes["data-mxptext"].Value;
@@ -145,15 +145,15 @@ namespace Spider.Main.Core
 
                             urlDic[cateName] = Domain + url;
 
-                            cateInfo = MySql_VideoCateService.Select(string.Format(" where c_name='{0}'", cateName)).FirstOrDefault();
+                            cateInfo = VideoCateService.Select(string.Format(" where c_name='{0}'", cateName)).FirstOrDefault();
                             if (cateInfo == null)
                             {
-                                cates.Add(new MySql_VideoCate() { c_name = cateName });
+                                cates.Add(new VideoCate() { c_name = cateName });
                             }
                         }
                         if (cates.Count > 0)
                         {
-                            MySql_VideoCateService.BatchInsert(cates);
+                            VideoCateService.SqlBulkCopyBatchInsert(cates, cates.Count);
                         }
                     }
                     else
@@ -204,7 +204,7 @@ namespace Spider.Main.Core
                 if (!string.IsNullOrEmpty(result))
                 {
                     htmlDoc.LoadHtml(result);
-                    HtmlNode item = htmlDoc.DocumentNode.SelectSingleNode("/html/body/div[11]/div/div[5]/div/div[2]");
+                    HtmlNode item = htmlDoc.DocumentNode.SelectSingleNode("/html/body/div[11]/div/div[5]/div/div[3]");
                     string totalNumsText = item.InnerText;
 
                     //获取总条数

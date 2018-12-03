@@ -32,7 +32,7 @@ namespace Spider.Main.Core
         int _currentPage;
 
         //待获取小说数据
-        List<KeyValuePair<MySql_VideoInfo, string>> _watingGetFictionList = new List<KeyValuePair<MySql_VideoInfo, string>>();
+        List<KeyValuePair<VideoInfo, string>> _watingGetFictionList = new List<KeyValuePair<VideoInfo, string>>();
 
         /// <summary>
         /// 并发小说数
@@ -93,7 +93,7 @@ namespace Spider.Main.Core
         /// <param name="totalPage"></param>
         /// <param name="isContinueCompensateChapter">
         /// </param>
-        public Spider591_Cate_Detail(MainForm form, string domain, string logTaskHead, List<KeyValuePair<MySql_VideoInfo, string>> watingInsertList, string cateName, int nums, int fictionNums, int currentPage, int UpdateGrowNums)
+        public Spider591_Cate_Detail(MainForm form, string domain, string logTaskHead, List<KeyValuePair<VideoInfo, string>> watingInsertList, string cateName, int nums, int fictionNums, int currentPage, int UpdateGrowNums)
         {
             main = form;
             Domain = domain;
@@ -174,7 +174,7 @@ namespace Spider.Main.Core
             {
                 if (fictionIndex < _watingGetFictionList.Count)
                 {
-                    MySql_VideoInfo fInfo = _watingGetFictionList[fictionIndex].Key;
+                    VideoInfo fInfo = _watingGetFictionList[fictionIndex].Key;
                     try
                     {
                         string detailUrl = _watingGetFictionList[fictionIndex].Value;
@@ -199,7 +199,7 @@ namespace Spider.Main.Core
         /// <param name="fInfo"></param>
         /// <param name="fictionUrl"></param>
         /// <returns></returns>
-        private string GetCoverImage(MySql_VideoInfo fInfo, string detailUrl)
+        private string GetCoverImage(VideoInfo fInfo, string detailUrl)
         {
             string identityId = string.Empty;
 
@@ -207,7 +207,7 @@ namespace Spider.Main.Core
             {
                 //判断是否存在
                 bool isExist = false;
-                MySql_VideoInfo isExistInfo = MySql_VideoInfoService.Select(string.Format("where v_titile='{0}'", fInfo.v_titile)).FirstOrDefault();
+                VideoInfo isExistInfo = VideoInfoService.Select(string.Format("where v_titile='{0}'", fInfo.v_titile)).FirstOrDefault();
                 if (isExistInfo != null)
                 {
                     isExist = true;
@@ -336,7 +336,7 @@ namespace Spider.Main.Core
                         if (!string.IsNullOrEmpty(fInfo.v_coverImgSrc))
                         {
                             //插入
-                            identityId = MySql_VideoInfoService.Insert(fInfo).ToString();
+                            identityId = VideoInfoService.Insert(fInfo).ToString();
                         }
                     }
                 }
