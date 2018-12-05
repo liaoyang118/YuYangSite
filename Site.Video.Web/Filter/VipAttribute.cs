@@ -7,7 +7,7 @@ using Site.Untity;
 using Site.Video.Web.Tools;
 using Site.Videos.DataAccess.Model;
 
-namespace Site.Video.Web.Filder
+namespace Site.Video.Web.Filter
 {
     /// <summary>
     /// 会员验证
@@ -22,7 +22,7 @@ namespace Site.Video.Web.Filder
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             string httpMethod = filterContext.RequestContext.HttpContext.Request.HttpMethod.ToLower();
-            MySql_UserInfo uInfo = HttpContextUntity.CurrentUser;
+            UserInfo uInfo = HttpContextUntity.CurrentUser;
             if (uInfo == null)
             {
                 base.OnAuthorization(filterContext);
@@ -65,4 +65,5 @@ namespace Site.Video.Web.Filder
 
         }
     }
+
 }

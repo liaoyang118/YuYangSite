@@ -1,4 +1,4 @@
-﻿using Site.Video.Web.Filder;
+﻿using Site.Video.Web.Filter;
 using Site.Videos.DataAccess.Model;
 using Site.Videos.DataAccess.Service;
 using Site.Videos.DataAccess.Service.PartialService.Search;

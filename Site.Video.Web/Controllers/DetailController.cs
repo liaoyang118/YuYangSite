@@ -1,4 +1,4 @@
-﻿using Site.Video.Web.Filder;
+﻿using Site.Video.Web.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,7 @@ using Site.Videos.DataAccess.Model;
 using Site.Videos.DataAccess.Service;
 using Site.Untity;
 using Site.Videos.DataAccess.Service.PartialService.Search;
+using Site.XiaoShuo.Web.Filter;
 
 namespace Site.Video.Web.Controllers
 {
@@ -39,7 +40,7 @@ namespace Site.Video.Web.Controllers
         }
 
 
-
+        [VisitsLog]
         public ActionResult Min(int cateId, int vid)
         {
             VideoCate vcInfo = VideoCateService.SelectObject(cateId);

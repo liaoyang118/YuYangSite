@@ -1047,6 +1047,34 @@ namespace Site.Videos.DataAccess.Model
 		}
 		#endregion
 		
+		#region v_browser
+		private string _v_browser;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string v_browser 
+		{ 
+			get { return _v_browser; } 
+			set { _v_browser = value; } 
+		
+		}
+		#endregion
+		
+		#region v_os
+		private string _v_os;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string v_os 
+		{ 
+			get { return _v_os; } 
+			set { _v_os = value; } 
+		
+		}
+		#endregion
+		
     }
 	[Serializable]
 	public partial class MySql_VideoCate

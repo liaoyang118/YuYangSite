@@ -33,7 +33,7 @@ namespace Site.Video.Web.Controllers
             string message = "开通失败，请稍后再试！";
             if (cInfo != null)
             {
-                MySql_UserInfo uInfo = HttpContextUntity.CurrentUser;
+                UserInfo uInfo = HttpContextUntity.CurrentUser;
                 if (uInfo != null)
                 {
                     //读取邮件模板

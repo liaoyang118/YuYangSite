@@ -3349,6 +3349,10 @@ namespace Site.Videos.DataAccess.Access
 				Command.Parameters["@v_url"].Value=obj.v_url;					
 				Command.Parameters.Add(new MySqlParameter("@v_time", MySqlDbType.DateTime));
 				Command.Parameters["@v_time"].Value=obj.v_time;					
+				Command.Parameters.Add(new MySqlParameter("@v_browser", MySqlDbType.String));
+				Command.Parameters["@v_browser"].Value=obj.v_browser;					
+				Command.Parameters.Add(new MySqlParameter("@v_os", MySqlDbType.String));
+				Command.Parameters["@v_os"].Value=obj.v_os;					
 							
 				int returnValue = Command.ExecuteNonQuery();
 				DisposeCommand();
@@ -3407,6 +3411,10 @@ namespace Site.Videos.DataAccess.Access
 				Command.Parameters["@v_url"].Value=obj.v_url;	
 				Command.Parameters.Add(new MySqlParameter("@v_time", MySqlDbType.DateTime));
 				Command.Parameters["@v_time"].Value=obj.v_time;	
+				Command.Parameters.Add(new MySqlParameter("@v_browser", MySqlDbType.String));
+				Command.Parameters["@v_browser"].Value=obj.v_browser;	
+				Command.Parameters.Add(new MySqlParameter("@v_os", MySqlDbType.String));
+				Command.Parameters["@v_os"].Value=obj.v_os;	
 				
 			
 				int returnValue = Command.ExecuteNonQuery();
@@ -3576,6 +3584,10 @@ namespace Site.Videos.DataAccess.Access
 				sb.Append("v_url");	
 				sb.Append(",");		
 				sb.Append("v_time");	
+				sb.Append(",");		
+				sb.Append("v_browser");	
+				sb.Append(",");		
+				sb.Append("v_os");	
 				sb.Append(") VALUES ");
 				int _index=0;
 				foreach(MySql_UserVisitsInfo item in list)
@@ -3592,6 +3604,10 @@ namespace Site.Videos.DataAccess.Access
 										sb.Append("\""+item.v_url+"\"");
 									sb.Append(",");
 										sb.Append("\""+item.v_time.Value.ToString("yyyy-MM-dd HH:mm:ss")+"\"");
+									sb.Append(",");
+										sb.Append("\""+item.v_browser+"\"");
+									sb.Append(",");
+										sb.Append("\""+item.v_os+"\"");
 									sb.Append(")");
 					if(_index<list.Count-1)
 					{
@@ -3636,6 +3652,8 @@ namespace Site.Videos.DataAccess.Access
 				obj.platform = reader["platform"] == DBNull.Value ? default(string) : (string)reader["platform"];
 				obj.v_url = reader["v_url"] == DBNull.Value ? default(string) : (string)reader["v_url"];
 				obj.v_time = reader["v_time"] == DBNull.Value ? default(DateTime) : (DateTime)reader["v_time"];
+				obj.v_browser = reader["v_browser"] == DBNull.Value ? default(string) : (string)reader["v_browser"];
+				obj.v_os = reader["v_os"] == DBNull.Value ? default(string) : (string)reader["v_os"];
 				
             }
             catch(Exception ex)

@@ -1844,7 +1844,7 @@ namespace Site.Videos.DataAccess.Access
 			{ 
 				IMongoCollection<Mongo_UserVisitsInfo> collection = Database.GetCollection<Mongo_UserVisitsInfo>(DataTableName);
 				
-				UpdateResult result= collection.UpdateOne<Mongo_UserVisitsInfo>(filter,Builders<Mongo_UserVisitsInfo>.Update.Set("Id",obj.Id).Set("u_id",obj.u_id).Set("v_id",obj.v_id).Set("v_ip",obj.v_ip).Set("platform",obj.platform).Set("v_url",obj.v_url).Set("v_time",obj.v_time));
+				UpdateResult result= collection.UpdateOne<Mongo_UserVisitsInfo>(filter,Builders<Mongo_UserVisitsInfo>.Update.Set("Id",obj.Id).Set("u_id",obj.u_id).Set("v_id",obj.v_id).Set("v_ip",obj.v_ip).Set("platform",obj.platform).Set("v_url",obj.v_url).Set("v_time",obj.v_time).Set("v_browser",obj.v_browser).Set("v_os",obj.v_os));
 				int returnValue = (int)result.ModifiedCount;
                 return returnValue;
 			}

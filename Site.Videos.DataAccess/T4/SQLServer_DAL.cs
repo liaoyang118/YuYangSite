@@ -2317,6 +2317,8 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@platform", DbType.String,obj.platform);
 			db.AddInParameter(dbCmd, "@v_url", DbType.String,obj.v_url);
 			db.AddInParameter(dbCmd, "@v_time", DbType.DateTime,obj.v_time);
+			db.AddInParameter(dbCmd, "@v_browser", DbType.String,obj.v_browser);
+			db.AddInParameter(dbCmd, "@v_os", DbType.String,obj.v_os);
 						
 				int returnValue = db.ExecuteNonQuery(dbCmd);
 				int Id = (int)dbCmd.Parameters["@Id"].Value;
@@ -2362,6 +2364,8 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@platform", DbType.String,obj.platform);
 			db.AddInParameter(dbCmd, "@v_url", DbType.String,obj.v_url);
 			db.AddInParameter(dbCmd, "@v_time", DbType.DateTime,obj.v_time);
+			db.AddInParameter(dbCmd, "@v_browser", DbType.String,obj.v_browser);
+			db.AddInParameter(dbCmd, "@v_os", DbType.String,obj.v_os);
 			
 			
 				int returnValue = db.ExecuteNonQuery(dbCmd);
@@ -2490,6 +2494,8 @@ namespace Site.Videos.DataAccess.Access
 				obj.platform = reader["platform"] == DBNull.Value ? default(string) : (string)reader["platform"];
 				obj.v_url = reader["v_url"] == DBNull.Value ? default(string) : (string)reader["v_url"];
 				obj.v_time = reader["v_time"] == DBNull.Value ? default(DateTime) : (DateTime)reader["v_time"];
+				obj.v_browser = reader["v_browser"] == DBNull.Value ? default(string) : (string)reader["v_browser"];
+				obj.v_os = reader["v_os"] == DBNull.Value ? default(string) : (string)reader["v_os"];
 				
             }
             catch(Exception ex)

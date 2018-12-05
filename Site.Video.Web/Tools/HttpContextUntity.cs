@@ -14,7 +14,7 @@ namespace Site.Video.Web.Tools
         /// <summary>
         /// 当前登录用户
         /// </summary>
-        public static MySql_UserInfo CurrentUser
+        public static UserInfo CurrentUser
         {
             set
             {
@@ -24,7 +24,7 @@ namespace Site.Video.Web.Tools
             {
                 if (HttpContext.Current.Session["user"] != null)
                 {
-                    return (MySql_UserInfo)HttpContext.Current.Session["user"];
+                    return (UserInfo)HttpContext.Current.Session["user"];
                 }
                 else
                 {
@@ -36,8 +36,8 @@ namespace Site.Video.Web.Tools
                             Account = name,
                             AccountState = (int)SiteEnum.AccountState.正常
                         };
-                        IList<MySql_UserInfo> list = MySql_UserInfoService.Select(search.ToWhereString());
-                        MySql_UserInfo sInfo = list.FirstOrDefault();
+                        IList<UserInfo> list = UserInfoService.Select(search.ToWhereString());
+                        UserInfo sInfo = list.FirstOrDefault();
                         return sInfo;
                     }
                     return null;
