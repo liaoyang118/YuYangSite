@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(main));
             this.btn_start = new System.Windows.Forms.Button();
             this.txt_url = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -37,11 +36,11 @@
             this.web_browser = new System.Windows.Forms.WebBrowser();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.btn_recoder = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.OnlyCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Money = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btn_recoder = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -131,6 +130,21 @@
             this.dataGridView1.Size = new System.Drawing.Size(402, 443);
             this.dataGridView1.TabIndex = 0;
             // 
+            // btn_recoder
+            // 
+            this.btn_recoder.Location = new System.Drawing.Point(317, 10);
+            this.btn_recoder.Name = "btn_recoder";
+            this.btn_recoder.Size = new System.Drawing.Size(75, 23);
+            this.btn_recoder.TabIndex = 6;
+            this.btn_recoder.Text = "查看记录";
+            this.btn_recoder.UseVisualStyleBackColor = true;
+            this.btn_recoder.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 60000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // OnlyCode
             // 
             this.OnlyCode.DataPropertyName = "OnlyCode";
@@ -152,21 +166,6 @@
             this.Time.Name = "Time";
             this.Time.ReadOnly = true;
             // 
-            // btn_recoder
-            // 
-            this.btn_recoder.Location = new System.Drawing.Point(317, 10);
-            this.btn_recoder.Name = "btn_recoder";
-            this.btn_recoder.Size = new System.Drawing.Size(75, 23);
-            this.btn_recoder.TabIndex = 6;
-            this.btn_recoder.Text = "查看记录";
-            this.btn_recoder.UseVisualStyleBackColor = true;
-            this.btn_recoder.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 60000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -179,9 +178,9 @@
             this.Controls.Add(this.txt_url);
             this.Controls.Add(this.btn_start);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "监控";
             this.Load += new System.EventHandler(this.main_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

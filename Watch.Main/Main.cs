@@ -125,6 +125,9 @@ namespace Watch.Main
                                         case 365:
                                             uInfo.u_level = (int)SiteEnum.AccountLevel.年用户;
                                             break;
+                                        default:
+                                            uInfo.u_level = (int)SiteEnum.AccountLevel.试用用户;
+                                            break;
                                     }
                                     UserInfoService.Update(uInfo);
                                     ActiveVipInfoService.Update(avInfo);
@@ -140,6 +143,24 @@ namespace Watch.Main
                                 recoder.r_u_expriseTime = DateTime.Now.AddDays(avInfo.c_days);
                                 recoder.r_u_id = avInfo.u_id.ToString();
                                 RechargeRecoderService.Insert(recoder);
+
+                                //邮件通知
+                                string url = string.Format("http://{0}/Account/LoginOut", UntityTool.GetConfigValue("Domain"));
+                                //内容
+                                StringBuilder sb = new StringBuilder();
+                                sb.Append("开通成功：");
+                                sb.Append("会员等级：" + uInfo.u_level.ToString());
+                                sb.Append("开通时间：" + DateTime.Now.ToStringFullDate());
+                                sb.Append("过期时间：" + uInfo.u_expriseTime.Value.ToStringFullDate());
+                                sb.Append("请点击以下链接，重新登录，如果点击无效，复制该链接到浏览器地址中访问。\r\n");
+                                sb.AppendFormat("<a href=\"{0}\" target=\"_blank\">{0}</a>", url);
+                                string content = sb.ToString();
+
+                                //发送邮件
+                                SentMail.SentMail sm = new SentMail.SentMail();
+                                sm.Init(UntityTool.GetConfigValue("mailAccount"), "开通VIP成功", avInfo.u_name, content, true);
+                                string error;
+                                sm.SentNetMail(out error);
                             }
                         }
                     }

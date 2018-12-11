@@ -88,6 +88,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Site.Mail\SentMail.csproj">
+      <Project>{3fa14bb2-ffae-4972-8450-261426fae235}</Project>
+      <Name>SentMail</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Site.Untity\Site.Untity.csproj">
       <Project>{422e16e1-a23a-4e46-95d3-840f7e44f2be}</Project>
       <Name>Site.Untity</Name>
