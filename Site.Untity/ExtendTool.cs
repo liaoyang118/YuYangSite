@@ -53,7 +53,28 @@ namespace Site.Untity
             }
             return value;
         }
-        
+
+        /// <summary>
+        /// 值转换为对应的枚举
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T ValueToEnum<T>(this string value)
+        {
+            return (T)Enum.Parse(typeof(T), value);
+        }
+
+        /// <summary>
+        /// 获取指定枚举常数值对应的名称
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ValueToEnumName<T>(this int value)
+        {
+            return Enum.GetName(typeof(T), value);
+        }
 
     }
 }

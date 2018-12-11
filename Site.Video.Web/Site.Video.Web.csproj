@@ -349,11 +349,11 @@
     <Content Include="Views\Vip\Index.cshtml" />
     <Content Include="Views\Account\Notify.cshtml" />
     <Content Include="Views\Shared\_Detail_Min_Layout.cshtml" />
+    <Content Include="Views\Sidebar\Video_Detail_Sidebar_VipInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Sidebar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

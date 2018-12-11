@@ -91,6 +91,6 @@ namespace Site.Video.Web.Controllers
 
             return RedirectToAction("Notify", "Account", new { msg = HttpUtility.UrlEncode(message) });
         }
-
+        
     }
 }
