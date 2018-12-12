@@ -273,6 +273,19 @@ namespace Site.Untity
             client.DefaultRequestHeaders.Add(name, newHeaders);
         }
 
+        public void AddHeaders(string name, string values)
+        {
+            client.DefaultRequestHeaders.Add(name, values);
+        }
+
+        public void SetAuthorizationHead(string name, string password)
+        {
+            string str = string.Format("{0}:{1}", name, password);
+            AuthenticationHeaderValue authValue = new AuthenticationHeaderValue("Basic", str.ToBase64(Encoding.UTF8));
+            client.DefaultRequestHeaders.Authorization = authValue;
+        }
+
+
 
         HttpClient client = null;
         //fiddler 代理
@@ -419,12 +432,13 @@ namespace Site.Untity
         /// <param name="url"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public string Post(string url, string param)
+        public string Post(string url, string param, string bodyContentType = "application/x-www-form-urlencoded")
         {
             try
             {
                 string content = string.Empty;
                 HttpContent requestContent = new StringContent(param);
+                requestContent.Headers.ContentType = new MediaTypeHeaderValue(bodyContentType);
                 HttpResponseMessage result = client.PostAsync(url, requestContent).Result;
                 if (result.StatusCode == System.Net.HttpStatusCode.OK)
                 {

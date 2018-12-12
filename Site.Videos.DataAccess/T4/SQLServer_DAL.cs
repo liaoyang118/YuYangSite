@@ -1399,6 +1399,268 @@ namespace Site.Videos.DataAccess.Access
     }
 
 	[Serializable]
+	public partial class PaypalTokenAccess : AccessBase<PaypalToken>,IDisposable
+    {
+
+		Database db;
+
+		DatabaseProviderFactory factory = new DatabaseProviderFactory();//6.0 创建方式
+
+		 private string _connectionStr;
+        protected override string ConnectionStr
+        {
+            get { return _connectionStr; }
+            set { _connectionStr = value; }
+        }
+
+		private string _dataTableName;
+		protected override string DataTableName
+		{
+			get { return _dataTableName; }
+			set { _dataTableName = value; }
+		}
+		
+        
+
+        #region 00 IDisposable 实现
+        public PaypalTokenAccess(string configName)
+        {
+			db = factory.Create(configName);
+			DataTableName = "PaypalToken";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        public PaypalTokenAccess()
+        {
+            db = factory.Create("Video");
+			DataTableName = "PaypalToken";
+			ConnectionStr = ConfigurationManager.ConnectionStrings["Video"].ToString();
+        }
+
+        //虚拟Idisposable 实现,手动调用的
+        public void Dispose()
+        {
+            //调用方法，释放资源
+            Dispose(true);
+            //通知GC，已经手动调用，不用调用析构函数了
+            System.GC.SuppressFinalize(this);
+        }
+
+        //重载方法，满足不同的调用，清理干净资源，提升性能
+        /// <summary>
+        /// true --手动调用，清理托管资源
+        /// false--GC 调用，把非托管资源一起清理掉
+        /// </summary>
+        /// <param name="isDispose"></param>
+        protected virtual void Dispose(bool isDispose)
+        {
+            if (isDispose)
+            {
+
+            }
+            //清理非托管资源，此处没有，所以直接ruturn
+            return;
+        }
+
+        //析构函数，供GC 调用
+        ~PaypalTokenAccess()
+        {
+            Dispose(false);
+        }
+        #endregion
+
+
+        #region 01 Proc_PaypalToken_Insert
+		 public override int Insert(PaypalToken obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_PaypalToken_Insert");
+			db.AddOutParameter(dbCmd, "@Id", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@Token", DbType.String,obj.Token);
+			db.AddInParameter(dbCmd, "@ExpriseTime", DbType.DateTime,obj.ExpriseTime);
+						
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				int Id = (int)dbCmd.Parameters["@Id"].Value;
+				return Id;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+		
+		#region 02 Proc_PaypalToken_Delete
+		 public override int Delete(int id)
+		 {
+			try
+			{ 
+			
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_PaypalToken_DeleteById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 03 Proc_PaypalToken_Update
+		 public override int Update(PaypalToken obj)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_PaypalToken_UpdateById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,obj.Id);
+			db.AddInParameter(dbCmd, "@Token", DbType.String,obj.Token);
+			db.AddInParameter(dbCmd, "@ExpriseTime", DbType.DateTime,obj.ExpriseTime);
+			
+			
+				int returnValue = db.ExecuteNonQuery(dbCmd);
+				return returnValue;
+			}
+			catch(Exception e)
+			{
+				throw new Exception("数据层："+e.Message);
+			}
+		}
+		#endregion
+
+		#region 04 Proc_PaypalToken_SelectObject
+		 public override PaypalToken SelectObject(int id)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_PaypalToken_SelectById");
+			db.AddInParameter(dbCmd, "@Id", DbType.Int32,id);
+			
+			PaypalToken obj=null;
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						obj=Object2Model(reader);
+					}
+                }
+				return obj;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 05 Proc_PaypalToken_Select
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<PaypalToken> Select(string whereStr)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_PaypalToken_SelectList");
+			db.AddInParameter(dbCmd, "@whereStr", DbType.String,whereStr);
+						IList<PaypalToken> list= new List<PaypalToken>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						PaypalToken obj= Object2Model(reader);
+						list.Add(obj);
+					}
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+		#region 06 Proc_PaypalToken_SelectPage
+		 /// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public override IList<PaypalToken> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			try
+			{ 
+			DbCommand dbCmd = db.GetStoredProcCommand("Proc_PaypalToken_SelectPage");
+			db.AddOutParameter(dbCmd, "@rowCount", DbType.Int32,4);
+			db.AddInParameter(dbCmd, "@cloumns", DbType.String,cloumns);
+			db.AddInParameter(dbCmd, "@pageIndex", DbType.Int32,pageIndex);
+			db.AddInParameter(dbCmd, "@pageSize", DbType.Int32,pageSize);
+			db.AddInParameter(dbCmd, "@orderBy", DbType.String,order);
+			db.AddInParameter(dbCmd, "@where", DbType.String,whereStr);
+			
+			List<PaypalToken> list= new List<PaypalToken>();
+			
+               using(IDataReader reader = db.ExecuteReader(dbCmd))
+               {
+					while (reader.Read())
+					{
+						//属性赋值
+						PaypalToken obj= Object2Model(reader);
+						list.Add(obj);
+					}
+					reader.NextResult();
+					rowCount = (int)dbCmd.Parameters["@rowCount"].Value;
+                }
+				return list;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("数据层："+e.Message);
+            }
+		}
+		#endregion
+
+
+		#region Object2Model
+
+        public PaypalToken Object2Model(IDataReader reader)
+        {
+            PaypalToken obj = null;
+            try
+            {
+                obj = new PaypalToken();
+				obj.Id = reader["Id"] == DBNull.Value ? default(int) : (int)reader["Id"];
+				obj.Token = reader["Token"] == DBNull.Value ? default(string) : (string)reader["Token"];
+				obj.ExpriseTime = reader["ExpriseTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["ExpriseTime"];
+				
+            }
+            catch(Exception ex)
+            {
+                obj = null;
+            }
+            return obj;
+        }
+
+
+
+        #endregion
+
+
+    }
+
+	[Serializable]
 	public partial class RechargeRecoderAccess : AccessBase<RechargeRecoder>,IDisposable
     {
 

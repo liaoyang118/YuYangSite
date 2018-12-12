@@ -684,6 +684,140 @@ namespace Site.Videos.DataAccess.Service
         #endregion
 
     }
+	public partial class PaypalTokenService
+    {
+
+        #region 01 PaypalToken_Insert
+		 public static int Insert(PaypalToken obj)
+		 {
+			try
+			{
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.Insert(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		 }
+		#endregion
+		
+		#region 02 PaypalToken_Delete
+		 public static int Delete(int id)
+		 {
+			try
+			{
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.Delete(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 03 PaypalToken_Update
+		 public static int Update(PaypalToken obj)
+		 {
+			try
+			{
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.Update(obj);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 04 PaypalToken_SelectObject
+		 public static PaypalToken SelectObject(int id)
+		 {
+			try
+			{
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.SelectObject(id);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 05 PaypalToken_Select
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="whereStr">以where 开始</param>
+         /// <returns></returns>
+		 public static IList<PaypalToken> Select(string whereStr)
+		 {
+			try
+			{
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.Select(whereStr);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 06 PaypalToken_SelectPage
+		/// <summary>
+         /// 
+         /// </summary>
+         /// <param name="order">列名，分页排序字段，可支持多字段，多顺序</param>
+         /// <param name="whereStr">以 where 开头</param>
+         /// <returns></returns>
+		 public static IList<PaypalToken> SelectPage(string cloumns, string order, string whereStr, int pageIndex, int pageSize, out int rowCount)
+		 {
+			 try
+			 {
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.SelectPage(cloumns,order,whereStr,pageIndex,pageSize,out rowCount);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+		}
+		#endregion
+
+		#region 07 PaypalToken_SqlBulkCopyBatchInsert
+        public static int SqlBulkCopyBatchInsert(List<PaypalToken> list,int count)
+        {
+			try
+			{
+				using (var access = new PaypalTokenAccess())
+				{
+					return access.SqlBulkCopyBatchInsert(list, count);
+				}
+			}
+			catch(Exception ex)
+			{
+				throw ex;
+			}
+        }
+        #endregion
+
+    }
 	public partial class RechargeRecoderService
     {
 

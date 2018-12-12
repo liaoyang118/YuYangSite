@@ -76,5 +76,48 @@ namespace Site.Untity
             return Enum.GetName(typeof(T), value);
         }
 
+        /// <summary>
+        /// base64 加密
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="encode"></param>
+        /// <returns></returns>
+        public static string ToBase64(this string source, Encoding encode)
+        {
+            string result = string.Empty;
+            byte[] bytes = encode.GetBytes(source);
+            try
+            {
+                result = Convert.ToBase64String(bytes);
+            }
+            catch
+            {
+                result = source;
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// base64 解密
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="encode"></param>
+        /// <returns></returns>
+        public static string Base64ToString(this string source, Encoding encode)
+        {
+            string decode = "";
+            byte[] bytes = Convert.FromBase64String(source);
+            try
+            {
+                decode = encode.GetString(bytes);
+            }
+            catch
+            {
+                decode = source;
+            }
+            return decode;
+        }
+
     }
 }

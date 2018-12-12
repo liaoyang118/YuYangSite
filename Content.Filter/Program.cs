@@ -133,27 +133,42 @@ namespace Content.Filter
 
             #region MySql测试
 
-            try
+            //try
+            //{
+            //    MySql_VideoCate cate = new MySql_VideoCate();
+            //    cate.c_name = "test";
+
+            //    int result = MySql_VideoCateService.Insert(cate);
+
+            //    if (result > 0)
+            //    {
+            //        Console.WriteLine("插入成功");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("插入失败");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("出错了：" + ex.Message);
+            //}
+
+            #endregion
+
+            #region paypal测试
+
+            Paypal.Core.Paypal paypal = new Paypal.Core.Paypal();
+            paypal.IsSandBox = true;
+            string result = paypal.GetCurrentToken();
+            if (!string.IsNullOrEmpty(result))
             {
-                MySql_VideoCate cate = new MySql_VideoCate();
-                cate.c_name = "test";
-
-                int result = MySql_VideoCateService.Insert(cate);
-
-                if (result > 0)
-                {
-                    Console.WriteLine("插入成功");
-                }
-                else
-                {
-                    Console.WriteLine("插入失败");
-                }
+                Console.WriteLine(result);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("出错了：" + ex.Message);
+                Console.WriteLine("获取错误");
             }
-
             #endregion
 
 

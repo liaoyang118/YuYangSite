@@ -581,6 +581,53 @@ namespace Site.Videos.DataAccess.Model
 		
     }
 	[Serializable]
+	public partial class PaypalToken
+    {
+        
+		#region Id
+		private int _Id;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public int Id 
+		{ 
+			get { return _Id; } 
+			set { _Id = value; } 
+		
+		}
+		#endregion
+		
+		#region Token
+		private string _Token;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string Token 
+		{ 
+			get { return _Token; } 
+			set { _Token = value; } 
+		
+		}
+		#endregion
+		
+		#region ExpriseTime
+		private DateTime _ExpriseTime;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public DateTime ExpriseTime 
+		{ 
+			get { return _ExpriseTime; } 
+			set { _ExpriseTime = value; } 
+		
+		}
+		#endregion
+		
+    }
+	[Serializable]
 	public partial class RechargeRecoder
     {
         
