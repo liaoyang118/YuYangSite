@@ -65,6 +65,11 @@ namespace Paypal.Core
                 {
                     if (token.ExpriseTime <= DateTime.Now)
                     {
+                        PaypalToken pInfo = PaypalTokenService.Select("").FirstOrDefault();
+                        if (pInfo != null)
+                        {
+                            PaypalTokenService.Delete(pInfo.Id);
+                        }
                         //需要重新获取token
                         needRequest = true;
                     }
@@ -96,6 +101,9 @@ namespace Paypal.Core
                             //expires_in
                             obj.TryGetValue("expires_in", out jtoken);
                             token.ExpriseTime = DateTime.Now.AddSeconds(jtoken.ToString().ToInt32(0));
+
+                            PaypalTokenService.Insert(token);
+
                             return true;
                         }
                         else
@@ -119,7 +127,14 @@ namespace Paypal.Core
 
         public bool CreateInvoice()
         {
-            string access_token = GetCurrentToken();
+            string access_token = string.Empty;
+            PaypalToken currentToken;
+            bool isSuccess = GetToken(out currentToken);
+            if (isSuccess)
+            {
+                access_token = currentToken.Token;
+            }
+
             if (!string.IsNullOrEmpty(access_token))
             {
                 client.Accept = "application/json";
@@ -168,27 +183,6 @@ namespace Paypal.Core
                 }
             }
             return false;
-        }
-
-        private string GetCurrentToken()
-        {
-            PaypalToken obj;
-            bool isSuccess = GetToken(out obj);
-            if (isSuccess)
-            {
-                PaypalToken pInfo = PaypalTokenService.Select("").FirstOrDefault();
-                if (pInfo != null)
-                {
-                    PaypalTokenService.Delete(pInfo.Id);
-                }
-                PaypalTokenService.Insert(obj);
-
-                return obj.Token;
-            }
-            else
-            {
-                return string.Empty;
-            }
         }
 
         private string GenerateJsonParams()
