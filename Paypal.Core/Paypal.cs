@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Paypal.Core.Model;
 using Site.Log;
 using Site.Untity;
 using Site.Videos.DataAccess.Model;
@@ -115,7 +116,61 @@ namespace Paypal.Core
             }
         }
 
-        public string GetCurrentToken()
+
+        public bool CreateInvoice()
+        {
+            string access_token = GetCurrentToken();
+            if (!string.IsNullOrEmpty(access_token))
+            {
+                client.Accept = "application/json";
+                client.ContentType = "application/json";
+                client.AddHeaders("Authorization", string.Format("Bearer {0}", access_token));
+
+                //构建body参数 json格式
+                string param = GenerateJsonParams();
+
+                string content = client.Post(CurrentDomain + "/v1/invoicing/invoices", param, "application/json");
+                if (!string.IsNullOrEmpty(content))
+                {
+                    ResultInvoices invoices = new ResultInvoices();
+
+                    string result = string.Empty;
+                    JObject obj = (JObject)JsonConvert.DeserializeObject(content);
+
+                    JToken token;
+                    obj.TryGetValue("number", out token);
+                    if (token != null)
+                    {
+                        invoices.number = token.ToString();
+                        //id
+                        obj.TryGetValue("id", out token);
+                        invoices.id = token.ToString();
+                        //template_id
+                        obj.TryGetValue("template_id", out token);
+                        invoices.template_id = token.ToString();
+                        //status
+                        obj.TryGetValue("status", out token);
+                        invoices.status = token.ToString();
+
+                        //links
+                        obj.TryGetValue("links", out token);
+                        List<Urls> list = JsonConvert.DeserializeObject<List<Urls>>(token.ToString());
+                        invoices.links = list;
+
+                        return true;
+                    }
+                    else
+                    {
+                        //失败
+                        LogHelp.Error("创建账单错误!");
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private string GetCurrentToken()
         {
             PaypalToken obj;
             bool isSuccess = GetToken(out obj);
@@ -134,6 +189,73 @@ namespace Paypal.Core
             {
                 return string.Empty;
             }
+        }
+
+        private string GenerateJsonParams()
+        {
+            InvoiceBody body = new InvoiceBody();
+            body.note = "请注册账号后付款";
+            body.terms = "请在30天内付款";
+            //body.discount = new discount() { percent = 0.00 };
+            body.shipping_cost = new shipping_cost()
+            {
+                amount = new amount()
+                {
+                    currency = "USD",
+                    value = 0
+                }
+            };
+            body.items = new List<item>() {
+                 new item()
+                 {
+                      name="商品1",
+                      quantity=1,
+                      tax=new tax(){ name="Tax", percent=0 },
+                      unit_price=new unit_price(){ currency="USD",value=1.5m }
+                 }
+            };
+            body.shipping_info = new shipping_info()
+            {
+                //address = new address()
+                //{
+                //    city = "",
+                //    country_code = "",
+                //    line1 = "",
+                //    postal_code = "",
+                //    state = ""
+                //},
+                first_name = "VIP",
+                last_name = "开通"
+            };
+            body.billing_info = new List<billing_info>()
+            {
+                 new billing_info()
+                 {
+                     email ="vipactive@outlook.com",
+                     first_name ="VIP",
+                     last_name ="开通"
+                 }
+            };
+            body.merchant_info = new merchant_info()
+            {
+                business_name = "591av",
+                phone = new phone() { country_code = "001", national_number = "123456" },
+                email = "liao.yang118-facilitator@163.com",
+                first_name = "591av",
+                last_name = "community",
+                //address = new address()
+                //{
+                //    city = "",
+                //    country_code = "",
+                //    line1 = "",
+                //    postal_code = "",
+                //    state = ""
+                //}
+            };
+
+            string result = UntityTool.GetJsonByObject(body);
+
+            return result;
         }
 
     }

@@ -45,6 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\address.cs" />
+    <Compile Include="Model\billing_info.cs" />
+    <Compile Include="Model\InvoiceBody.cs" />
+    <Compile Include="Model\item.cs" />
+    <Compile Include="Model\merchant_info.cs" />
+    <Compile Include="Model\phone.cs" />
+    <Compile Include="Model\ResultInvoices.cs" />
+    <Compile Include="Model\shipping_info.cs" />
     <Compile Include="Paypal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

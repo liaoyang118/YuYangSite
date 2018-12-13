@@ -160,8 +160,8 @@ namespace Content.Filter
 
             Paypal.Core.Paypal paypal = new Paypal.Core.Paypal();
             paypal.IsSandBox = true;
-            string result = paypal.GetCurrentToken();
-            if (!string.IsNullOrEmpty(result))
+            bool result = paypal.CreateInvoice();
+            if (result)
             {
                 Console.WriteLine(result);
             }

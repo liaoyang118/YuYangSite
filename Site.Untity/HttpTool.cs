@@ -275,7 +275,7 @@ namespace Site.Untity
 
         public void AddHeaders(string name, string values)
         {
-            client.DefaultRequestHeaders.Add(name, values);
+            ChangeHeaders(name, values);
         }
 
         public void SetAuthorizationHead(string name, string password)
@@ -440,7 +440,7 @@ namespace Site.Untity
                 HttpContent requestContent = new StringContent(param);
                 requestContent.Headers.ContentType = new MediaTypeHeaderValue(bodyContentType);
                 HttpResponseMessage result = client.PostAsync(url, requestContent).Result;
-                if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                if (result.StatusCode == System.Net.HttpStatusCode.OK || result.StatusCode == System.Net.HttpStatusCode.Created)
                 {
                     content = result.Content.ReadAsStringAsync().Result;
                 }
