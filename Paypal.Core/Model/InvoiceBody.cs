@@ -11,10 +11,13 @@ namespace Paypal.Core.Model
     /// </summary>
     public class InvoiceBody
     {
+        /// <summary>
+        /// 商户信息
+        /// </summary>
         public merchant_info merchant_info { get; set; }
 
         /// <summary>
-        /// 收件人
+        /// 收件人信息（账单接收人）
         /// </summary>
         public List<billing_info> billing_info { get; set; }
 

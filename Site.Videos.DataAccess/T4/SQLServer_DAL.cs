@@ -1479,6 +1479,7 @@ namespace Site.Videos.DataAccess.Access
 			db.AddOutParameter(dbCmd, "@Id", DbType.Int32,4);
 			db.AddInParameter(dbCmd, "@Token", DbType.String,obj.Token);
 			db.AddInParameter(dbCmd, "@ExpriseTime", DbType.DateTime,obj.ExpriseTime);
+			db.AddInParameter(dbCmd, "@TokenType", DbType.String,obj.TokenType);
 						
 				int returnValue = db.ExecuteNonQuery(dbCmd);
 				int Id = (int)dbCmd.Parameters["@Id"].Value;
@@ -1520,6 +1521,7 @@ namespace Site.Videos.DataAccess.Access
 			db.AddInParameter(dbCmd, "@Id", DbType.Int32,obj.Id);
 			db.AddInParameter(dbCmd, "@Token", DbType.String,obj.Token);
 			db.AddInParameter(dbCmd, "@ExpriseTime", DbType.DateTime,obj.ExpriseTime);
+			db.AddInParameter(dbCmd, "@TokenType", DbType.String,obj.TokenType);
 			
 			
 				int returnValue = db.ExecuteNonQuery(dbCmd);
@@ -1644,6 +1646,7 @@ namespace Site.Videos.DataAccess.Access
 				obj.Id = reader["Id"] == DBNull.Value ? default(int) : (int)reader["Id"];
 				obj.Token = reader["Token"] == DBNull.Value ? default(string) : (string)reader["Token"];
 				obj.ExpriseTime = reader["ExpriseTime"] == DBNull.Value ? default(DateTime) : (DateTime)reader["ExpriseTime"];
+				obj.TokenType = reader["TokenType"] == DBNull.Value ? default(string) : (string)reader["TokenType"];
 				
             }
             catch(Exception ex)

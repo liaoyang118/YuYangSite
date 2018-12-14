@@ -12,6 +12,7 @@ using Site.XiaoShuo.DataAccess.Service.PartialService.Search;
 using Site.Videos.DataAccess.Model;
 using Site.Videos.DataAccess.Service;
 using Site.Videos.DataAccess.Service.PartialService.Search;
+using Paypal.Core.Model;
 
 namespace Content.Filter
 {
@@ -159,16 +160,28 @@ namespace Content.Filter
             #region paypal测试
 
             Paypal.Core.Paypal paypal = new Paypal.Core.Paypal();
-            paypal.IsSandBox = true;
-            bool result = paypal.CreateInvoice();
+            paypal.IsLive = false;
+            paypal.Init();
+            ResultInvoices invoices;
+            bool result = paypal.CreateInvoice("591社区", "VipActive@outlook.com", "试用会员（1天）", 1, 9, "从成功付款开始，会员有效期为1天", out invoices);
             if (result)
             {
-                Console.WriteLine(result);
+                Console.WriteLine("创建账单成功,待发送....");
+                result = paypal.SendInvoice(invoices);
+                if (result)
+                {
+                    Console.WriteLine("发送账单成功....");
+                }
+                else
+                {
+                    Console.WriteLine("发送账单失败....");
+                }
             }
             else
             {
-                Console.WriteLine("获取错误");
+                Console.WriteLine("创建账单失败....");
             }
+
             #endregion
 
 

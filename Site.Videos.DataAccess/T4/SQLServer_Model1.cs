@@ -626,6 +626,20 @@ namespace Site.Videos.DataAccess.Model
 		}
 		#endregion
 		
+		#region TokenType
+		private string _TokenType;
+       
+        /// <summary>
+        /// 
+        /// </summary>        
+        public string TokenType 
+		{ 
+			get { return _TokenType; } 
+			set { _TokenType = value; } 
+		
+		}
+		#endregion
+		
     }
 	[Serializable]
 	public partial class RechargeRecoder
