@@ -10,14 +10,37 @@
     Layout = "~/Views/Shared/_Detail_Min_Layout.cshtml";
     ViewBag.Title = "试看" + "-" + vInfo.v_titile + "-" + vcInfo.c_name;
 }
+@section head
+{
+    <link href="~/Scripts/Video/css/video-js.min.css" rel="stylesheet" />
+    <script src="~/Scripts/Video/js/video.min.js"></script>
+    <script src="~/Scripts/Video/js/videojs-ie8.min.js"></script>
+    <script src="~/Scripts/Video/js/zh-CN.js"></script>
+    <script>
+        $(function () {
+            var player = videojs('video', {
+                muted: true,
+                controls: true / false,
+                height: 750,
+                width: 400,
+                loop: false,
+                fluid: true,
+                preload: "metadata"
+                // 更多配置.....
+            });
+        })
+    </script>
+
+}
 
 <div id="page-content" class="single-page">
     <div class="container">
         <div class="row">
             <div id="main-content" class="col-md-8">
-
                 <div class="wrap-vid">
-                    <video src="@vInfo.v_min_playSrc" width="750" height="400" controls="controls" contextmenu="123"></video>
+                    <video id="video" class="video-js vjs-default-skin" width="400" height="750" poster="@vInfo.v_coverImgSrc">
+                        <source src="@vInfo.v_min_playSrc" type="video/mp4">
+                    </video>
                 </div>
                 <div class="line"></div>
                 @{
@@ -42,7 +65,7 @@
                                                             </a>
                                                             <p>@vList[i].v_titile.SubOmitString(15)</p>
                                                         </div>
-                                                        <img src="~/images/7.jpg">
+                                                        <img src="@vList[i].v_coverImgSrc">
                                                     </div>
                                                     <h3 class="vid-name"><a href="@UntityTool.GenerateVideoMinDetailUrl(vList[i].v_c_id.Value,vList[i].Id)">@vList[i].v_titile.SubOmitString(15)</a></h3>
                                                     <div class="info">
@@ -83,7 +106,7 @@
                                                             </a>
                                                             <p>@vList[i].v_titile.SubOmitString(15)</p>
                                                         </div>
-                                                        <img src="~/images/7.jpg">
+                                                        <img src="@vList[i].v_coverImgSrc">
                                                     </div>
                                                     <h3 class="vid-name"><a href="@UntityTool.GenerateVideoMinDetailUrl(vList[i].v_c_id.Value,vList[i].Id)">@vList[i].v_titile.SubOmitString(15)</a></h3>
                                                     <div class="info">

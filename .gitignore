@@ -259,3 +259,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/Site.Video.Web
+/Site.WCF.Video.PublishPageService
+/Site.WCF.PublishPageService
+/Video.sql
+/YuYang.zip
+/Site.Untity
